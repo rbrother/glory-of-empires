@@ -1,7 +1,7 @@
-(ns glory-of-empires.core
+(ns glory-of-empires.map
   (:require [clojure.string :as str])
-  (:use utils)
-  (:use xml)
+  (:use clojure-common.utils)
+  (:use clojure-common.xml)
   (:use clojure.test)
   (:gen-class))
 
@@ -162,17 +162,7 @@
 
 ;-----------------------------------------------------------------------
 
-(println (xml-to-text (map-to-svg (make-random-map 2))))
-
-(spit "map.html" (xml-to-text (map-to-svg (make-random-map 4))))
-
-;(clojure.main/repl)
-
-;(run-tests)
-
-
-
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
+(defn -main [& args]
+  (println (xml-to-text (map-to-svg (make-random-map 2))))
+  (spit "map.html" (xml-to-text (map-to-svg (make-random-map 4))))
+)

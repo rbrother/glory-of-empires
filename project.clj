@@ -5,6 +5,6 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [  [org.clojure/clojure "1.7.0"]
                    [ring "1.4.0"] ]
-  :main ^:skip-aot glory-of-empires.core
+  :main ^:skip-aot glory-of-empires.map
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
