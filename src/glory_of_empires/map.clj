@@ -3,6 +3,7 @@
   (:use clojure-common.utils)
   (:use clojure-common.xml)
   (:use clojure.test)
+  (:use ring.adapter.jetty)
   (:gen-class))
 
 (def resources-url "http://www.brotherus.net/ti3/")
@@ -160,9 +161,19 @@
           (concat [ :g { :transform (str "scale(0.5) translate(" counter-translate ")") } ]
                   (map piece-to-svg pieces2)) ] ] ] ))
 
-;-----------------------------------------------------------------------
+;----------------- web server ----------------------
+
+(def big-map (xml-to-text (map-to-svg (make-random-map 4))))
+
+(defn handler [request]
+  (println (pretty-pr request))
+  {:status 200
+   :headers {"Content-Type" "text/html"}
+   :body big-map } )
+
 
 (defn -main [& args]
   (println (xml-to-text (map-to-svg (make-random-map 2))))
   (spit "map.html" (xml-to-text (map-to-svg (make-random-map 4))))
+  (run-jetty handler {:port 3000})
 )
