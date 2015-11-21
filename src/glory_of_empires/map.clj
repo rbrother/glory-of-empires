@@ -118,11 +118,8 @@
     { :x (* logical-x tile-width 0.75)
       :y (* tile-height (+ (* logical-x 0.5) logical-y)) } )
 
-(defn- add-screen-coord [ { pos :logical-pos :as piece } ]
-  (assoc piece :screen-pos (screen-pos pos) ))
-
 (defn- tile-on-table? [ piece map-size ]
-  (let [ { { x :x y :y } :screen-pos } (add-screen-coord piece) ]
+  (let [ { x :x y :y } (screen-pos (:logical-pos piece)) ]
     (< (distance x y) (* tile-height map-size 1.01 ))))
 
 (defn- random-system [ x y ]
@@ -147,19 +144,19 @@
 
 ;------------------ to svg ------------------------
 
-(defn- piece-to-svg [ { { x :x y :y } :screen-pos system :system :as tile } ]
-  [ :image { :x (int x) :y (int y) :width tile-width :height tile-height
-             "xlink:href" (str resources-url "Tiles/" (system :image)) } ] )
+(defn- piece-to-svg [ { logical-pos :logical-pos system :system :as tile } ]
+  (let [ { x :x y :y } (screen-pos logical-pos) ]
+    [ :image { :x (int x) :y (int y) :width tile-width :height tile-height
+               "xlink:href" (str resources-url "Tiles/" (system :image)) } ] ))
 
 (defn map-to-svg [ map-pieces ]
-  (let [ pieces2 (map add-screen-coord map-pieces)
-         { min-x :x min-y :y } (min-pos (map :screen-pos pieces2))
+  (let [ { min-x :x min-y :y } (->> map-pieces (map :logical-pos) (map screen-pos) (min-pos))
          counter-translate (str (- min-x) "," (- min-y)) ]
     [ :html {}
       [ :body { :style "background: #202020;" }
         [ :svg { :width 1500, :height 1000, "xmlns:xlink" "http://www.w3.org/1999/xlink" }
           (concat [ :g { :transform (str "scale(0.5) translate(" counter-translate ")") } ]
-                  (map piece-to-svg pieces2)) ] ] ] ))
+                  (map piece-to-svg map-pieces)) ] ] ] ))
 
 ;----------------- web server ----------------------
 
@@ -169,7 +166,7 @@
   (println (pretty-pr request))
   {:status 200
    :headers {"Content-Type" "text/html"}
-   :body big-map } )
+   :body (xml-to-text (map-to-svg (make-random-map 3))) } )
 
 
 (defn -main [& args]
