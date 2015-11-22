@@ -15,6 +15,10 @@
   { :test (fn [] (is (= { :x 7 :y -4 } (min-pos [ { :x 7 :y 12} { :x 8 :y -4 } ] )))) }
   [ coords ] { :x (apply min (map :x coords)) :y (apply min (map :y coords)) } )
 
+(defn max-pos
+  { :test (fn [] (is (= { :x 8 :y 12 } (min-pos [ { :x 7 :y 12} { :x 8 :y -4 } ] )))) }
+  [ coords ] { :x (apply max (map :x coords)) :y (apply max (map :y coords)) } )
+
 (defn distance [dx dy] (Math/sqrt (+ (* dx dx) (* dy dy))))
 
 ; -------------------------- map ---------------------------------
@@ -35,21 +39,11 @@
 (defn- random-system [ x y ]
   { :logical-pos { :x x :y y } :system (rand-nth all-systems) } )
 
-(defn make-random-map
-  { :test (fn [] (is (=
-    (->> (make-random-map 1) (map #(assoc-in % [:system :image] "xxx")))
-    [ { :logical-pos { :x -1 :y 0 } :system { :image "xxx" } }
-      { :logical-pos { :x -1 :y 1 } :system { :image "xxx" } }
-      { :logical-pos { :x 0 :y -1 } :system { :image "xxx" } }
-      { :logical-pos { :x 0 :y 0 } :system { :image "xxx" } }
-      { :logical-pos { :x 0 :y 1 } :system { :image "xxx" } }
-      { :logical-pos { :x 1 :y -1 } :system { :image "xxx" } }
-      { :logical-pos { :x 1 :y 0 } :system { :image "xxx" } } ] ))) }
-  [ rings ]
-    (let [ a-range (range (- rings) (inc rings)) ]
-      (->> (range2d a-range a-range)
-          (map (fn [ [x y] ] (random-system x y) ))
-          (filter #(tile-on-table? % rings)) )))
+(defn make-random-map [ rings ]
+  (let [ a-range (range (- rings) (inc rings)) ]
+    (->> (range2d a-range a-range)
+         (map (fn [ [x y] ] (random-system x y) ))
+         (filter #(tile-on-table? % rings)) )))
 
 
 ;------------------ to svg ------------------------
@@ -60,7 +54,9 @@
                "xlink:href" (str resources-url "Tiles/" (system :image)) } ] ))
 
 (defn map-to-svg [ map-pieces ]
-  (let [ { min-x :x min-y :y } (->> map-pieces (map :logical-pos) (map screen-pos) (min-pos))
+  (let [ screen-locs (->> map-pieces (map :logical-pos) (map screen-pos))
+         { min-x :x min-y :y } (min-pos screen-locs)
+         { max-x :x max-y :y } (max-pos screen-locs)
          counter-translate (str (- min-x) "," (- min-y)) ]
     [ :html {}
       [ :body { :style "background: #202020;" }
