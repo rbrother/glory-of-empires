@@ -21,20 +21,23 @@
 
 (defn distance [dx dy] (Math/sqrt (+ (* dx dx) (* dy dy))))
 
+(defn add-pos [ { x1 :x y1 :y } { x2 :x y2 :y } ] { :x (+ x1 x2) :y (+ y1 y2) } )
+(defn sub-pos [ { x1 :x y1 :y } { x2 :x y2 :y } ] { :x (- x1 x2) :y (- y1 y2) } )
+(defn mul-pos [ { x :x y :y } m ] { :x (* x m) :y (* y m) } )
+
 ; -------------------------- map ---------------------------------
 
-(def tile-height 376)
-(def tile-width 432)
+(def tile-size { :x 432 :y 376 } )
 
 (defn- screen-pos
   { :test (fn [] (is (= { :x 0.0 :y 0.0 } (screen-pos { :x 0 :y 0 } )))) }
   [ { logical-x :x logical-y :y } ]
-    { :x (* logical-x tile-width 0.75)
-      :y (* tile-height (+ (* logical-x 0.5) logical-y)) } )
+    { :x (* logical-x (tile-size :x) 0.75)
+      :y (* (tile-size :y) (+ (* logical-x 0.5) logical-y)) } )
 
 (defn- tile-on-table? [ piece map-size ]
   (let [ { x :x y :y } (screen-pos (:logical-pos piece)) ]
-    (< (distance x y) (* tile-height map-size 1.01 ))))
+    (< (distance x y) (* (tile-size :y) map-size 1.01 ))))
 
 (defn- random-system [ x y ]
   { :logical-pos { :x x :y y } :system (rand-nth all-systems) } )
@@ -50,33 +53,27 @@
 
 (defn- piece-to-svg [ { logical-pos :logical-pos system :system :as tile } ]
   (let [ { x :x y :y } (screen-pos logical-pos) ]
-    [ :image { :x (int x) :y (int y) :width tile-width :height tile-height
+    [ :image { :x (int x) :y (int y) :width (tile-size :x) :height (tile-size :y)
                "xlink:href" (str resources-url "Tiles/" (system :image)) } ] ))
 
-(defn map-to-svg [ map-pieces ]
+(defn map-to-svg [ map-pieces scale ]
   (let [ screen-locs (->> map-pieces (map :logical-pos) (map screen-pos))
-         { min-x :x min-y :y } (min-pos screen-locs)
-         { max-x :x max-y :y } (max-pos screen-locs)
-         counter-translate (str (- min-x) "," (- min-y)) ]
+         min-p (min-pos screen-locs)
+         max-p (max-pos screen-locs)
+         size (mul-pos (add-pos (sub-pos max-p min-p) tile-size) scale)
+         counter-translate (str (- (min-p :x)) "," (- (min-p :y))) ]
     [ :html {}
       [ :body { :style "background: #202020;" }
-        [ :svg { :width 1500, :height 1000, "xmlns:xlink" "http://www.w3.org/1999/xlink" }
-          (concat [ :g { :transform (str "scale(0.5) translate(" counter-translate ")") } ]
+        [ :svg { :width (:x size), :height (:y size), "xmlns:xlink" "http://www.w3.org/1999/xlink" }
+          (concat [ :g { :transform (str "scale(" scale ") translate(" counter-translate ")") } ]
                   (map piece-to-svg map-pieces)) ] ] ] ))
 
 ;----------------- web server ----------------------
-
-(def big-map (xml-to-text (map-to-svg (make-random-map 4))))
 
 (defn handler [request]
   (println (pretty-pr request))
   {:status 200
    :headers {"Content-Type" "text/html"}
-   :body (xml-to-text (map-to-svg (make-random-map 3))) } )
+   :body (xml-to-text (map-to-svg (make-random-map 3) 1.0)) } )
 
-
-(defn -main [& args]
-  (println (xml-to-text (map-to-svg (make-random-map 2))))
-  (spit "map.html" (xml-to-text (map-to-svg (make-random-map 4))))
-  (run-jetty handler {:port 3000})
-)
+(defn -main [& args] (run-jetty handler {:port 3000} ) )
