@@ -54,10 +54,11 @@
          scale-str (if (nil? scale) "" (str "scale(" scale ")")) ]
     { :transform (str scale-str " " translate) } ))
 
+(defn- width-height [ loc ] { :width (first loc) :height (last loc) } )
+
 (defn- piece-to-svg [ { logical-pos :logical-pos system :system :as tile } ]
   [ :g (transform { :translate (screen-loc logical-pos) })
-    [ :image { :x 0 :y 0 :width (first tile-size) :height (last tile-size)
-               "xlink:href" (str resources-url "Tiles/" (system :image)) } ] ] )
+    [ :image (merge { :x 0 :y 0 } (width-height tile-size) { "xlink:href" (str resources-url "Tiles/" (system :image)) } ) ] ] )
 
 (defn bounding-rect [ map-pieces ]
   (let [ s-locs (screen-locs map-pieces) ]
@@ -66,7 +67,7 @@
 (defn rect-size [ [ min-corner max-corner ] ] (map - max-corner min-corner))
 
 (defn- svg [ size & content ]
-  (concat [ :svg { :width (first size) :height (last size) "xmlns:xlink" "http://www.w3.org/1999/xlink" } ] content ))
+  (concat [ :svg (merge (width-height size) { "xmlns:xlink" "http://www.w3.org/1999/xlink" } ) ] content ))
 
 (defn map-to-svg [ map-pieces scale ]
   (let [ bounds (bounding-rect map-pieces)
