@@ -8,7 +8,8 @@
   (testing "make-random-map"
     (let [ a-map (make-random-map 1)
            normalized-map (map #(assoc-in % [:system :image] "xxx") a-map)
-           correct-screen-locs [ [-324.0 -188.0] [-324.0 188.0] [0.0 -376.0] [0.0 0.0] [0.0 376.0] [324.0 -188.0] [324.0 188.0] ] ]
+           correct-screen-locs [ [-324.0 -188.0] [-324.0 188.0] [0.0 -376.0] [0.0 0.0] [0.0 376.0] [324.0 -188.0] [324.0 188.0] ]
+           correct-bounding-rect [ [ -324.0 -376.0 ] [ 756.0 752.0 ] ] ]
       (is (=
         normalized-map
         [ { :logical-pos [ -1 0 ] :system { :image "xxx" } }
@@ -20,8 +21,9 @@
           { :logical-pos [ 1 0 ] :system { :image "xxx" } } ] ))
       (is (= (screen-locs a-map) correct-screen-locs ))
       (is (= (min-pos correct-screen-locs) [-324.0 -376.0] ))
-      (is (= (max-pos correct-screen-locs) [324.0 376.0] ))
-      (is (= (mul-pos (map + (map - [324.0 376.0] [-324.0 -376.0]) tile-size) 0.5) [ 540.0 564.0] ))
+      (is (= (max-pos correct-screen-locs) [ 324.0 376.0 ] ))
+      (is (= (bounding-rect a-map) correct-bounding-rect ))
+      (is (= (rect-size correct-bounding-rect) [ 1080.0 1128.0 ] ))
       (is (= (map-to-svg normalized-map 0.5)
              [:html {}
               [:body {:style "background: #202020;"}
@@ -33,5 +35,4 @@
                     [:image {:x 0, :y 0, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]
                     [:image {:x 0, :y 376, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]
                     [:image {:x 324, :y -188, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]
-                    [:image {:x 324, :y 188, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]]]]]))
-      )))
+                    [:image {:x 324, :y 188, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]]]]])))))

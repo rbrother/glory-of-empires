@@ -21,9 +21,7 @@
 
 (defn distance [ vec1 ] (Math/sqrt (apply + (map * vec1 vec1))))
 
-(defn add-pos [ vec1 vec2 ] (map + vec1 vec2) )
-(defn sub-pos [ vec1 vec2 ] (map - vec1 vec2) )
-(defn mul-pos [ vec1 scalar ] (map * vec1 (repeat scalar)))
+(defn mul-vec [ vec1 scalar ] (map * vec1 (repeat scalar)))
 
 ; -------------------------- map ---------------------------------
 
@@ -58,15 +56,20 @@
     [ :image { :x (int x) :y (int y) :width (first tile-size) :height (last tile-size)
                "xlink:href" (str resources-url "Tiles/" (system :image)) } ] ))
 
+(defn bounding-rect [ map-pieces ]
+  (let [ s-locs (screen-locs map-pieces) ]
+    [ (min-pos s-locs) (map + (max-pos s-locs) tile-size) ] ))
+
+(defn rect-size [ [ min-corner max-corner ] ] (map - max-corner min-corner))
+
 (defn map-to-svg [ map-pieces scale ]
-  (let [ s-locs (screen-locs map-pieces)
-         min-p (min-pos s-locs)
-         max-p (max-pos s-locs)
-         size (mul-pos (map + (map - max-p min-p) tile-size) scale)
-         counter-translate (str (- (first min-p)) "," (- (last min-p))) ]
+  (let [ bounds (bounding-rect map-pieces)
+         min-corner (first bounds)
+         svg-size (mul-vec (rect-size bounds) scale)
+         counter-translate (str (- (first min-corner)) "," (- (last min-corner))) ]
     [ :html {}
       [ :body { :style "background: #202020;" }
-        [ :svg { :width (first size), :height (last size), "xmlns:xlink" "http://www.w3.org/1999/xlink" }
+        [ :svg { :width (first svg-size), :height (last svg-size), "xmlns:xlink" "http://www.w3.org/1999/xlink" }
           (concat [ :g { :transform (str "scale(" scale ") translate(" counter-translate ")") } ]
                   (map piece-to-svg map-pieces)) ] ] ] ))
 
