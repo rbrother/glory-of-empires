@@ -27,11 +27,9 @@
 
 (def tile-size [ 432 376 ] )
 
-(defn- screen-loc
-  { :test (fn [] (is (= { :x 0.0 :y 0.0 } (screen-loc { :x 0 :y 0 } )))) }
-  [ [ logical-x logical-y ] ]
-    [ (* logical-x (first tile-size) 0.75)
-      (* (last tile-size) (+ (* logical-x 0.5) logical-y)) ] )
+(defn- screen-loc [ [ logical-x logical-y ] ]
+  [ (* logical-x (first tile-size) 0.75)
+    (* (last tile-size) (+ (* logical-x 0.5) logical-y)) ] )
 
 (defn screen-locs [ map-pieces ]
   (->> map-pieces (map :logical-pos) (map screen-loc)))
@@ -51,10 +49,15 @@
 
 ;------------------ to svg ------------------------
 
+(defn- transform [ { loc :translate scale :scale } ]
+  (let [ translate (if (nil? loc) "" (str "translate(" (first loc) "," (last loc) ")" ))
+         scale-str (if (nil? scale) "" (str "scale(" scale ")")) ]
+    { :transform (str scale-str " " translate) } ))
+
 (defn- piece-to-svg [ { logical-pos :logical-pos system :system :as tile } ]
-  (let [ [ x y ] (screen-loc logical-pos) ]
-    [ :image { :x (int x) :y (int y) :width (first tile-size) :height (last tile-size)
-               "xlink:href" (str resources-url "Tiles/" (system :image)) } ] ))
+  [ :g (transform { :translate (screen-loc logical-pos) })
+    [ :image { :x 0 :y 0 :width (first tile-size) :height (last tile-size)
+               "xlink:href" (str resources-url "Tiles/" (system :image)) } ] ] )
 
 (defn bounding-rect [ map-pieces ]
   (let [ s-locs (screen-locs map-pieces) ]
@@ -62,16 +65,18 @@
 
 (defn rect-size [ [ min-corner max-corner ] ] (map - max-corner min-corner))
 
+(defn- svg [ size & content ]
+  (concat [ :svg { :width (first size) :height (last size) "xmlns:xlink" "http://www.w3.org/1999/xlink" } ] content ))
+
 (defn map-to-svg [ map-pieces scale ]
   (let [ bounds (bounding-rect map-pieces)
          min-corner (first bounds)
-         svg-size (mul-vec (rect-size bounds) scale)
-         counter-translate (str (- (first min-corner)) "," (- (last min-corner))) ]
+         svg-size (mul-vec (rect-size bounds) scale) ]
     [ :html {}
       [ :body { :style "background: #202020;" }
-        [ :svg { :width (first svg-size), :height (last svg-size), "xmlns:xlink" "http://www.w3.org/1999/xlink" }
-          (concat [ :g { :transform (str "scale(" scale ") translate(" counter-translate ")") } ]
-                  (map piece-to-svg map-pieces)) ] ] ] ))
+        (svg svg-size
+          (concat [ :g (transform { :scale scale :translate (mul-vec min-corner -1.0) } ) ]
+                  (map piece-to-svg map-pieces))) ] ] ))
 
 ;----------------- web server ----------------------
 

@@ -25,14 +25,22 @@
       (is (= (bounding-rect a-map) correct-bounding-rect ))
       (is (= (rect-size correct-bounding-rect) [ 1080.0 1128.0 ] ))
       (is (= (map-to-svg normalized-map 0.5)
-             [:html {}
-              [:body {:style "background: #202020;"}
-                [:svg {:width 540.0, :height 564.0, "xmlns:xlink" "http://www.w3.org/1999/xlink"}
-                  [:g {:transform "scale(0.5) translate(324.0,376.0)"}
-                    [:image {:x -324, :y -188, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]
-                    [:image {:x -324, :y 188, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]
-                    [:image {:x 0, :y -376, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]
-                    [:image {:x 0, :y 0, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]
-                    [:image {:x 0, :y 376, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]
-                    [:image {:x 324, :y -188, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]
-                    [:image {:x 324, :y 188, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]]]]])))))
+        [:html {}
+          [:body {:style "background: #202020;"}
+            [:svg {:width 540.0, :height 564.0, "xmlns:xlink" "http://www.w3.org/1999/xlink"}
+              [:g {:transform "scale(0.5) translate(324.0,376.0)"}
+                [:g {:transform " translate(-324.0,-188.0)"}
+                  [:image {:x 0, :y 0, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]]
+                [:g {:transform " translate(-324.0,188.0)"}
+                  [:image {:x 0, :y 0, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]]
+                [:g {:transform " translate(0.0,-376.0)"}
+                  [:image {:x 0, :y 0, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]]
+                [:g {:transform " translate(0.0,0.0)"}
+                  [:image {:x 0, :y 0, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]]
+                [:g {:transform " translate(0.0,376.0)"}
+                  [:image {:x 0, :y 0, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]]
+                [:g {:transform " translate(324.0,-188.0)"}
+                  [:image {:x 0, :y 0, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]]
+                [:g {:transform " translate(324.0,188.0)"}
+                  [:image {:x 0, :y 0, :width 432, :height 376, "xlink:href" "http://www.brotherus.net/ti3/Tiles/xxx"}]]]]]]
+       )))))
