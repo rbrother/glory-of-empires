@@ -3,7 +3,6 @@
   (:use clojure-common.utils)
   (:use clojure-common.xml)
   (:use clojure.test)
-  (:use ring.adapter.jetty)
   (:use glory-of-empires.systems)
   (:gen-class))
 
@@ -60,6 +59,10 @@
          (filter #(tile-on-table? % rings))
          (amend-tile-ids) )))
 
+;------------------- ships ----------------
+
+
+
 ;------------------ to svg ------------------------
 
 (defn- transform [ { loc :translate scale :scale } ]
@@ -107,12 +110,7 @@
           (concat [ :g (transform { :scale scale :translate (mul-vec min-corner -1.0) } ) ]
                   (map piece-to-svg map-pieces))) ] ] ))
 
-;----------------- web server ----------------------
 
-(defn handler [request]
-  (println (pretty-pr request))
-  {:status 200
-   :headers {"Content-Type" "text/html"}
-   :body (xml-to-text (map-to-svg (make-random-map 3) 1.0)) } )
-
-(defn -main [& args] (run-jetty handler {:port 3000} ) )
+; Create example for testing
+(defn get-random-map-html-text []
+  (xml-to-text (map-to-svg (make-random-map 3) 1.0)))
