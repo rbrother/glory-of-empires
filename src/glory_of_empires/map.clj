@@ -89,7 +89,7 @@
   (let [ center (mul-vec tile-size 0.5) ]
     [ :g (transform { :translate (screen-loc logical-pos) })
       [ :image (merge { :x 0 :y 0 } (width-height tile-size) { "xlink:href" (str resources-url "Tiles/" (system :image)) } ) ]
-      (double-text id (polar 210 170)) ] ))
+      (double-text id (polar 270 170)) ] ))
 
 (defn bounding-rect [ map-pieces ]
   (let [ s-locs (screen-locs map-pieces) ]
@@ -113,4 +113,4 @@
 
 ; Create example for testing
 (defn get-random-map-html-text []
-  (xml-to-text (map-to-svg (make-random-map 3) 1.0)))
+  (xml-to-text (map-to-svg (make-random-map 3) 0.6)))
