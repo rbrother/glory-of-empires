@@ -9,8 +9,9 @@
 (defn handler [request]
   (println "------------ request received -----------")
   (println (pretty-pr request))
+  (println (slurp (:body request)))
   {:status 200
-   :headers {"Content-Type" "text/html"}
-   :body (get-random-map-html-text) } )
+   :headers {"Content-Type" "text/html" "Access-Control-Allow-Origin" "*"}
+   :body (get-random-map-svg-text) } )
 
 (defn -main [& args] (run-jetty handler {:port 3000} ) )

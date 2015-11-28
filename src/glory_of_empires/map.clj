@@ -66,7 +66,7 @@
 ;------------------ to svg ------------------------
 
 (defn- transform [ { loc :translate scale :scale } ]
-  (let [ translate (if (nil? loc) "" (str "translate(" (first loc) "," (last loc) ")" ))
+  (let [ translate (if (nil? loc) "" (str "translate(" (Math/round (first loc)) "," (Math/round (last loc)) ")" ))
          scale-str (if (nil? scale) "" (str "scale(" scale ")")) ]
     { :transform (str scale-str " " translate) } ))
 
@@ -104,13 +104,19 @@
   (let [ bounds (bounding-rect map-pieces)
          min-corner (first bounds)
          svg-size (mul-vec (rect-size bounds) scale) ]
-    [ :html {}
-      [ :body { :style "background: #202020;" }
-        (svg svg-size
-          (concat [ :g (transform { :scale scale :translate (mul-vec min-corner -1.0) } ) ]
-                  (map piece-to-svg map-pieces))) ] ] ))
+    (svg svg-size
+      (concat
+        [ :g (transform { :scale scale :translate (mul-vec min-corner -1.0) } ) ]
+        (map piece-to-svg map-pieces)))))
 
+(defn map-to-svg-html [ map-pieces scale ]
+  [ :html {}
+    [ :body { :style "background: #202020;" }
+      (map-to-svg map-pieces scale) ] ] )
 
 ; Create example for testing
 (defn get-random-map-html-text []
+  (xml-to-text (map-to-svg-html (make-random-map 3) 0.6)))
+
+(defn get-random-map-svg-text []
   (xml-to-text (map-to-svg (make-random-map 3) 0.6)))
