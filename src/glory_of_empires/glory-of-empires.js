@@ -7,8 +7,7 @@ var url = "http://localhost:3000/";
 function ExecuteCommand() {
   var command = $("#command").val();
   $("#currentCommand").html(command + " ➔ ");
-  var wrappedCommand = "[:command " + command + "]";
-  $.post( url, wrappedCommand, function (fromServer, status){
+  $.post( url, command, function (fromServer, status){
       $("#commandResult").html( fromServer );
       RefreshView();
   });

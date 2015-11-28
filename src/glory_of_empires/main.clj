@@ -11,6 +11,7 @@
 
 ;----------------- commands ----------------------
 
+; Commands change game-state
 
 (defn command-fn [ [ command-id opts ] ]
   (fn [ state ]
@@ -38,9 +39,9 @@
            message-id (first message) ]
       (reply
         (case message-id
-          :command (run-command (last message))
+          :random-map (run-command message)
           :map (let [ pieces (@game-state :map) ]
-                 (if (nil? pieces) ""
+                 (if (nil? pieces) "No map"
                    (xml-to-text (map-to-svg (@game-state :map) (last message))))))))))
 
 (defn -main [& args]
