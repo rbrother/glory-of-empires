@@ -6,7 +6,16 @@
 		<script type="text/javascript" src="jquery-2.1.4.js"></script>
 		<script type="text/javascript" src="glory-of-empires.js"></script>
 	</head>
-	<body style="background: #202020;">
-		<div id="mapdiv"></div>
+	<body style="background: #202020; color: white;">
+		<div>
+			Command <input style="width: 300px;" id="command" onchange="ExecuteCommand();" autofocus="true"/>
+			<span id="currentCommand" style="color: green;"/>
+			<span id="commandResult" style="color: white;"/>
+		</div>
+		<hr/>
+		<div>
+			View <input style="width: 300px;" id="viewDefinition" value="[:map {:scale 0.6}]" onchange="RefreshView();"/>
+		</div>
+		<div id="view"></div>
 	</body>
 </html>

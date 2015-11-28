@@ -100,8 +100,9 @@
 (defn- svg [ size & content ]
   (concat [ :svg (merge (width-height size) { "xmlns:xlink" "http://www.w3.org/1999/xlink" } ) ] content ))
 
-(defn map-to-svg [ map-pieces scale ]
-  (let [ bounds (bounding-rect map-pieces)
+(defn map-to-svg [ map-pieces opts ]
+  (let [ scale (get opts :scale 0.5)
+         bounds (bounding-rect map-pieces)
          min-corner (first bounds)
          svg-size (mul-vec (rect-size bounds) scale) ]
     (svg svg-size
@@ -114,9 +115,5 @@
     [ :body { :style "background: #202020;" }
       (map-to-svg map-pieces scale) ] ] )
 
-; Create example for testing
-(defn get-random-map-html-text []
-  (xml-to-text (map-to-svg-html (make-random-map 3) 0.6)))
-
-(defn get-random-map-svg-text []
-  (xml-to-text (map-to-svg (make-random-map 3) 0.6)))
+(defn get-random-map-svg-text [ opts ]
+  (xml-to-text (map-to-svg (make-random-map 3) opts)))
