@@ -1,12 +1,27 @@
 (ns glory-of-empires.main
   (:use ring.adapter.jetty)
   (:use clojure-common.utils)
+  (:use clojure-common.xml)
   (:use glory-of-empires.map)
   (:gen-class))
 
 ;----------------- game state ----------------------
 
-(def game-state (atom nil))
+(def game-state (atom { } ))
+
+;----------------- commands ----------------------
+
+
+(defn command-fn [ [ command-id opts ] ]
+  (fn [ state ]
+    (case command-id
+      :random-map (assoc state :map (make-random-map (get opts :size 3)))
+      state ; default: do nothing
+      )))
+
+(defn run-command [ command ]
+  (swap! game-state (command-fn command))
+  "done")
 
 ;----------------- web server ----------------------
 
@@ -21,11 +36,12 @@
     (println message-text)
     (let [ message (read-string message-text)
            message-id (first message) ]
-      (cond
-        (= message-id :command)
-          (reply "done")
-        (= message-id :map)
-          (reply (get-random-map-svg-text (last message)))))))
+      (reply
+        (case message-id
+          :command (run-command (last message))
+          :map (let [ pieces (@game-state :map) ]
+                 (if (nil? pieces) ""
+                   (xml-to-text (map-to-svg (@game-state :map) (last message))))))))))
 
 (defn -main [& args]
   (reset! game-state (load-from-file "game-state.clj"))

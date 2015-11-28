@@ -109,11 +109,3 @@
       (concat
         [ :g (transform { :scale scale :translate (mul-vec min-corner -1.0) } ) ]
         (map piece-to-svg map-pieces)))))
-
-(defn map-to-svg-html [ map-pieces scale ]
-  [ :html {}
-    [ :body { :style "background: #202020;" }
-      (map-to-svg map-pieces scale) ] ] )
-
-(defn get-random-map-svg-text [ opts ]
-  (xml-to-text (map-to-svg (make-random-map 3) opts)))

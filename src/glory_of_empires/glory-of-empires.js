@@ -6,16 +6,16 @@ var url = "http://localhost:3000/";
 
 function ExecuteCommand() {
   var command = $("#command").val();
-  console.log("Executing: " + command);
   $("#currentCommand").html(command + " ➔ ");
   var wrappedCommand = "[:command " + command + "]";
   $.post( url, wrappedCommand, function (fromServer, status){
-    $("#commandResult").val( fromServer );
+      $("#commandResult").html( fromServer );
+      RefreshView();
   });
   $("#command").val("");
-  RefreshView();
 }
 
+// Make view refresh periodically (only if game-state changed
 function RefreshView() {
   $.post( url, $("#viewDefinition").val(), function (fromServer, status){
     $("#view").html( fromServer );
