@@ -13,16 +13,19 @@
 
 ; Commands change game-state
 
-(defn command-fn [ [ command-id opts ] ]
-  (fn [ state ]
-    (case command-id
-      :random-map (assoc state :map (make-random-map (get opts :size 3)))
-      state ; default: do nothing
-      )))
-
 (defn run-command [ command ]
-  (swap! game-state (command-fn command))
+  (swap! game-state command)
   "done")
+
+(defn get-map
+  ( [] (get-map {}) )
+  ( [ opts ] (xml-to-text (map-to-svg (@game-state :map) opts))))
+
+(defn set-random-map
+  ( [] (set-random-map { :size 3 } ))
+  ( [ opts ]
+    (run-command
+      (fn [ state ] (assoc state :map (make-random-map (get opts :size 3)))))))
 
 ;----------------- web server ----------------------
 
@@ -35,14 +38,8 @@
   (println "------------ request received -----------")
   (let [ message-text (slurp (:body request)) ]
     (println message-text)
-    (let [ message (read-string message-text)
-           message-id (first message) ]
-      (reply
-        (case message-id
-          :random-map (run-command message)
-          :map (let [ pieces (@game-state :map) ]
-                 (if (nil? pieces) "No map"
-                   (xml-to-text (map-to-svg (@game-state :map) (last message))))))))))
+    (let [ message (read-string message-text) ]
+      (reply (eval message)))))
 
 (defn -main [& args]
   (reset! game-state (load-from-file "game-state.clj"))
