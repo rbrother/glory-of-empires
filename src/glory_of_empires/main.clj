@@ -19,7 +19,10 @@
 
 (defn get-map
   ( [] (get-map {}) )
-  ( [ opts ] (xml-to-text (map-to-svg (@game-state :map) opts))))
+  ( [ opts ]
+    (let [ m (@game-state :map) ]
+      (if (nil? m) "No map"
+        (xml-to-text (map-to-svg m opts))))))
 
 (defn set-random-map
   ( [] (set-random-map { :size 3 } ))
@@ -39,7 +42,10 @@
   (let [ message-text (slurp (:body request)) ]
     (println message-text)
     (let [ message (read-string message-text) ]
-      (reply (eval message)))))
+      (reply
+        (try
+          (eval message)
+          (catch Exception e (do (println (str e)) (str "Error: " (.getMessage e)))))))))
 
 (defn -main [& args]
   (reset! game-state (load-from-file "game-state.clj"))
