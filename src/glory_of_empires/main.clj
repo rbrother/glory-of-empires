@@ -20,8 +20,10 @@
 (defn get-map
   ( [] (get-map {}) )
   ( [ opts ]
-    (let [ m (@game-state :map) ]
-      (if (nil? m) "No map" (map-to-svg m opts)))))
+    (println opts)
+    (if (number? opts) (get-map { :scale opts })
+      (let [ m (@game-state :map) ]
+        (if (nil? m) "No map" (map-to-svg m opts))))))
 
 (defn set-random-map
   ( [] (set-random-map { :size 3 } ))
@@ -38,14 +40,18 @@
 
 (defn handle-exception [ ex ]
   (println (str ex))
-  [ :span { :style "color: #ff0000;" } (str "Error: " (.getMessage ex)) ] )
+  [ :span { :style "color: #ff0000;" } (.getMessage ex) ] )
+
+(defn eval-input [ message ]
+  (let [ call-msg (str "("  message ")" ) ]
+    (binding [*ns* (find-ns 'glory-of-empires.main)]
+      (eval (read-string call-msg)))))
 
 (defn handler [request]
   (println "------------ request received -----------")
-  (let [ message-text (slurp (:body request)) ]
-    (println message-text)
-    (let [ message (read-string message-text) ]
-      (reply (try (eval message) (catch Exception e (handle-exception e)))))))
+  (let [ message (slurp (:body request)) ]
+    (println message)
+    (reply (try (eval-input message) (catch Exception e (handle-exception e))))))
 
 (defn -main [& args]
   (reset! game-state (load-from-file "game-state.clj"))
