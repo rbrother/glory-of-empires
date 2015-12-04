@@ -1,7 +1,6 @@
 (ns glory-of-empires.map
   (:require [clojure.string :as str])
   (:use clojure-common.utils)
-  (:use clojure-common.xml)
   (:use clojure.test)
   (:use glory-of-empires.systems)
   (:gen-class))

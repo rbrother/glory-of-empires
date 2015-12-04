@@ -1,4 +1,4 @@
-(defproject glory-of-empires "0.1.0-SNAPSHOT"
+(defproject glory-of-empires "0.1.1-SNAPSHOT"
   :description "Space strategy board game"
   :url "http://brotherus.net/fixme"
   :license {:name "Eclipse Public License"
