@@ -1,11 +1,11 @@
 (ns glory-of-empires.systems)
 
 (def all-systems
-  [ { :image "1planet/Tile-Acheron.gif" }
-    { :image "1planet/Tile-Aeon.gif" }
-    { :image "1planet/Tile-Aker.gif" }
-    { :image "1planet/Tile-Ammit.gif" }
-    { :image "1planet/Tile-Amun.gif" }
+  [ { :id :acheron :image "1planet/Tile-Acheron.gif" }
+    { :id :aeon :image "1planet/Tile-Aeon.gif" }
+    { :id :aker :image "1planet/Tile-Aker.gif" }
+    { :id :ammit :image "1planet/Tile-Ammit.gif" }
+    { :id :amun :image "1planet/Tile-Amun.gif" }
     { :image "1planet/Tile-Andjety.gif" }
     { :image "1planet/Tile-Anhur.gif" }
     { :image "1planet/Tile-Ankh.gif" }
@@ -170,4 +170,13 @@
     { :image "Special/Tile-Supernova.gif" }
     { :image "Special/Tile-Tianshang-Tiangu-Changtian.gif" }
     { :image "Special/Tile-Wormhole_A.gif" }
-    { :image "Special/Tile-Wormhole_B.gif" } ] )
+    { :image "Special/Tile-Wormhole_B.gif" }
+    { :id :setup-dark-blue :image "Setup/Tile-Setup-DarkBlue.gif" }
+    { :image "Setup/Tile-Setup-LightBlue.gif" }
+    { :image "Setup/Tile-Setup-MediumBlue.gif" }
+    { :image "Setup/Tile-Setup-Red.gif" }
+    { :image "Setup/Tile-Setup-Yellow.gif" } ] )
+
+; TODO: make this hash-map instead (use index)
+(defn get-system [ id ]
+  (first (filter #(= (:id %) id) all-systems)))

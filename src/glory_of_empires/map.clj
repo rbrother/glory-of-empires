@@ -25,12 +25,12 @@
 
 (def tile-size [ 432 376 ] )
 
-(def good-letters [ "A", "B", "C", "D", "E", "F", "G",
-              "H", "J", "K", "L", "M", "N", "P",
-              "R", "S", "T", "U", "V", "X", "Y", "Z" ] )
+(def good-letters [ "a", "b", "c", "d", "e", "f", "g",
+              "h", "j", "k", "m", "n", "p",
+              "r", "s", "t", "u", "v", "z", "y", "z" ] )
 
 (defn location-id [ [ x y ] [ min-x min-y ] ]
-  (str (good-letters (- x min-x)) (+ 1 (- y min-y))))
+  (keyword (str (good-letters (- x min-x)) (+ 1 (- y min-y)))))
 
 (defn- screen-loc [ [ logical-x logical-y ] ]
   [ (* logical-x (first tile-size) 0.75)
@@ -43,24 +43,35 @@
   (let [ pos (screen-loc (:logical-pos piece)) ]
     (< (distance pos) (* (last tile-size) map-size 1.01 ))))
 
-(defn- random-system [ x y ]
-  { :logical-pos [ x y ] :system (rand-nth all-systems) } )
+(defn- setup-system [ x y ]
+  { :logical-pos [ x y ] :system (get-system :setup-dark-blue) } )
+
+(defn set-random-system [ piece ] (assoc piece :system (rand-nth all-systems)))
 
 (defn amend-tile-ids [ map-pieces ]
   (let [ min-loc (min-pos (map :logical-pos map-pieces))
          amend-tile-id (fn [tile] (assoc tile :id (location-id (:logical-pos tile) min-loc))) ]
     (map amend-tile-id map-pieces)))
 
-(defn make-random-map [ rings ]
+(defn round-board [ rings ]
   (let [ a-range (range (- rings) (inc rings)) ]
     (->> (range2d a-range a-range)
-         (map (fn [ [x y] ] (random-system x y) ))
+         (map (fn [ [x y] ] (setup-system x y) ))
          (filter #(tile-on-table? % rings))
          (amend-tile-ids) )))
 
-;------------------- ships ----------------
+(defn square-board [ width height ]
+  (let [ size (+ width height)
+         a-range (range (- size) (inc size)) ]
+    nil))
 
 
+;------------------- map operations -------------------------
+
+(defn swap-system [ board loc-id system-id ]
+  (let [ swap-system-piece (fn [ piece ]
+           (if (= (:id piece) loc-id) (assoc piece :system (get-system system-id)) piece)) ]
+      (map swap-system-piece board)))
 
 ;------------------ to svg ------------------------
 
@@ -88,7 +99,7 @@
   (let [ center (mul-vec tile-size 0.5) ]
     [ :g (transform { :translate (screen-loc logical-pos) })
       [ :image (merge { :x 0 :y 0 } (width-height tile-size) { "xlink:href" (str resources-url "Tiles/" (system :image)) } ) ]
-      (double-text id (polar 270 170)) ] ))
+      (double-text (str/upper-case (name id)) (polar 270 170)) ] ))
 
 (defn bounding-rect [ map-pieces ]
   (let [ s-locs (screen-locs map-pieces) ]

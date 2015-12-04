@@ -1,13 +1,23 @@
 (ns glory-of-empires.command
-  (:use glory-of-empires.map)
+  (:require [glory-of-empires.map :as board])
   (:require [glory-of-empires.game-state :as game-state]))
 
 (defn run-command [ command ]
   (swap! game-state/game command)
   "ok")
 
-(defn random-map
-  ( [] (random-map { :size 3 } ))
-  ( [ opts ]
+(defn board-command [ command ]
+  (run-command (fn [ game ] (update game :map command))))
+
+(defn round-board
+  ( [] (round-board 3) )
+  ( [ size ]
     (run-command
-      (fn [ state ] (assoc state :map (make-random-map (get opts :size 3)))))))
+      (fn [ state ] (assoc state :map (board/round-board size))))))
+
+(defn set-systems-random []
+  (board-command
+    (fn [ board ] (map board/set-random-system board))))
+
+(defn set-system [ loc-id system-id ]
+  (board-command #(board/swap-system % loc-id system-id)))

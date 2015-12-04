@@ -5,7 +5,6 @@
   (defn board
     ( [] (board {}) )
     ( [ opts ]
-      (println opts)
       (if (number? opts) (board { :scale opts })
         (let [ m (@game :map) ]
           (if (nil? m) "No map" (map-to-svg m opts))))))
