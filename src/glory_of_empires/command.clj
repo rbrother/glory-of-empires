@@ -12,7 +12,7 @@
   (run-command (fn [ game ] (update game :map command))))
 
 (defn- make-board-command [ new-board ]
-  (run-command (fn [ state ] (assoc state :map new-board))))
+  (run-command (fn [ game ] (assoc game :map new-board))))
 
 ;----------- commands --------------------
 
@@ -30,3 +30,6 @@
 
 (defn set-system [ loc-id system-id ]
   (board-command #(board/swap-system % loc-id system-id)))
+
+(defn del-system [ loc-id ]
+  (board-command #(dissoc % loc-id)))
