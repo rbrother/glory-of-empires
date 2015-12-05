@@ -55,7 +55,8 @@
     (->> (range2d a-range a-range)
          (filter (fn [ pos ] (< (logical-distance pos) rings)))
          (map (fn [ pos ] (setup-system pos (logical-distance pos))))
-         (amend-tile-ids) )))
+         (amend-tile-ids)
+         (index-by-id))))
 
 (defn square-board [ width height ]
   (let [ size (+ width height)
@@ -66,12 +67,10 @@
 
 (defn set-random-system [ piece ] (assoc piece :system (:id (rand-nth all-systems-arr))))
 
-(defn random-systems [ board ] (map set-random-system board))
+(defn random-systems [ board ] (map-map-values set-random-system board))
 
 (defn swap-system [ board loc-id system-id ]
-  (let [ swap-system-piece (fn [ piece ]
-           (if (= (:id piece) loc-id) (assoc piece :system system-id) piece)) ]
-      (map swap-system-piece board)))
+  (assoc-in board [ loc-id :system ] system-id))
 
 ;------------------ to svg ------------------------
 
@@ -122,9 +121,10 @@
   (concat [ :svg (merge (width-height size) { "xmlns:xlink" "http://www.w3.org/1999/xlink" } ) ] content ))
 
 (defn map-to-svg
-  ( [ map-pieces ] (map-to-svg map-pieces {} ))
-  ( [ map-pieces opts ]
-    (let [ scale (get opts :scale 0.5)
+  ( [ board ] (map-to-svg board {} ))
+  ( [ board opts ]
+    (let [ map-pieces (vals board)
+           scale (get opts :scale 0.5)
            bounds (bounding-rect map-pieces)
            min-corner (first bounds)
            svg-size (mul-vec (rect-size bounds) scale) ]
