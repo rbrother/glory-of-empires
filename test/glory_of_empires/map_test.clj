@@ -9,6 +9,7 @@
 (deftest random-map-test
   (testing "make-random-map"
     (let [ a-map (round-board 2)
+           b-map (rect-board 3 2)
            pieces (vals a-map)
            correct-screen-locs [ [-324.0 -188.0] [-324.0 188.0] [0.0 -376.0] [0.0 0.0] [0.0 376.0] [324.0 -188.0] [324.0 188.0] ]
            correct-bounding-rect [ [ -324.0 -376.0 ] [ 756.0 752.0 ] ] ]

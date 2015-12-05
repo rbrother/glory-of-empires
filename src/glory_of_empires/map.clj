@@ -17,15 +17,28 @@
   { :test (fn [] (is (= [ 8 12 ] (min-pos [ [ 7 12 ] [ 8 -4 ] ] )))) }
   [ vectors ] (apply mapv max vectors))
 
+(defn pos> [ [ x1 y1 ] [ x2 y2 ] ] (and (> x1 x2) (> y1 y2)))
+(defn pos< [ [ x1 y1 ] [ x2 y2 ] ] (and (< x1 x2) (< y1 y2)))
+
 (defn distance [ vec1 ] (Math/sqrt (apply + (map * vec1 vec1))))
 
 (defn mul-vec [ vec1 scalar ] (map * vec1 (repeat scalar)))
+
+(defn inside-rect? [ pos [ small-corner large-corner ] ]
+  (and (pos> pos small-corner) (pos< pos large-corner)))
 
 ; -------------------------- map ---------------------------------
 
 (def tile-width 432 )
 (def tile-height 376 )
 (def tile-size [ tile-width tile-height ] )
+
+(defn- screen-loc [ [ logical-x logical-y ] ]
+  [ (* logical-x tile-width 0.75)
+    (* (last tile-size) (+ (* logical-x 0.5) logical-y)) ] )
+
+(defn screen-locs [ map-pieces ]
+  (->> map-pieces (map :logical-pos) (map screen-loc)))
 
 (def good-letters [ "a", "b", "c", "d", "e", "f", "g",
               "h", "j", "k", "m", "n", "p",
@@ -43,7 +56,7 @@
 
 (defn- setup-system [ pos tile-index ]
   { :logical-pos pos
-    :system (nth setup-tiles (min 4 tile-index)) } )
+    :system (nth setup-tiles (mod tile-index 5)) } )
 
 (defn amend-tile-ids [ map-pieces ]
   (let [ min-loc (min-pos (map :logical-pos map-pieces))
@@ -58,10 +71,16 @@
          (amend-tile-ids)
          (index-by-id))))
 
-(defn square-board [ width height ]
-  (let [ size (+ width height)
+(defn rect-board [ width height ]
+  (let [ pixel-size [ (* width tile-width 0.75) (* height tile-height) ]
+         bounding-rect [ (mul-vec pixel-size -0.5) (mul-vec pixel-size 0.5) ]
+         size (+ width height)
          a-range (range (- size) (inc size)) ]
-    nil))
+    (->> (range2d a-range a-range)
+         (filter (fn [ pos ] (inside-rect? (screen-loc pos) bounding-rect)))
+         (map (fn [ pos ] (setup-system pos (logical-distance pos))))
+         (amend-tile-ids)
+         (index-by-id))))
 
 ;------------------- map operations -------------------------
 
@@ -93,13 +112,6 @@
     [ :g (transform { :translate loc })
       [ :text (merge attr { :x 2 :y 2 :fill "black" }) text ]
       [ :text attr text ] ] ))
-
-(defn- screen-loc [ [ logical-x logical-y ] ]
-  [ (* logical-x (first tile-size) 0.75)
-    (* (last tile-size) (+ (* logical-x 0.5) logical-y)) ] )
-
-(defn screen-locs [ map-pieces ]
-  (->> map-pieces (map :logical-pos) (map screen-loc)))
 
 (defn- piece-to-svg [ { logical-pos :logical-pos system-id :system id :id :as tile } ]
   (let [ center (mul-vec tile-size 0.5)

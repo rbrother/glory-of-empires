@@ -15,6 +15,12 @@
     (run-command
       (fn [ state ] (assoc state :map (board/round-board size))))))
 
+(defn rect-board
+  ( [] (rect-board 3 3) )
+  ( [ width height ]
+    (run-command
+      (fn [ state ] (assoc state :map (board/rect-board width height))))))
+
 (defn set-systems-random [] (board-command board/random-systems))
 
 (defn set-system [ loc-id system-id ]
