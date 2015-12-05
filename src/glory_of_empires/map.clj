@@ -45,8 +45,6 @@
   { :logical-pos pos
     :system (get-system (nth setup-tiles (min 4 tile-index))) } )
 
-(defn set-random-system [ piece ] (assoc piece :system (rand-nth all-systems)))
-
 (defn amend-tile-ids [ map-pieces ]
   (let [ min-loc (min-pos (map :logical-pos map-pieces))
          amend-tile-id (fn [tile] (assoc tile :id (location-id (:logical-pos tile) min-loc))) ]
@@ -65,6 +63,10 @@
     nil))
 
 ;------------------- map operations -------------------------
+
+(defn set-random-system [ piece ] (assoc piece :system (rand-nth all-systems-arr)))
+
+(defn random-systems [ board ] (map set-random-system board))
 
 (defn swap-system [ board loc-id system-id ]
   (let [ swap-system-piece (fn [ piece ]

@@ -15,9 +15,7 @@
     (run-command
       (fn [ state ] (assoc state :map (board/round-board size))))))
 
-(defn set-systems-random []
-  (board-command
-    (fn [ board ] (map board/set-random-system board))))
+(defn set-systems-random [] (board-command board/random-systems))
 
 (defn set-system [ loc-id system-id ]
   (board-command #(board/swap-system % loc-id system-id)))

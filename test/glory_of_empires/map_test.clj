@@ -1,5 +1,6 @@
 (ns glory-of-empires.map-test
   (:use clojure-common.utils)
+  (:use clojure-common.xml)
   (:require [clojure.test :refer :all]
             [glory-of-empires.map :refer :all]))
 
@@ -25,4 +26,7 @@
       (is (= (max-pos correct-screen-locs) [ 324.0 376.0 ] ))
       (is (= (bounding-rect a-map) correct-bounding-rect ))
       (is (= (rect-size correct-bounding-rect) [ 1080.0 1128.0 ] ))
+      (is (seq? (map-to-svg a-map {})))
+      (is (string? (xml-to-text (map-to-svg a-map { :scale 1.0 }))))
+      (is (seq? (random-systems a-map)))
       )))
