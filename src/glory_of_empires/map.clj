@@ -43,7 +43,7 @@
 
 (defn- setup-system [ pos tile-index ]
   { :logical-pos pos
-    :system (get-system (nth setup-tiles (min 4 tile-index))) } )
+    :system (nth setup-tiles (min 4 tile-index)) } )
 
 (defn amend-tile-ids [ map-pieces ]
   (let [ min-loc (min-pos (map :logical-pos map-pieces))
@@ -64,13 +64,13 @@
 
 ;------------------- map operations -------------------------
 
-(defn set-random-system [ piece ] (assoc piece :system (rand-nth all-systems-arr)))
+(defn set-random-system [ piece ] (assoc piece :system (:id (rand-nth all-systems-arr))))
 
 (defn random-systems [ board ] (map set-random-system board))
 
 (defn swap-system [ board loc-id system-id ]
   (let [ swap-system-piece (fn [ piece ]
-           (if (= (:id piece) loc-id) (assoc piece :system (get-system system-id)) piece)) ]
+           (if (= (:id piece) loc-id) (assoc piece :system system-id) piece)) ]
       (map swap-system-piece board)))
 
 ;------------------ to svg ------------------------
@@ -102,10 +102,14 @@
 (defn screen-locs [ map-pieces ]
   (->> map-pieces (map :logical-pos) (map screen-loc)))
 
-(defn- piece-to-svg [ { logical-pos :logical-pos system :system id :id :as tile } ]
-  (let [ center (mul-vec tile-size 0.5) ]
+(defn- piece-to-svg [ { logical-pos :logical-pos system-id :system id :id :as tile } ]
+  (let [ center (mul-vec tile-size 0.5)
+         system (get-system system-id) ]
     [ :g (transform { :translate (screen-loc logical-pos) })
-      [ :image (merge { :x 0 :y 0 } (width-height tile-size) { "xlink:href" (str resources-url "Tiles/" (system :image)) } ) ]
+      [ :image (merge
+                 { :x 0 :y 0 }
+                 (width-height tile-size)
+                 { "xlink:href" (str resources-url "Tiles/" (system :image)) } ) ]
       (double-text (str/upper-case (name id)) (polar 270 170)) ] ))
 
 (defn bounding-rect [ map-pieces ]
@@ -117,12 +121,14 @@
 (defn- svg [ size & content ]
   (concat [ :svg (merge (width-height size) { "xmlns:xlink" "http://www.w3.org/1999/xlink" } ) ] content ))
 
-(defn map-to-svg [ map-pieces opts ]
-  (let [ scale (get opts :scale 0.5)
-         bounds (bounding-rect map-pieces)
-         min-corner (first bounds)
-         svg-size (mul-vec (rect-size bounds) scale) ]
-    (svg svg-size
-      (concat
-        [ :g (transform { :scale scale :translate (mul-vec min-corner -1.0) } ) ]
-        (map piece-to-svg map-pieces)))))
+(defn map-to-svg
+  ( [ map-pieces ] (map-to-svg map-pieces {} ))
+  ( [ map-pieces opts ]
+    (let [ scale (get opts :scale 0.5)
+           bounds (bounding-rect map-pieces)
+           min-corner (first bounds)
+           svg-size (mul-vec (rect-size bounds) scale) ]
+      (svg svg-size
+        (concat
+          [ :g (transform { :scale scale :translate (mul-vec min-corner -1.0) } ) ]
+          (map piece-to-svg map-pieces))))))
