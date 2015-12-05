@@ -1,181 +1,172 @@
 (ns glory-of-empires.systems)
 
 (def all-systems
-  [ { :id :acheron :image "1planet/Tile-Acheron.gif" }
-    { :id :aeon :image "1planet/Tile-Aeon.gif" }
-    { :id :aker :image "1planet/Tile-Aker.gif" }
-    { :id :ammit :image "1planet/Tile-Ammit.gif" }
-    { :id :amun :image "1planet/Tile-Amun.gif" }
-    { :image "1planet/Tile-Andjety.gif" }
-    { :image "1planet/Tile-Anhur.gif" }
-    { :image "1planet/Tile-Ankh.gif" }
-    { :image "1planet/Tile-Anuket.gif" }
-    { :image "1planet/Tile-Apis.gif" }
-    { :image "1planet/Tile-Asgard.gif" }
-    { :image "1planet/Tile-Asgard_III.gif" }
-    { :image "1planet/Tile-Astennu.gif" }
-    { :image "1planet/Tile-Aten.gif" }
-    { :image "1planet/Tile-Babi.gif" }
-    { :image "1planet/Tile-Bakha.gif" }
-    { :image "1planet/Tile-Bast.gif" }
-    { :image "1planet/Tile-Beriyil.gif" }
-    { :image "1planet/Tile-Bes.gif" }
-    { :image "1planet/Tile-Capha.gif" }
-    { :image "1planet/Tile-Chensit.gif" }
-    { :image "1planet/Tile-Chnum.gif" }
-    { :image "1planet/Tile-Chuuka.gif" }
-    { :image "1planet/Tile-Cicerus.gif" }
-    { :image "1planet/Tile-Coruscant.gif" }
-    { :image "1planet/Tile-Dedun.gif" }
-    { :image "1planet/Tile-Deimo.gif" }
-    { :image "1planet/Tile-Discworld.gif" }
-    { :image "1planet/Tile-Dune.gif" }
-    { :image "1planet/Tile-Elnath.gif" }
-    { :image "1planet/Tile-Everra.gif" }
-    { :image "1planet/Tile-Faunus.gif" }
-    { :image "1planet/Tile-Fiorina.gif" }
-    { :image "1planet/Tile-FloydIV.gif" }
-    { :image "1planet/Tile-Garbozia.gif" }
-    { :image "1planet/Tile-Heimat.gif" }
-    { :image "1planet/Tile-Hopes_End.gif" }
-    { :image "1planet/Tile-Inaak.gif" }
-    { :image "1planet/Tile-Industrex.gif" }
-    { :image "1planet/Tile-Iskra.gif" }
-    { :image "1planet/Tile-Ithaki.gif" }
-    { :image "1planet/Tile-Kanite.gif" }
-    { :image "1planet/Tile-Kauket.gif" }
-    { :image "1planet/Tile-Kazenoeki.gif" }
-    { :image "1planet/Tile-Khepri.gif" }
-    { :image "1planet/Tile-Khnum.gif" }
-    { :image "1planet/Tile-Klendathu.gif" }
-    { :image "1planet/Tile-Kobol.gif" }
-    { :image "1planet/Tile-Laurin.gif" }
-    { :image "1planet/Tile-Lesab.gif" }
-    { :image "1planet/Tile-Lodor.gif" }
-    { :image "1planet/Tile-Lv426.gif" }
-    { :image "1planet/Tile-Medusa_V.gif" }
-    { :image "1planet/Tile-Mehar_Xull.gif" }
-    { :image "1planet/Tile-Mirage.gif" }
-    { :image "1planet/Tile-Myrkr.gif" }
-    { :image "1planet/Tile-Nanan.gif" }
-    { :image "1planet/Tile-Natthar.gif" }
-    { :image "1planet/Tile-Nef.gif" }
-    { :image "1planet/Tile-Nexus.gif" }
-    { :image "1planet/Tile-Niiwa-Sei.gif" }
-    { :image "1planet/Tile-Pakhet.gif" }
-    { :image "1planet/Tile-Parzifal.gif" }
-    { :image "1planet/Tile-Perimeter.gif" }
-    { :image "1planet/Tile-Petbe.gif" }
-    { :image "1planet/Tile-Primor.gif" }
-    { :image "1planet/Tile-Ptah.gif" }
-    { :image "1planet/Tile-Qetesh.gif" }
-    { :image "1planet/Tile-Quann.gif" }
-    { :image "1planet/Tile-Radon.gif" }
-    { :image "1planet/Tile-Saudor.gif" }
-    { :image "1planet/Tile-Sem-Lore.gif" }
-    { :image "1planet/Tile-Shai.gif" }
-    { :image "1planet/Tile-Shool.gif" }
-    { :image "1planet/Tile-Solitude.gif" }
-    { :image "1planet/Tile-Sulako.gif" }
-    { :image "1planet/Tile-Suuth.gif" }
-    { :image "1planet/Tile-Tarmann.gif" }
-    { :image "1planet/Tile-Tefnut.gif" }
-    { :image "1planet/Tile-Tempesta.gif" }
-    { :image "1planet/Tile-Tenenit.gif" }
-    { :image "1planet/Tile-Theom.gif" }
-    { :image "1planet/Tile-Thibah.gif" }
-    { :image "1planet/Tile-Ubuntu.gif" }
-    { :image "1planet/Tile-Vefut_II.gif" }
-    { :image "1planet/Tile-Wadjet.gif" }
-    { :image "1planet/Tile-Wellon.gif" }
-    { :image "1planet/Tile-Wepwawet.gif" }
-    { :image "2planet/Tile-Abyz-Fria.gif" }
-    { :image "2planet/Tile-Achill.gif" }
-    { :image "2planet/Tile-AeternaTammuz.gif" }
-    { :image "2planet/Tile-Arinam-Meer.gif" }
-    { :image "2planet/Tile-Arnor-Lor.gif" }
-    { :image "2planet/Tile-Aztlan-Senhora.gif" }
-    { :image "2planet/Tile-Bereg-Lirta_IV.gif" }
-    { :image "2planet/Tile-Bondar-MacLean.gif" }
-    { :image "2planet/Tile-Cato.gif" }
-    { :image "2planet/Tile-Centauri-Gral.gif" }
-    { :image "2planet/Tile-Coorneeq-Resculon.gif" }
-    { :image "2planet/Tile-Custos-Xhal.gif" }
-    { :image "2planet/Tile-Dal_Bootha-Xxehan.gif" }
-    { :image "2planet/Tile-Garneau-Hadfield.gif" }
-    { :image "2planet/Tile-Gilea-Xerel_Wu.gif" }
-    { :image "2planet/Tile-Gurmee-Uguza.gif" }
-    { :image "2planet/Tile-Hana.gif" }
-    { :image "2planet/Tile-Hercalor-Tiamat.gif" }
-    { :image "2planet/Tile-Kazaros-Mirabar.gif" }
-    { :image "2planet/Tile-Lazar-Sakulag.gif" }
-    { :image "2planet/Tile-Lisis-Velnor.gif" }
-    { :image "2planet/Tile-MachallSorkragh.gif" }
-    { :image "2planet/Tile-Masada-Jamiah.gif" }
-    { :image "2planet/Tile-Massada-Iuddaea.gif" }
-    { :image "2planet/Tile-Mellon-Zohbat.gif" }
-    { :image "2planet/Tile-Nadir-Lucus.gif" }
-    { :image "2planet/Tile-New_Albion-Starpoint.gif" }
-    { :image "2planet/Tile-Nummantia-Hisspania.gif" }
-    { :image "2planet/Tile-OthorAiel.gif" }
-    { :image "2planet/Tile-Pankow-Prenzlberg.gif" }
-    { :image "2planet/Tile-Perro-Senno.gif" }
-    { :image "2planet/Tile-Qucenn-Rarron.gif" }
-    { :image "2planet/Tile-Renenutet-Osiris.gif" }
-    { :image "2planet/Tile-Renpet-Tawaret.gif" }
-    { :image "2planet/Tile-Resheph-Ogdoad.gif" }
-    { :image "2planet/Tile-SalemIogu.gif" }
-    { :image "2planet/Tile-Shiva-Wishnu.gif" }
-    { :image "2planet/Tile-SullaMartinez.gif" }
-    { :image "2planet/Tile-Sumerian-Arcturus.gif" }
-    { :image "2planet/Tile-Temujin-Avanti.gif" }
-    { :image "2planet/Tile-Tequran-Torkan.gif" }
-    { :image "2planet/Tile-Thoth-Mafdet.gif" }
-    { :image "2planet/Tile-Tsion-Bellatrix.gif" }
-    { :image "2planet/Tile-Vega.gif" }
-    { :image "2planet/Tile-Verne-Quebec.gif" }
-    { :image "2planet/Tile-Vortekai-Deguzz.gif" }
-    { :image "Special/Tile-3-Ashtroth-Loki-Abaddon.gif" }
-    { :image "Special/Tile-3-Rigel.gif" }
-    { :image "Special/Tile-Ancient_Minefield.gif" }
-    { :image "Special/Tile-Ashtroth-Loki-Abaddon.gif" }
-    { :image "Special/Tile-Asteroid_Field.gif" }
-    { :image "Special/Tile-Asteroid_Field2.gif" }
-    { :image "Special/Tile-Asteroid_Nexus.gif" }
-    { :image "Special/Tile-Babylon_5.gif" }
-    { :image "Special/Tile-BlackHole.gif" }
-    { :image "Special/Tile-China.gif" }
-    { :image "Special/Tile-Citadel.gif" }
-    { :image "Special/Tile-Cormund.gif" }
-    { :image "Special/Tile-Elder-Card.gif" }
-    { :image "Special/Tile-Elder-Uhuru-Amani.gif" }
-    { :image "Special/Tile-Empty.gif" }
-    { :image "Special/Tile-Galactic_Storm.gif" }
-    { :image "Special/Tile-Gravity Rift.gif" }
-    { :image "Special/Tile-Gravity_Well.gif" }
-    { :image "Special/Tile-Gravity_rift.gif" }
-    { :image "Special/Tile-Ion_Storm.gif" }
-    { :image "Special/Tile-Ion_Storm2.gif" }
-    { :image "Special/Tile-Mecatol_Rex.gif" }
-    { :image "Special/Tile-Mecatol_Rex09.gif" }
-    { :image "Special/Tile-Muaat-Supernova.gif" }
-    { :image "Special/Tile-Nebula.gif" }
-    { :image "Special/Tile-Nebula_Nexus.gif" }
-    { :image "Special/Tile-OldMecatolRex.gif" }
-    { :image "Special/Tile-Orion2.gif" }
-    { :image "Special/Tile-Pulsar.gif" }
-    { :image "Special/Tile-Quantum_Singularity.gif" }
-    { :image "Special/Tile-Rigel.gif" }
-    { :image "Special/Tile-Summer_Palace.gif" }
-    { :image "Special/Tile-Supernova.gif" }
-    { :image "Special/Tile-Tianshang-Tiangu-Changtian.gif" }
-    { :image "Special/Tile-Wormhole_A.gif" }
-    { :image "Special/Tile-Wormhole_B.gif" }
+  [ { :id :acheron  :image "1planet/Tile-Acheron.gif" }
+    { :id :aeon     :image "1planet/Tile-Aeon.gif" }
+    { :id :aker     :image "1planet/Tile-Aker.gif" }
+    { :id :ammit    :image "1planet/Tile-Ammit.gif" }
+    { :id :amun     :image "1planet/Tile-Amun.gif" }
+    { :id :andjety  :image "1planet/Tile-Andjety.gif" }
+    { :id :anhur    :image "1planet/Tile-Anhur.gif" }
+    { :id :ankh     :image "1planet/Tile-Ankh.gif" }
+    { :id :anuket   :image "1planet/Tile-Anuket.gif" }
+    { :id :apis     :image "1planet/Tile-Apis.gif" }
+    { :id :asgard   :image "1planet/Tile-Asgard.gif" }
+    { :id :asgard3  :image "1planet/Tile-Asgard_III.gif" }
+    { :id :astennu  :image "1planet/Tile-Astennu.gif" }
+    { :id :aten :image "1planet/Tile-Aten.gif" }
+    { :id :babi :image "1planet/Tile-Babi.gif" }
+    { :id :bakha :image "1planet/Tile-Bakha.gif" }
+    { :id :bast :image "1planet/Tile-Bast.gif" }
+    { :id :beriyil :image "1planet/Tile-Beriyil.gif" }
+    { :id :bes :image "1planet/Tile-Bes.gif" }
+    { :id :capha :image "1planet/Tile-Capha.gif" }
+    { :id :chensit :image "1planet/Tile-Chensit.gif" }
+    { :id :chnum :image "1planet/Tile-Chnum.gif" }
+    { :id :chuuka :image "1planet/Tile-Chuuka.gif" }
+    { :id :cicerus :image "1planet/Tile-Cicerus.gif" }
+    { :id :coruscant :image "1planet/Tile-Coruscant.gif" }
+    { :id :dedun :image "1planet/Tile-Dedun.gif" }
+    { :id :deimo :image "1planet/Tile-Deimo.gif" }
+    { :id :discworld :image "1planet/Tile-Discworld.gif" }
+    { :id :dune :image "1planet/Tile-Dune.gif" }
+    { :id :elnath :image "1planet/Tile-Elnath.gif" }
+    { :id :everra :image "1planet/Tile-Everra.gif" }
+    { :id :faunus :image "1planet/Tile-Faunus.gif" }
+    { :id :fiorina :image "1planet/Tile-Fiorina.gif" }
+    { :id :floyd4 :image "1planet/Tile-FloydIV.gif" }
+    { :id :garbozia :image "1planet/Tile-Garbozia.gif" }
+    { :id :heimat :image "1planet/Tile-Heimat.gif" }
+    { :id :hopes-end :image "1planet/Tile-Hopes_End.gif" }
+    { :id :inaak :image "1planet/Tile-Inaak.gif" }
+    { :id :industrex :image "1planet/Tile-Industrex.gif" }
+    { :id :iskra :image "1planet/Tile-Iskra.gif" }
+    { :id :ithaki :image "1planet/Tile-Ithaki.gif" }
+    { :id :kanite :image "1planet/Tile-Kanite.gif" }
+    { :id :kauket :image "1planet/Tile-Kauket.gif" }
+    { :id :kazenoeki :image "1planet/Tile-Kazenoeki.gif" }
+    { :id :khepri :image "1planet/Tile-Khepri.gif" }
+    { :id :khnum :image "1planet/Tile-Khnum.gif" }
+    { :id :klendathu :image "1planet/Tile-Klendathu.gif" }
+    { :id :kobol :image "1planet/Tile-Kobol.gif" }
+    { :id :laurin :image "1planet/Tile-Laurin.gif" }
+    { :id :lesab :image "1planet/Tile-Lesab.gif" }
+    { :id :lodor :image "1planet/Tile-Lodor.gif" }
+    { :id :lv426 :image "1planet/Tile-Lv426.gif" }
+    { :id :medusa-v :image "1planet/Tile-Medusa_V.gif" }
+    { :id :mehar-xull :image "1planet/Tile-Mehar_Xull.gif" }
+    { :id :mirage :image "1planet/Tile-Mirage.gif" }
+    { :id :myrkr :image "1planet/Tile-Myrkr.gif" }
+    { :id :nanan :image "1planet/Tile-Nanan.gif" }
+    { :id :natthar :image "1planet/Tile-Natthar.gif" }
+    { :id :nef :image "1planet/Tile-Nef.gif" }
+    { :id :nexus :image "1planet/Tile-Nexus.gif" }
+    { :id :niiwa-sei :image "1planet/Tile-Niiwa-Sei.gif" }
+    { :id :pakhet :image "1planet/Tile-Pakhet.gif" }
+    { :id :parzifal :image "1planet/Tile-Parzifal.gif" }
+    { :id :perimeter :image "1planet/Tile-Perimeter.gif" }
+    { :id :petbe :image "1planet/Tile-Petbe.gif" }
+    { :id :primor :image "1planet/Tile-Primor.gif" }
+    { :id :ptah :image "1planet/Tile-Ptah.gif" }
+    { :id :qetesh :image "1planet/Tile-Qetesh.gif" }
+    { :id :quann :image "1planet/Tile-Quann.gif" }
+    { :id :radon :image "1planet/Tile-Radon.gif" }
+    { :id :saudor :image "1planet/Tile-Saudor.gif" }
+    { :id :sem-lore :image "1planet/Tile-Sem-Lore.gif" }
+    { :id :shai :image "1planet/Tile-Shai.gif" }
+    { :id :shool :image "1planet/Tile-Shool.gif" }
+    { :id :solitude :image "1planet/Tile-Solitude.gif" }
+    { :id :sulako :image "1planet/Tile-Sulako.gif" }
+    { :id :suuth :image "1planet/Tile-Suuth.gif" }
+    { :id :tarmann :image "1planet/Tile-Tarmann.gif" }
+    { :id :tefnut :image "1planet/Tile-Tefnut.gif" }
+    { :id :tempesta :image "1planet/Tile-Tempesta.gif" }
+    { :id :tenenit :image "1planet/Tile-Tenenit.gif" }
+    { :id :theom :image "1planet/Tile-Theom.gif" }
+    { :id :thibah :image "1planet/Tile-Thibah.gif" }
+    { :id :ubuntu :image "1planet/Tile-Ubuntu.gif" }
+    { :id :vefut2 :image "1planet/Tile-Vefut_II.gif" }
+    { :id :wadjet :image "1planet/Tile-Wadjet.gif" }
+    { :id :wellon :image "1planet/Tile-Wellon.gif" }
+    { :id :wepwawet :image "1planet/Tile-Wepwawet.gif" }
+    { :id :abyz-fria :image "2planet/Tile-Abyz-Fria.gif" }
+    { :id :achill :image "2planet/Tile-Achill.gif" }
+    { :id :aeterna-tammuz :image "2planet/Tile-AeternaTammuz.gif" }
+    { :id :arinam-meer :image "2planet/Tile-Arinam-Meer.gif" }
+    { :id :arnor-lor :image "2planet/Tile-Arnor-Lor.gif" }
+    { :id :aztlan-senhora :image "2planet/Tile-Aztlan-Senhora.gif" }
+    { :id :bereg-lirta4 :image "2planet/Tile-Bereg-Lirta_IV.gif" }
+    { :id :bondar-maclean :image "2planet/Tile-Bondar-MacLean.gif" }
+    { :id :cato :image "2planet/Tile-Cato.gif" }
+    { :id :centauri-gral :image "2planet/Tile-Centauri-Gral.gif" }
+    { :id :coorneeq-resculon :image "2planet/Tile-Coorneeq-Resculon.gif" }
+    { :id :custos-xhal :image "2planet/Tile-Custos-Xhal.gif" }
+    { :id :dal-bootha-xxehan :image "2planet/Tile-Dal_Bootha-Xxehan.gif" }
+    { :id :garneau-hadfield :image "2planet/Tile-Garneau-Hadfield.gif" }
+    { :id :gilea-xerel-wu :image "2planet/Tile-Gilea-Xerel_Wu.gif" }
+    { :id :gurmee-uguza :image "2planet/Tile-Gurmee-Uguza.gif" }
+    { :id :hana :image "2planet/Tile-Hana.gif" }
+    { :id :hercalor-tiamat :image "2planet/Tile-Hercalor-Tiamat.gif" }
+    { :id :kazaros-mirabar :image "2planet/Tile-Kazaros-Mirabar.gif" }
+    { :id :lazar-sakulag :image "2planet/Tile-Lazar-Sakulag.gif" }
+    { :id :lisis-velnor :image "2planet/Tile-Lisis-Velnor.gif" }
+    { :id :machall-sorkragh :image "2planet/Tile-MachallSorkragh.gif" }
+    { :id :masada-jamiah :image "2planet/Tile-Masada-Jamiah.gif" }
+    { :id :massada-iuddaea :image "2planet/Tile-Massada-Iuddaea.gif" }
+    { :id :mellon-zohbat :image "2planet/Tile-Mellon-Zohbat.gif" }
+    { :id :nadir-lucus :image "2planet/Tile-Nadir-Lucus.gif" }
+    { :id :new-albion-starpoint :image "2planet/Tile-New_Albion-Starpoint.gif" }
+    { :id :nummantia-hisspania :image "2planet/Tile-Nummantia-Hisspania.gif" }
+    { :id :othorAiel :image "2planet/Tile-OthorAiel.gif" }
+    { :id :pankow-prenzlberg :image "2planet/Tile-Pankow-Prenzlberg.gif" }
+    { :id :perro-senno :image "2planet/Tile-Perro-Senno.gif" }
+    { :id :qucenn-rarron :image "2planet/Tile-Qucenn-Rarron.gif" }
+    { :id :renenutet-osiris :image "2planet/Tile-Renenutet-Osiris.gif" }
+    { :id :renpet-tawaret :image "2planet/Tile-Renpet-Tawaret.gif" }
+    { :id :resheph-ogdoad :image "2planet/Tile-Resheph-Ogdoad.gif" }
+    { :id :salem-iogu :image "2planet/Tile-SalemIogu.gif" }
+    { :id :shiva-wishnu :image "2planet/Tile-Shiva-Wishnu.gif" }
+    { :id :sulla-martinez :image "2planet/Tile-SullaMartinez.gif" }
+    { :id :sumerian-arcturus :image "2planet/Tile-Sumerian-Arcturus.gif" }
+    { :id :temujin-avanti :image "2planet/Tile-Temujin-Avanti.gif" }
+    { :id :tequran-torkan :image "2planet/Tile-Tequran-Torkan.gif" }
+    { :id :thoth-mafdet :image "2planet/Tile-Thoth-Mafdet.gif" }
+    { :id :tsion-bellatrix :image "2planet/Tile-Tsion-Bellatrix.gif" }
+    { :id :vega :image "2planet/Tile-Vega.gif" }
+    { :id :verne-quebec :image "2planet/Tile-Verne-Quebec.gif" }
+    { :id :vortekai-deguzz :image "2planet/Tile-Vortekai-Deguzz.gif" }
+    { :id :ashtroth-loki-abaddon :image "3planet/Tile-Ashtroth-Loki-Abaddon.gif" }
+    { :id :rigel :image "3planet/Tile-Rigel.gif" }
+    { :id :elder-uhuru-amani :image "3planet/Tile-Elder-Uhuru-Amani.gif" }
+    { :id :tianshang-tiangu-changtian :image "3planet/Tile-Tianshang-Tiangu-Changtian.gif" }
+    { :id :ancient-minefield :image "Special/Tile-Ancient_Minefield.gif" }
+    { :id :asteroid-field :image "Special/Tile-Asteroid_Field.gif" }
+    { :id :babylon5 :image "Special/Tile-Babylon_5.gif" }
+    { :id :blackHole :image "Special/Tile-BlackHole.gif" }
+    { :id :citadel :image "Special/Tile-Citadel.gif" }
+    { :id :cormund :image "Special/Tile-Cormund.gif" }
+    { :id :empty :image "Special/Tile-Empty.gif" }
+    { :id :galactic-storm :image "Special/Tile-Galactic_Storm.gif" }
+    { :id :gravity-well :image "Special/Tile-Gravity_Well.gif" }
+    { :id :gravity-rift :image "Special/Tile-Gravity_rift.gif" }
+    { :id :ion-storm :image "Special/Tile-Ion_Storm.gif" }
+    { :id :mecatol-rex :image "Special/Tile-Mecatol_Rex.gif" }
+    { :id :mecatol-rex09 :image "Special/Tile-Mecatol_Rex09.gif" }
+    { :id :muaat-supernova :image "Special/Tile-Muaat-Supernova.gif" }
+    { :id :nebula :image "Special/Tile-Nebula.gif" }
+    { :id :old-mecatol-rex :image "Special/Tile-OldMecatolRex.gif" }
+    { :id :orion2 :image "Special/Tile-Orion2.gif" }
+    { :id :pulsar :image "Special/Tile-Pulsar.gif" }
+    { :id :quantum-singularity :image "Special/Tile-Quantum_Singularity.gif" }
+    { :id :summer-palace :image "Special/Tile-Summer_Palace.gif" }
+    { :id :Supernova :image "Special/Tile-Supernova.gif" }
+    { :id :wormhole-a :image "Special/Tile-Wormhole_A.gif" }
+    { :id :wormhole-b :image "Special/Tile-Wormhole_B.gif" }
     { :id :setup-dark-blue :image "Setup/Tile-Setup-DarkBlue.gif" }
-    { :image "Setup/Tile-Setup-LightBlue.gif" }
-    { :image "Setup/Tile-Setup-MediumBlue.gif" }
-    { :image "Setup/Tile-Setup-Red.gif" }
-    { :image "Setup/Tile-Setup-Yellow.gif" } ] )
+    { :id :setup-light-blue :image "Setup/Tile-Setup-LightBlue.gif" }
+    { :id :setup-medium-blue :image "Setup/Tile-Setup-MediumBlue.gif" }
+    { :id :setup-red :image "Setup/Tile-Setup-Red.gif" }
+    { :id :setup-yellow :image "Setup/Tile-Setup-Yellow.gif" } ] )
 
 ; TODO: make this hash-map instead (use index)
 (defn get-system [ id ]
