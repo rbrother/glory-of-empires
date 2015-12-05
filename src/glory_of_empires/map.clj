@@ -63,24 +63,21 @@
          amend-tile-id (fn [tile] (assoc tile :id (location-id (:logical-pos tile) min-loc))) ]
     (map amend-tile-id map-pieces)))
 
-(defn round-board [ rings ]
-  (let [ a-range (range (- rings) (inc rings)) ]
+(defn- make-board [ initial-range-size piece-filter ]
+  (let [ a-range (range (- initial-range-size) (inc initial-range-size)) ]
     (->> (range2d a-range a-range)
-         (filter (fn [ pos ] (< (logical-distance pos) rings)))
+         (filter piece-filter)
          (map (fn [ pos ] (setup-system pos (logical-distance pos))))
          (amend-tile-ids)
          (index-by-id))))
 
+(defn round-board [ rings ]
+  (make-board rings (fn [ pos ] (< (logical-distance pos) rings))))
+
 (defn rect-board [ width height ]
   (let [ pixel-size [ (* width tile-width 0.75) (* height tile-height) ]
-         bounding-rect [ (mul-vec pixel-size -0.5) (mul-vec pixel-size 0.5) ]
-         size (+ width height)
-         a-range (range (- size) (inc size)) ]
-    (->> (range2d a-range a-range)
-         (filter (fn [ pos ] (inside-rect? (screen-loc pos) bounding-rect)))
-         (map (fn [ pos ] (setup-system pos (logical-distance pos))))
-         (amend-tile-ids)
-         (index-by-id))))
+         bounding-rect [ (mul-vec pixel-size -0.5) (mul-vec pixel-size 0.5) ] ]
+    (make-board (+ width height) (fn [ pos ] (inside-rect? (screen-loc pos) bounding-rect)))))
 
 ;------------------- map operations -------------------------
 
