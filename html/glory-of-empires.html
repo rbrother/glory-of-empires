@@ -9,13 +9,25 @@
 	<body style="background: #202020; color: white;">
 		<div>
 			Command <input style="width: 300px;" id="command" onchange="ExecuteCommand();" autofocus="true"/>
-			<span id="currentCommand" style="color: green;"></span>
-			<span id="commandResult" style="color: white;"></span>
-		</div>
+      Examples
+      <select>
+        <option>round-board 3</option>
+        <option>rect-board 10 5</option>
+        <option>set-systems-random</option>
+        <option>set-system :c4 :mecatol-rex</option>
+      </select>
+    </div>
+    <div>
+      <span id="currentCommand" style="color: green;"></span>
+      <span id="commandResult" style="color: white;"></span>
+    </div>
 		<hr/>
 		<div>
 			View <input style="width: 300px;" id="viewDefinition" value="board" onchange="RefreshView();"/>
-			<span id="viewResult"></span>
+      Examples
+      <select>
+        <option>board 0.6</option>
+      </select>      
 		</div>
 		<div id="view" style="margin: 8px;"></div>
 	</body>

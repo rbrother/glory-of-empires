@@ -16,10 +16,8 @@ function ExecuteCommand() {
 
 // Make view refresh periodically (only if game-state changed
 function RefreshView() {
-  $("#viewResult").html("");
   var viewDef = "(view/" + $("#viewDefinition").val() + ")"; 
   $.post( url, viewDef, function (fromServer, status){
-    $("#viewResult").html("done");
     $("#view").html( fromServer );
   });
 
