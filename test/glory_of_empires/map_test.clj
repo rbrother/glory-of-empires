@@ -1,4 +1,5 @@
 (ns glory-of-empires.map-test
+  (:use clojure-common.utils)
   (:require [clojure.test :refer :all]
             [glory-of-empires.map :refer :all]))
 
@@ -6,19 +7,19 @@
 
 (deftest random-map-test
   (testing "make-random-map"
-    (let [ a-map (round-board 1)
+    (let [ a-map (round-board 2)
            correct-screen-locs [ [-324.0 -188.0] [-324.0 188.0] [0.0 -376.0] [0.0 0.0] [0.0 376.0] [324.0 -188.0] [324.0 188.0] ]
            correct-bounding-rect [ [ -324.0 -376.0 ] [ 756.0 752.0 ] ] ]
       (is (= (location-id [ -3 4 ] [ -5 -6 ] ) :c11 ))
       (is (=
         a-map
-        [ { :logical-pos [-1 0], :system {:id :setup-dark-blue, :image "Setup/Tile-Setup-DarkBlue.gif"}, :id :a2 }
-          { :logical-pos [-1 1], :system {:id :setup-dark-blue, :image "Setup/Tile-Setup-DarkBlue.gif"}, :id :a3 }
-          { :logical-pos [0 -1], :system {:id :setup-dark-blue, :image "Setup/Tile-Setup-DarkBlue.gif"}, :id :b1 }
-          { :logical-pos [0 0], :system {:id :setup-dark-blue, :image "Setup/Tile-Setup-DarkBlue.gif"}, :id :b2 }
-          { :logical-pos [0 1], :system {:id :setup-dark-blue, :image "Setup/Tile-Setup-DarkBlue.gif"}, :id :b3 }
-          { :logical-pos [1 -1], :system {:id :setup-dark-blue, :image "Setup/Tile-Setup-DarkBlue.gif"}, :id :c1 }
-          { :logical-pos [1 0], :system {:id :setup-dark-blue, :image "Setup/Tile-Setup-DarkBlue.gif"}, :id :c2 } ] ))
+        [ { :logical-pos [-1 0], :system {:id :setup-yellow, :image "Setup/Tile-Setup-Yellow.gif"}, :id :a2 }
+          { :logical-pos [-1 1], :system {:id :setup-yellow, :image "Setup/Tile-Setup-Yellow.gif"}, :id :a3 }
+          { :logical-pos [0 -1], :system {:id :setup-yellow, :image "Setup/Tile-Setup-Yellow.gif"}, :id :b1 }
+          { :logical-pos [0 0], :system {:id :setup-red, :image "Setup/Tile-Setup-Red.gif"}, :id :b2 }
+          { :logical-pos [0 1], :system {:id :setup-yellow, :image "Setup/Tile-Setup-Yellow.gif"}, :id :b3 }
+          { :logical-pos [1 -1], :system {:id :setup-yellow, :image "Setup/Tile-Setup-Yellow.gif"}, :id :c1 }
+          { :logical-pos [1 0], :system {:id :setup-yellow, :image "Setup/Tile-Setup-Yellow.gif"}, :id :c2 } ] ))
       (is (= (screen-locs a-map) correct-screen-locs ))
       (is (= (min-pos correct-screen-locs) [-324.0 -376.0] ))
       (is (= (max-pos correct-screen-locs) [ 324.0 376.0 ] ))
