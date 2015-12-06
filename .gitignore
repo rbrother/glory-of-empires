@@ -11,3 +11,4 @@ pom.xml.asc
 .hg/
 # temp map generated for testing
 map.html
+game-state.clj
