@@ -6,6 +6,7 @@
 
 (defn- run-command [ command ]
   (swap! game-state/game command)
+  (game-state/save-game-async)
   "ok")
 
 (defn- board-command [ command ]
@@ -14,7 +15,7 @@
 (defn- make-board-command [ new-board ]
   (run-command (fn [ game ] (assoc game :map new-board))))
 
-;----------- commands --------------------
+;----------- map commands --------------------
 
 (defn round-board
   ( [] (round-board 3) )
