@@ -34,3 +34,10 @@
 
 (defn del-system [ loc-id ]
   (board-command #(dissoc % loc-id)))
+
+;------------ ship commands ------------------
+
+(defn new-ship [ loc-id owner type ]
+  (board-command #(board/new-ship loc-id owner type % )))
+
+(defn del-ship [ ship-id ] nil )

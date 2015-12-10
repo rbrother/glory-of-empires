@@ -34,6 +34,7 @@
 (def tile-size [ tile-width tile-height ] )
 
 (defn- screen-loc [ [ logical-x logical-y ] ]
+  { :pre [ (integer? logical-x) (integer? logical-y) ] }
   [ (* logical-x tile-width 0.75)
     (* (last tile-size) (+ (* logical-x 0.5) logical-y)) ] )
 
@@ -85,8 +86,24 @@
 
 (defn random-systems [ board ] (map-map-values set-random-system board))
 
-(defn swap-system [ board loc-id system-id ]
+(defn swap-system [ loc-id system-id board ]
+  { :pre [ (contains? board loc-id) ] }
   (assoc-in board [ loc-id :system ] system-id))
+
+;-------------------- ships --------------------------
+
+(defn new-ship-to-piece [ { controller :controller ships :ships :as piece } owner type ]
+  (let [ controller (piece :controller)
+         initial-ships (or ships [])
+         new-id "de123" ]
+    (if (and (not (empty? ships)) (not= controller owner))
+      (throw (Exception. "Cannot add ship of different"))
+      (merge piece { :controller owner :ships (conj initial-ships { :type type :id new-id }) } ))))
+
+(defn new-ship [ loc-id owner type board ]
+  { :pre [ (contains? board loc-id) ] }
+  ; TODO: validate that the ship type is within the values all-ship-types
+  (update-in board [ loc-id ] new-ship-to-piece owner type))
 
 ;------------------ to svg ------------------------
 
