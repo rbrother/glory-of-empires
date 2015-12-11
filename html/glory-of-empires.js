@@ -14,6 +14,10 @@ function ExecuteCommand() {
   $("#command").val("");
 }
 
+function ExampleChanged() {
+  $("#command").val( $("#examples option:selected").text() );
+}
+
 // Make view refresh periodically (only if game-state changed
 function RefreshView() {
   var viewDef = "(view/" + $("#viewDefinition").val() + ")"; 

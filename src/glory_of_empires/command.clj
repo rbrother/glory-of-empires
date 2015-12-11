@@ -30,7 +30,7 @@
 (defn set-systems-random [] (board-command board/random-systems))
 
 (defn set-system [ loc-id system-id ]
-  (board-command #(board/swap-system % loc-id system-id)))
+  (board-command #(board/swap-system loc-id system-id %)))
 
 (defn del-system [ loc-id ]
   (board-command #(dissoc % loc-id)))
