@@ -3,6 +3,7 @@
   (:use clojure-common.utils)
   (:use clojure.test)
   (:use glory-of-empires.systems)
+  (:use glory-of-empires.ships)
   (:gen-class))
 
 (def resources-url "http://www.brotherus.net/ti3/")
@@ -101,8 +102,8 @@
       (merge piece { :controller owner :ships (conj initial-ships { :type type :id new-id }) } ))))
 
 (defn new-ship [ loc-id owner type board ]
-  { :pre [ (contains? board loc-id) ] }
-  ; TODO: validate that the ship type is within the values all-ship-types
+  { :pre [ (contains? board loc-id)
+           (contains? all-ship-types type)] }
   (update-in board [ loc-id ] new-ship-to-piece owner type))
 
 ;------------------ to svg ------------------------
