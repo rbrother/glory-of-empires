@@ -90,6 +90,7 @@
     { :id :wadjet    :image "1planet/Tile-Wadjet.gif" }
     { :id :wellon    :image "1planet/Tile-Wellon.gif" }
     { :id :wepwawet  :image "1planet/Tile-Wepwawet.gif" }
+
     { :id :abyz-fria :image "2planet/Tile-Abyz-Fria.gif" }
     { :id :achill    :image "2planet/Tile-Achill.gif" }
     { :id :aeterna-tammuz :image "2planet/Tile-AeternaTammuz.gif" }
@@ -136,10 +137,139 @@
     { :id :vega :image "2planet/Tile-Vega.gif" }
     { :id :verne-quebec :image "2planet/Tile-Verne-Quebec.gif" }
     { :id :vortekai-deguzz :image "2planet/Tile-Vortekai-Deguzz.gif" }
+
     { :id :ashtroth-loki-abaddon :image "3planet/Tile-Ashtroth-Loki-Abaddon.gif" }
     { :id :rigel :image "3planet/Tile-Rigel.gif" }
     { :id :elder-uhuru-amani :image "3planet/Tile-Elder-Uhuru-Amani.gif" }
     { :id :tianshang-tiangu-changtian :image "3planet/Tile-Tianshang-Tiangu-Changtian.gif" }
+
+    { :id :akoytay   :image "HomeSystem/Tile-HS-Akoytay.gif" }
+    { :id :alkari   :image "HomeSystem/Tile-HS-Alkari.gif" }
+    { :id :alliance   :image "HomeSystem/Tile-HS-Alliance.gif" }
+    { :id :altair   :image "HomeSystem/Tile-HS-Altair.gif" }
+    { :id :andorian   :image "HomeSystem/Tile-HS-Andorian.gif" }
+    { :id :arborec   :image "HomeSystem/Tile-HS-Arborec.gif" }
+    { :id :asari   :image "HomeSystem/Tile-HS-Asari.gif" }
+    { :id :asgard   :image "HomeSystem/Tile-HS-Asgard.gif" }
+    { :id :atreides   :image "HomeSystem/Tile-HS-Atreides.gif" }
+    { :id :bajoran   :image "HomeSystem/Tile-HS-Bajoran.gif" }
+    { :id :batarian   :image "HomeSystem/Tile-HS-Batarian.gif" }
+    { :id :bene-gesserit   :image "HomeSystem/Tile-HS-Bene_Gesserit.gif" }
+    { :id :bene-tleilaxu   :image "HomeSystem/Tile-HS-Bene_Tleilaxu.gif" }
+    { :id :betazoid   :image "HomeSystem/Tile-HS-Betazoid.gif" }
+    { :id :bolian   :image "HomeSystem/Tile-HS-Bolian.gif" }
+    { :id :bulrathi   :image "HomeSystem/Tile-HS-Bulrathi.gif" }
+    { :id :caitian   :image "HomeSystem/Tile-HS-Caitian.gif" }
+    { :id :cannibals   :image "HomeSystem/Tile-HS-Cannibals.gif" }
+    { :id :cardassian   :image "HomeSystem/Tile-HS-Cardassian.gif" }
+    { :id :cartel   :image "HomeSystem/Tile-HS-Cartel.gif" }
+    { :id :centauri   :image "HomeSystem/Tile-HS-Centauri.gif" }
+    { :id :chaos   :image "HomeSystem/Tile-HS-Chaos.gif" }
+    { :id :chromatics   :image "HomeSystem/Tile-HS-Chromatics.gif" }
+    { :id :corrino   :image "HomeSystem/Tile-HS-Corrino.gif" }
+    { :id :creuss   :image "HomeSystem/Tile-HS-Creuss.gif" }
+    { :id :creuss-gate   :image "HomeSystem/Tile-HS-Creuss_Gate.gif" }
+    { :id :croax   :image "HomeSystem/Tile-HS-Croax.gif" }
+    { :id :dark-eldar   :image "HomeSystem/Tile-HS-DarkEldar.gif" }
+    { :id :darlocks   :image "HomeSystem/Tile-HS-Darlocks.gif" }
+    { :id :dominion   :image "HomeSystem/Tile-HS-Dominion.gif" }
+    { :id :dusun   :image "HomeSystem/Tile-HS-Dusun.gif" }
+    { :id :earth   :image "HomeSystem/Tile-HS-Earth.gif" }
+    { :id :eldar   :image "HomeSystem/Tile-HS-Eldar.gif" }
+    { :id :elerians   :image "HomeSystem/Tile-HS-Elerians.gif" }
+    { :id :elzenkar   :image "HomeSystem/Tile-HS-Elzenkar.gif" }
+    { :id :embers   :image "HomeSystem/Tile-HS-Embers.gif" }
+    { :id :fedaron   :image "HomeSystem/Tile-HS-Fedaron.gif" }
+    { :id :federation   :image "HomeSystem/Tile-HS-Federation.gif" }
+    { :id :ferengi   :image "HomeSystem/Tile-HS-Ferengi.gif" }
+    { :id :firijii   :image "HomeSystem/Tile-HS-Firijii.gif" }
+    { :id :geth   :image "HomeSystem/Tile-HS-Geth.gif" }
+    { :id :gnolams   :image "HomeSystem/Tile-HS-Gnolams.gif" }
+    { :id :goauld   :image "HomeSystem/Tile-HS-Goauld.gif" }
+    { :id :hacan   :image "HomeSystem/Tile-HS-Hacan.gif" }
+    { :id :harkonnen   :image "HomeSystem/Tile-HS-Harkonnen.gif" }
+    { :id :hirogen   :image "HomeSystem/Tile-HS-Hirogen.gif" }
+    { :id :humans   :image "HomeSystem/Tile-HS-Humans.gif" }
+    { :id :imperium-of-man   :image "HomeSystem/Tile-HS-Imperium_of_Man.gif" }
+    { :id :ironleague   :image "HomeSystem/Tile-HS-Ironleague.gif" }
+    { :id :jipa   :image "HomeSystem/Tile-HS-Jipa.gif" }
+    { :id :jolnar   :image "HomeSystem/Tile-HS-Jolnar.gif" }
+    { :id :kazon   :image "HomeSystem/Tile-HS-Kazon.gif" }
+    { :id :klackon   :image "HomeSystem/Tile-HS-Klackon.gif" }
+    { :id :klingon   :image "HomeSystem/Tile-HS-Klingon.gif" }
+    { :id :krenim   :image "HomeSystem/Tile-HS-Krenim.gif" }
+    { :id :krogan   :image "HomeSystem/Tile-HS-Krogan.gif" }
+    { :id :lisix   :image "HomeSystem/Tile-HS-L1z1x.gif" }
+    { :id :lazax   :image "HomeSystem/Tile-HS-Lazax.gif" }
+    { :id :letnev   :image "HomeSystem/Tile-HS-Letnev.gif" }
+    { :id :lun   :image "HomeSystem/Tile-HS-Lun.gif" }
+    { :id :mahact-sodality   :image "HomeSystem/Tile-HS-Mahact_Sodality.gif" }
+    { :id :maquis   :image "HomeSystem/Tile-HS-Maquis.gif" }
+    { :id :meklars   :image "HomeSystem/Tile-HS-Meklars.gif" }
+    { :id :mentak   :image "HomeSystem/Tile-HS-Mentak.gif" }
+    { :id :minbari   :image "HomeSystem/Tile-HS-Minbari.gif" }
+    { :id :mirssen   :image "HomeSystem/Tile-HS-Mirssen.gif" }
+    { :id :moritani   :image "HomeSystem/Tile-HS-Moritani.gif" }
+    { :id :mrrshan   :image "HomeSystem/Tile-HS-Mrrshan.gif" }
+    { :id :muaat   :image "HomeSystem/Tile-HS-Muaat.gif" }
+    { :id :mystics   :image "HomeSystem/Tile-HS-Mystics.gif" }
+    { :id :naalu   :image "HomeSystem/Tile-HS-Naalu.gif" }
+    { :id :narn   :image "HomeSystem/Tile-HS-Narn.gif" }
+    { :id :necron   :image "HomeSystem/Tile-HS-Necron.gif" }
+    { :id :nekro   :image "HomeSystem/Tile-HS-Nekro.gif" }
+    { :id :norr   :image "HomeSystem/Tile-HS-Norr.gif" }
+    { :id :omohry   :image "HomeSystem/Tile-HS-Omohry.gif" }
+    { :id :ori   :image "HomeSystem/Tile-HS-Ori.gif" }
+    { :id :orion   :image "HomeSystem/Tile-HS-Orion.gif" }
+    { :id :orks   :image "HomeSystem/Tile-HS-Orks.gif" }
+    { :id :overmind   :image "HomeSystem/Tile-HS-Overmind.gif" }
+    { :id :paradisian   :image "HomeSystem/Tile-HS-Paradisian.gif" }
+    { :id :protoss   :image "HomeSystem/Tile-HS-Protoss.gif" }
+    { :id :psilons   :image "HomeSystem/Tile-HS-Psilons.gif" }
+    { :id :qikai   :image "HomeSystem/Tile-HS-Qikai.gif" }
+    { :id :raiders   :image "HomeSystem/Tile-HS-Raiders.gif" }
+    { :id :renegade   :image "HomeSystem/Tile-HS-Renegade.gif" }
+    { :id :replicator   :image "HomeSystem/Tile-HS-Replicator.gif" }
+    { :id :richese   :image "HomeSystem/Tile-HS-Richese.gif" }
+    { :id :romulan   :image "HomeSystem/Tile-HS-Romulan.gif" }
+    { :id :rrargan   :image "HomeSystem/Tile-HS-Rrargan.gif" }
+    { :id :saar   :image "HomeSystem/Tile-HS-Saar.gif" }
+    { :id :sakkra   :image "HomeSystem/Tile-HS-Sakkra.gif" }
+    { :id :salarian   :image "HomeSystem/Tile-HS-Salarian.gif" }
+    { :id :shabbak   :image "HomeSystem/Tile-HS-Shabbak.gif" }
+    { :id :shadows   :image "HomeSystem/Tile-HS-Shadows.gif" }
+    { :id :silicoids   :image "HomeSystem/Tile-HS-Silicoids.gif" }
+    { :id :sirkaan1   :image "HomeSystem/Tile-HS-Sirkaan_1.gif" }
+    { :id :sirkaan2   :image "HomeSystem/Tile-HS-Sirkaan_2.gif" }
+    { :id :slavers   :image "HomeSystem/Tile-HS-Slavers.gif" }
+    { :id :sol   :image "HomeSystem/Tile-HS-Sol.gif" }
+    { :id :sturmgard   :image "HomeSystem/Tile-HS-Sturmgard.gif" }
+    { :id :swarm   :image "HomeSystem/Tile-HS-Swarm.gif" }
+    { :id :systems-alliance   :image "HomeSystem/Tile-HS-SystemsAlliance.gif" }
+    { :id :tau   :image "HomeSystem/Tile-HS-Tau.gif" }
+    { :id :tauri   :image "HomeSystem/Tile-HS-Tauri.gif" }
+    { :id :tellarite   :image "HomeSystem/Tile-HS-Tellarite.gif" }
+    { :id :terran   :image "HomeSystem/Tile-HS-Terran.gif" }
+    { :id :tlet   :image "HomeSystem/Tile-HS-Tlet.gif" }
+    { :id :tokra   :image "HomeSystem/Tile-HS-Tokra.gif" }
+    { :id :traelyn   :image "HomeSystem/Tile-HS-Traelyn.gif" }
+    { :id :triacterial   :image "HomeSystem/Tile-HS-Triacterial.gif" }
+    { :id :trilarians   :image "HomeSystem/Tile-HS-Trilarians.gif" }
+    { :id :trill   :image "HomeSystem/Tile-HS-Trill.gif" }
+    { :id :trillarians   :image "HomeSystem/Tile-HS-Trillarians.gif" }
+    { :id :turian   :image "HomeSystem/Tile-HS-Turian.gif" }
+    { :id :tyranid   :image "HomeSystem/Tile-HS-Tyranid.gif" }
+    { :id :vernius   :image "HomeSystem/Tile-HS-Vernius.gif" }
+    { :id :vorlon   :image "HomeSystem/Tile-HS-Vorlon.gif" }
+    { :id :vulcan   :image "HomeSystem/Tile-HS-Vulcan.gif" }
+    { :id :winnu   :image "HomeSystem/Tile-HS-Winnu.gif" }
+    { :id :xel-naga   :image "HomeSystem/Tile-HS-XelNaga.gif" }
+    { :id :xindi   :image "HomeSystem/Tile-HS-Xindi.gif" }
+    { :id :xxcha   :image "HomeSystem/Tile-HS-Xxcha.gif" }
+    { :id :yin   :image "HomeSystem/Tile-HS-Yin.gif" }
+    { :id :yssaril   :image "HomeSystem/Tile-HS-Yssaril.gif" }
+    { :id :zzedajin   :image "HomeSystem/Tile-HS-Zzedajin.gif" }
+
     { :id :ancient-minefield :image "Special/Tile-Ancient_Minefield.gif" }
     { :id :asteroid-field :image "Special/Tile-Asteroid_Field.gif" }
     { :id :babylon5 :image "Special/Tile-Babylon_5.gif" }
@@ -168,6 +298,7 @@
     { :id :setup-medium-blue :image "Setup/Tile-Setup-MediumBlue.gif" }
     { :id :setup-red :image "Setup/Tile-Setup-Red.gif" }
     { :id :setup-yellow :image "Setup/Tile-Setup-Yellow.gif" } ] )
+    { :id :hs-back   :image "HomeSystem/Tile-HS-Back.gif" }
 
 (def all-systems (index-by-id all-systems-arr))
 

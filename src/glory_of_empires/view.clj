@@ -7,4 +7,4 @@
     ( [ opts ]
       (if (number? opts) (board { :scale opts })
         (let [ m (@game :map) ]
-          (if (nil? m) "No map" (map-to-svg m opts))))))
+          (if (or (nil? m) (empty? m)) "No map" (map-to-svg m opts))))))

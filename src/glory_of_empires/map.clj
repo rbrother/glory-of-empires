@@ -4,6 +4,7 @@
   (:use clojure.test)
   (:use glory-of-empires.systems)
   (:use glory-of-empires.ships)
+  (:use glory-of-empires.races)
   (:gen-class))
 
 (def resources-url "http://www.brotherus.net/ti3/")
@@ -103,7 +104,8 @@
 
 (defn new-ship [ loc-id owner type board ]
   { :pre [ (contains? board loc-id)
-           (contains? all-ship-types type)] }
+           (contains? all-ship-types type)
+           (contains? all-races owner) ] } ; TODO: use races in this game instead?
   (update-in board [ loc-id ] new-ship-to-piece owner type))
 
 ;------------------ to svg ------------------------
