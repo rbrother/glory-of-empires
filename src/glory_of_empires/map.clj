@@ -104,8 +104,7 @@
 
 (defn new-ship [ loc-id owner type board ]
   { :pre [ (contains? board loc-id)
-           (contains? all-ship-types type)
-           (contains? all-races owner) ] } ; TODO: use races in this game instead?
+           (contains? all-ship-types type) ] }
   (update-in board [ loc-id ] new-ship-to-piece owner type))
 
 ;------------------ to svg ------------------------

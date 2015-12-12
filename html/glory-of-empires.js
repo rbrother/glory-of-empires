@@ -18,7 +18,12 @@ function ExampleChanged() {
   $("#command").val( $("#examples option:selected").text() );
 }
 
-// Make view refresh periodically (only if game-state changed
+function ViewExampleChanged() {
+  $("#viewDefinition").val( $("#viewExamples option:selected").text() );
+  RefreshView();
+}
+
+// Make view refresh periodically (but update the view only if game-state changed)
 function RefreshView() {
   var viewDef = "(view/" + $("#viewDefinition").val() + ")"; 
   $.post( url, viewDef, function (fromServer, status){

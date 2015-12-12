@@ -1,6 +1,7 @@
 (ns glory-of-empires.command
   (:require [glory-of-empires.map :as board])
-  (:require [glory-of-empires.game-state :as game-state]))
+  (:require [glory-of-empires.game-state :as game-state])
+  (:require [glory-of-empires.players :as players]))
 
 ;------------ command helpers ---------------
 
@@ -35,9 +36,15 @@
 (defn del-system [ loc-id ]
   (board-command #(dissoc % loc-id)))
 
+;------------- players -----------------
+
+(defn set-players [ & player-ids ]
+  (run-command #(players/set-players player-ids %)))
+
 ;------------ ship commands ------------------
 
 (defn new-ship [ loc-id owner type ]
+  { :pre [ (contains? (game-state/game :players) owner) ] }
   (board-command #(board/new-ship loc-id owner type % )))
 
 (defn del-ship [ ship-id ] nil )

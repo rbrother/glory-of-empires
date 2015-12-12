@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8"></meta>
-		<title>Glory of Empires</title>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-		<script type="text/javascript" src="glory-of-empires.js"></script>
-	</head>
-	<body style="background: #202020; color: white;">
-		<div>
-			Command <input style="width: 300px;" id="command"  autofocus="true"/>
+  <head>
+    <meta charset="UTF-8"></meta>
+    <title>Glory of Empires</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="glory-of-empires.js"></script>
+  </head>
+  <body style="background: #202020; color: white;">
+    <div>
+      Command <input style="width: 300px;" id="command"  autofocus="true"/>
       <button type="button" onclick="ExecuteCommand();">Execute</button>
       Examples
       <select id="examples" onchange="ExampleChanged();">
@@ -17,20 +17,22 @@
         <option>set-systems-random</option>
         <option>set-system :c4 :mecatol-rex</option>
         <option>del-system :c4</option>
+        <option>set-players :hacan :norr :naalu</option>
         <option>new-ship :b2 :hacan :carrier</option>
       </select>
       <span style="width: 20px;">-</span>
-			View <input style="width: 150px;" id="viewDefinition" value="board" onchange="RefreshView();"/>
+      View <input style="width: 150px;" id="viewDefinition" value="board" onchange="RefreshView();"/>
       Examples
-      <select>
+      <select id="viewExamples" onchange="ViewExampleChanged();">
         <option>board 0.6</option>
+        <option>players</option>
       </select>      
     </div>
     <div>
       <span id="currentCommand" style="color: green;"></span>
       <span id="commandResult" style="color: white;"></span>
     </div>
-		<hr/>
-		<div id="view" style="margin: 8px;"></div>
-	</body>
+    <hr/>
+    <div id="view" style="margin: 8px;"></div>
+  </body>
 </html>
