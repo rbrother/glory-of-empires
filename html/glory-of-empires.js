@@ -6,9 +6,10 @@ var url = "http://localhost:3000/";
 
 function ExecuteCommand() {
   var command = "(command/" + $("#command").val() + ")";
-  $("#currentCommand").html(command + " ➔ ");
+  $("#currentCommand").html(command);
+  $("#commandResult").html( "" )
   $.post( url, command, function (fromServer, status){
-      $("#commandResult").html( fromServer );
+      $("#commandResult").html( " ➔ " + fromServer );
       RefreshView();
   });
   $("#command").val("");

@@ -7,31 +7,46 @@
     <script type="text/javascript" src="glory-of-empires.js"></script>
   </head>
   <body style="background: #202020; color: white;">
-    <div>
-      Command <input style="width: 300px;" id="command"  autofocus="true"/>
-      <button type="button" onclick="ExecuteCommand();">Execute</button>
-      Examples
-      <select id="examples" onchange="ExampleChanged();">
-        <option>round-board 3</option>
-        <option>rect-board 10 5</option>
-        <option>set-systems-random</option>
-        <option>set-system :c4 :mecatol-rex</option>
-        <option>del-system :c4</option>
-        <option>set-players :hacan :norr :naalu</option>
-        <option>new-ship :b2 :hacan :carrier</option>
-      </select>
-      <span style="width: 20px;">-</span>
-      View <input style="width: 150px;" id="viewDefinition" value="board" onchange="RefreshView();"/>
-      Examples
-      <select id="viewExamples" onchange="ViewExampleChanged();">
-        <option>board 0.6</option>
-        <option>players</option>
-      </select>      
-    </div>
-    <div>
-      <span id="currentCommand" style="color: green;"></span>
-      <span id="commandResult" style="color: white;"></span>
-    </div>
+    <table>
+      <tr>
+        <td>Command</td>
+        <td><input style="width: 300px;" id="command"  autofocus="true"/></td>
+        <td><button type="button" onclick="ExecuteCommand();">Execute</button></td>
+        <td>Examples</td>
+        <td>
+          <select id="examples" onchange="ExampleChanged();">
+            <option>round-board 3</option>
+            <option>rect-board 10 5</option>
+            <option>set-systems-random</option>
+            <option>set-system :c4 :mecatol-rex</option>
+            <option>del-system :c4</option>
+            <option>set-players :hacan :norr :naalu</option>
+            <option>new-ship :b2 :hacan :carrier</option>
+          </select>
+        </td>
+        <td>
+          <span id="currentCommand" style="color: green;"></span>
+          <span id="commandResult" style="color: white;"></span>
+        </td>
+      </tr>
+      <tr>
+        <td>View</td>
+        <td><input style="width: 300px;" id="viewDefinition" value="board" onchange="RefreshView();"/></td>
+        <td></td>
+        <td>Examples</td>
+        <td>
+          <select id="viewExamples" onchange="ViewExampleChanged();">
+            <option>board 0.4</option>
+            <option>players</option>
+            <option>vertical (view/board 0.3) (view/players)</option>
+            <option>horizontal (view/board 0.3) (view/players)</option>
+          </select>      
+        </td>
+        <td>
+          <span id="viewResult" style="color: white;"></span>
+        </td>
+      </tr>
+    </table>
     <hr/>
     <div id="view" style="margin: 8px;"></div>
   </body>

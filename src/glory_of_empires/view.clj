@@ -11,3 +11,11 @@
           (if (or (nil? m) (empty? m)) "No map" (board/map-to-svg m opts))))))
 
   (defn players [] (players/players-html (@game :players)))
+
+  (defn vertical [ & views ]
+    `[ :div {}
+       ~@(map (fn [view] [ :div {} view] ) views) ] )
+
+  (defn horizontal [ & views ]
+    `[ :table {} [ :tr {}
+        ~@(map (fn [view] [ :td { :style "vertical-align: top;" } view] ) views) ]] )
