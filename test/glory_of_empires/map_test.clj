@@ -13,7 +13,12 @@
            pieces (vals a-map)
            correct-screen-locs [ [-324.0 -188.0] [-324.0 188.0] [0.0 -376.0] [0.0 0.0] [0.0 376.0] [324.0 -188.0] [324.0 188.0] ]
            correct-bounding-rect [ [ -324.0 -376.0 ] [ 756.0 752.0 ] ]
-           b2-after-new-ship {:logical-pos [0 0], :system :mecatol-rex, :id :b2, :controller :hacan, :ships [{:type :carrier, :id "de123"}]}
+           b2-after-new-ship {
+                :logical-pos [0 0],
+                :system :mecatol-rex,
+                :id :b2,
+                :controller :hacan,
+                :ships [ {:type :carrier, :id "de123"} ] }
            c-map (->> b-map
                       (swap-system :b2 :mecatol-rex)
                       (new-ship :b2 :hacan :carrier)) ]

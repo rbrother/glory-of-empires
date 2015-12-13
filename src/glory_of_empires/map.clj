@@ -129,7 +129,7 @@
       [ :text (merge attr { :x 2 :y 2 :fill "black" }) text ]
       [ :text attr text ] ] ))
 
-(defn- piece-to-svg [ { logical-pos :logical-pos system-id :system id :id :as tile } ]
+(defn- piece-to-svg [ { logical-pos :logical-pos system-id :system id :id controller :controller ships :ships } ]
   (let [ center (mul-vec tile-size 0.5)
          system (get-system system-id) ]
     [ :g (transform { :translate (screen-loc logical-pos) })
@@ -146,7 +146,8 @@
 (defn rect-size [ [ min-corner max-corner ] ] (map - max-corner min-corner))
 
 (defn- svg [ size & content ]
-  (concat [ :svg (merge (width-height size) { "xmlns:xlink" "http://www.w3.org/1999/xlink" } ) ] content ))
+  (let [ attrs (merge (width-height size) { "xmlns:xlink" "http://www.w3.org/1999/xlink" } ) ]
+    `[ :svg ~attrs ~@content ] ))
 
 (defn map-to-svg
   ( [ board ] (map-to-svg board {} ))
@@ -155,8 +156,6 @@
            scale (get opts :scale 0.5)
            bounds (bounding-rect map-pieces)
            min-corner (first bounds)
-           svg-size (mul-vec (rect-size bounds) scale) ]
-      (svg svg-size
-        (concat
-          [ :g (transform { :scale scale :translate (mul-vec min-corner -1.0) } ) ]
-          (map piece-to-svg map-pieces))))))
+           svg-size (mul-vec (rect-size bounds) scale)
+           trans (transform { :scale scale :translate (mul-vec min-corner -1.0) } ) ]
+      (svg svg-size `[ :g ~trans ~@(map piece-to-svg map-pieces) ] ))))
