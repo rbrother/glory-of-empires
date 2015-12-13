@@ -25,7 +25,7 @@
   (println "------------ request received -----------")
   (let [ message (slurp (:body request)) ]
     (println message)
-    (reply (try (eval-input message) (catch Exception e (handle-exception e))))))
+    (reply (try (eval-input message) (catch Throwable e (handle-exception e))))))
 
 (defn -main [& args]
   (game-state/load-game)
