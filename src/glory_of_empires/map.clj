@@ -129,14 +129,29 @@
       [ :text (merge attr { :x 2 :y 2 :fill "black" }) text ]
       [ :text attr text ] ] ))
 
+(defn- ship-svg [ { id :id type :type } color ]
+  { :pre [ (contains? all-ship-types type)
+           (string? color) ] }
+  (let [ ship-data (all-ship-types type)
+         image-name (ship-data :image-name)
+         image-file (str resources-url "Ships/" color "/Unit-" color "-" image-name ".png")
+         tile-size (ship-data :image-size) ]
+    [ :image (merge { :x 0 :y 0 "xlink:href" image-file } (width-height tile-size))  ] ))
+
+(defn- ships-svg [controller ships]
+  { :pre [ (not (nil? controller))
+           (contains? all-races controller) ] }
+  (let [ color ((all-races controller) :unit-color) ]
+    (map #(ship-svg % color) ships)))
+
 (defn- piece-to-svg [ { logical-pos :logical-pos system-id :system id :id controller :controller ships :ships } ]
   (let [ center (mul-vec tile-size 0.5)
-         system (get-system system-id) ]
+         system (get-system system-id)
+         ships-content (if (or (nil? ships) (empty? ships)) [] (ships-svg controller ships)) ]
     [ :g (transform { :translate (screen-loc logical-pos) })
-      [ :image (merge
-                 { :x 0 :y 0 }
-                 (width-height tile-size)
-                 { "xlink:href" (str resources-url "Tiles/" (system :image)) } ) ]
+      [ :image (merge { :x 0 :y 0 "xlink:href" (str resources-url "Tiles/" (system :image)) }
+                      (width-height tile-size)) ]
+      `[ :g ~(transform { :translate center }) ~@ships-content ]
       (double-text (str/upper-case (name id)) (polar 270 170)) ] ))
 
 (defn bounding-rect [ map-pieces ]
