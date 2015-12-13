@@ -5,6 +5,8 @@
 
 ;------------ command helpers ---------------
 
+(defn- game [] @game-state/game)
+
 (defn- run-command [ command ]
   (swap! game-state/game command)
   (game-state/save-game-async)
@@ -44,7 +46,7 @@
 ;------------ ship commands ------------------
 
 (defn new-ship [ loc-id owner type ]
-  { :pre [ (contains? (game-state/game :players) owner) ] }
+  { :pre [ (contains? (:players (game)) owner) ] }
   (board-command #(board/new-ship loc-id owner type % )))
 
 (defn del-ship [ ship-id ] nil )
