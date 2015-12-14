@@ -12,7 +12,6 @@ function ExecuteCommand() {
       $("#commandResult").html( " ➔ " + fromServer );
       RefreshView();
   });
-  $("#command").val("");
 }
 
 function ExampleChanged() {
