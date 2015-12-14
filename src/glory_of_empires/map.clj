@@ -9,26 +9,6 @@
 
 (def resources-url "http://www.brotherus.net/ti3/")
 
-; ----------- coordinate tools --------------------
-
-(defn min-pos
-  { :test (fn [] (is (= [ 7 -4 ] (min-pos [ [ 7 12 ] [ 8 -4 ] ] )))) }
-  [ vectors ] (apply mapv min vectors))
-
-(defn max-pos
-  { :test (fn [] (is (= [ 8 12 ] (min-pos [ [ 7 12 ] [ 8 -4 ] ] )))) }
-  [ vectors ] (apply mapv max vectors))
-
-(defn pos> [ [ x1 y1 ] [ x2 y2 ] ] (and (> x1 x2) (> y1 y2)))
-(defn pos< [ [ x1 y1 ] [ x2 y2 ] ] (and (< x1 x2) (< y1 y2)))
-
-(defn distance [ vec1 ] (Math/sqrt (apply + (map * vec1 vec1))))
-
-(defn mul-vec [ vec1 scalar ] (map * vec1 (repeat scalar)))
-
-(defn inside-rect? [ pos [ small-corner large-corner ] ]
-  (and (pos> pos small-corner) (pos< pos large-corner)))
-
 ; -------------------------- map ---------------------------------
 
 (def tile-width 432 )
@@ -116,33 +96,44 @@
 
 (defn- width-height [ loc ] { :width (first loc) :height (last loc) } )
 
-; Location from top-left corner of tile to some polar-coordinate location relative to its center
-(defn polar [ degrees distance ]
-  (let [ radians (/ degrees 57.2958)
-         center (mul-vec tile-size 0.5)
-         center-polar (mul-vec [ (Math/sin radians) (Math/cos radians) ] distance) ]
-    (map + center-polar center)))
-
 (defn double-text [ text loc ]
-  (let [ attr { :x 0 :y 0 :fill "white" :font-family "Arial" :font-size "30px" } ]
+  (let [ attr { :x 0 :y 0 :fill "white" :font-family "Arial" :font-size "36px" } ]
     [ :g (transform { :translate loc })
       [ :text (merge attr { :x 2 :y 2 :fill "black" }) text ]
       [ :text attr text ] ] ))
 
-(defn- ship-svg [ { id :id type :type } color ]
+(defn ship-svg [ { id :id type :type } color [ x y ] ]
   { :pre [ (contains? all-ship-types type)
            (string? color) ] }
   (let [ ship-data (all-ship-types type)
          image-name (ship-data :image-name)
          image-file (str resources-url "Ships/" color "/Unit-" color "-" image-name ".png")
-         tile-size (ship-data :image-size) ]
-    [ :image (merge { :x 0 :y 0 "xlink:href" image-file } (width-height tile-size))  ] ))
+         tile-size (ship-data :image-size)
+         center-shift (mul-vec tile-size -0.5) ]
+    [ :g (transform { :translate center-shift })
+      [ :image (merge { :x x :y y "xlink:href" image-file } (width-height tile-size))  ]] ))
 
-(defn- ships-svg [controller ships]
+(defn ship-group-svg [ [ group loc ] color ] ; returns [ [:g ... ] [:g ... ] ... ]
+  (if (empty? group) []
+    (let [ ship (first group)
+           next-loc (map + loc [50 0]) ]
+      (conj (ship-group-svg [ (rest group) next-loc ] color)
+            (ship-svg ship color loc)))))
+
+(defn map-polar [ clock rel-distance ]
+  (polar (- 180 (* clock 30)) (* rel-distance 0.5 tile-width)))
+
+(def default-ship-locs [ (map-polar 8 0.6) (map-polar 0.5 0.4) ]) ; zero angle to down
+
+(defn ships-svg [ controller ships ] ; returns [ [:g ... ] [:g ... ] ... ]
   { :pre [ (not (nil? controller))
            (contains? all-races controller) ] }
-  (let [ color ((all-races controller) :unit-color) ]
-    (map #(ship-svg % color) ships)))
+  (let [ color ((all-races controller) :unit-color)
+         sorted-ships (sort-by :type ships)
+         group-locs default-ship-locs ; TODO: make default locs dependent on number of planets (0, 1, 2, 3)
+         ships-per-group (int (Math/ceil (/ (count ships) (count group-locs))))
+         grouped-ships (partition ships-per-group ships-per-group [] sorted-ships) ]
+    (mapcat #(ship-group-svg % color) (seq (zipmap grouped-ships group-locs)))))
 
 (defn- piece-to-svg [ { logical-pos :logical-pos system-id :system id :id controller :controller ships :ships } ]
   (let [ center (mul-vec tile-size 0.5)
@@ -151,8 +142,9 @@
     [ :g (transform { :translate (screen-loc logical-pos) })
       [ :image (merge { :x 0 :y 0 "xlink:href" (str resources-url "Tiles/" (system :image)) }
                       (width-height tile-size)) ]
-      `[ :g ~(transform { :translate center }) ~@ships-content ]
-      (double-text (str/upper-case (name id)) (polar 270 170)) ] ))
+      `[ :g ~(transform { :translate center })
+         ~@ships-content
+         ~(double-text (str/upper-case (name id)) (map-polar 9 0.8)) ] ] ))
 
 (defn bounding-rect [ map-pieces ]
   (let [ s-locs (screen-locs map-pieces) ]
@@ -174,3 +166,5 @@
            svg-size (mul-vec (rect-size bounds) scale)
            trans (transform { :scale scale :translate (mul-vec min-corner -1.0) } ) ]
       (svg svg-size `[ :g ~trans ~@(map piece-to-svg map-pieces) ] ))))
+
+(run-tests)
