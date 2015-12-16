@@ -27,7 +27,23 @@
                 [:g { :transform " translate(-39,-79)"}
                    [:image {:x -50, :y 20, :width 79, :height 159,
                             "xlink:href" "http://www.brotherus.net/ti3/Ships/Yellow/Unit-Yellow-Dreadnaught.png" } ]]] ))
+      (is (= (group-ships [ :a ] [ 1 2 ] )           [ [ [:a ] 1 ] ] ))
+      (is (= (group-ships [ :a :b ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:b] 2 ] ] ))
+      (is (= (group-ships [ :a :b :c ] [ 1 2 ] )     [ [ [:a :b] 1 ] [ [:c] 2 ] ] ))
+
+      (is (= (ships-svg :naalu [ { :id :abc :type :cruiser } { :id :xyz :type :cruiser } ] )
+             [ [:g {:transform " translate(-27,-52)"}
+                 [:image {:x -112.2368680667313, :y 64.80004202599832, :width 55, :height 105
+                          "xlink:href" "http://www.brotherus.net/ti3/Ships/Tan/Unit-Tan-Cruiser.png"}]]
+               [:g {:transform " translate(-27,-52)"}
+                 [:image {:x 22.362051432357585, :y -83.45596836498032, :width 55, :height 105
+                          "xlink:href" "http://www.brotherus.net/ti3/Ships/Tan/Unit-Tan-Cruiser.png"}]] ] ))
+
+
       )))
+
+
+
 
 (deftest random-map-test
   (testing "make-random-map"

@@ -125,15 +125,19 @@
 
 (def default-ship-locs [ (map-polar 8 0.6) (map-polar 0.5 0.4) ]) ; zero angle to down
 
+(defn group-ships [ ships group-locs ]
+  (let [ ships-per-group (int (Math/ceil (/ (count ships) (count group-locs))))
+         ship-groups (partition ships-per-group ships-per-group [] ships) ]
+    (seq (zipmap ship-groups group-locs))))
+
 (defn ships-svg [ controller ships ] ; returns [ [:g ... ] [:g ... ] ... ]
   { :pre [ (not (nil? controller))
            (contains? all-races controller) ] }
   (let [ color ((all-races controller) :unit-color)
          sorted-ships (sort-by :type ships)
          group-locs default-ship-locs ; TODO: make default locs dependent on number of planets (0, 1, 2, 3)
-         ships-per-group (int (Math/ceil (/ (count ships) (count group-locs))))
-         grouped-ships (partition ships-per-group ships-per-group [] sorted-ships) ]
-    (mapcat #(ship-group-svg % color) (seq (zipmap grouped-ships group-locs)))))
+         grouped-ships (group-ships sorted-ships group-locs) ]
+    (mapcat #(ship-group-svg % color) grouped-ships)))
 
 (defn- piece-to-svg [ { logical-pos :logical-pos system-id :system id :id controller :controller ships :ships } ]
   (let [ center (mul-vec tile-size 0.5)
