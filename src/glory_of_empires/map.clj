@@ -128,7 +128,7 @@
 (defn group-ships [ ships group-locs ]
   (let [ ships-per-group (int (Math/ceil (/ (count ships) (count group-locs))))
          ship-groups (partition ships-per-group ships-per-group [] ships) ]
-    (seq (zipmap ship-groups group-locs))))
+    (zip ship-groups group-locs)))
 
 (defn ships-svg [ controller ships ] ; returns [ [:g ... ] [:g ... ] ... ]
   { :pre [ (not (nil? controller))
@@ -139,7 +139,7 @@
          grouped-ships (group-ships sorted-ships group-locs) ]
     (mapcat #(ship-group-svg % color) grouped-ships)))
 
-(defn- piece-to-svg [ { logical-pos :logical-pos system-id :system id :id controller :controller ships :ships } ]
+(defn piece-to-svg [ { logical-pos :logical-pos system-id :system id :id controller :controller ships :ships } ]
   (let [ center (mul-vec tile-size 0.5)
          system (get-system system-id)
          ships-content (if (or (nil? ships) (empty? ships)) [] (ships-svg controller ships)) ]
