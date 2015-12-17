@@ -1,5 +1,8 @@
 (ns glory-of-empires.ships
-  (:use clojure-common.utils))
+  (:use clojure-common.utils)
+  (:require [glory-of-empires.races :as races]))
+
+(def resources-url "http://www.brotherus.net/ti3/")
 
 (def all-ship-types-arr
   [ { :id :fighter   :short "fi" :image-name "Fighter" :image-size [ 50 36 ] }
@@ -15,3 +18,8 @@
     { :id :space-dock :short "sd" :image-name "Spacedock" :image-size [ 76 78 ] } ] )
 
 (def all-ship-types (index-by-id all-ship-types-arr))
+
+(defn ship-image-url [ { type :type :as ship } race ]
+  (let [ { image-name :image-name } (all-ship-types type)
+         { color :unit-color} (races/all-races race) ]
+    (str resources-url "Ships/" color "/Unit-" color "-" image-name ".png")))

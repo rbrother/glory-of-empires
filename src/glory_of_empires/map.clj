@@ -7,8 +7,6 @@
   (:use glory-of-empires.races)
   (:gen-class))
 
-(def resources-url "http://www.brotherus.net/ti3/")
-
 ; -------------------------- map ---------------------------------
 
 (def tile-width 432 )

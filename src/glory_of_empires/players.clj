@@ -1,6 +1,7 @@
 (ns glory-of-empires.players
   (:use clojure-common.utils)
-  (:require [glory-of-empires.races :as races]))
+  (:require [glory-of-empires.races :as races])
+  (:require [glory-of-empires.ships :as ships]))
 
 (defn set-players [ player-ids game-state ]
   { :pre [ (every? #(contains? races/all-races %) player-ids) ] }
@@ -11,10 +12,14 @@
 
 (defn- player-html [ { id :id } ]
   { :pre [ (not (nil? id)) ] }
-  (let [ race (races/all-races id)]
+  (let [ race (races/all-races id)
+         fighter-image (ships/ship-image-url { :type :fighter } id) ]
     [ :div {}
-      [ :h2 {} (race :name) ] ] ))
+      [ :h2 {}
+        [ :span {} (race :name) ]
+        [ :img { :src fighter-image } ] ] ] ))
 
 (defn players-html [ players ]
-  (let [ content (map player-html (vals players)) ]
-  `[ :div {} [ :h1 {} "Players" ] ~@content ] ))
+  `[ :div {}
+     [ :h1 {} "Players" ]
+     ~@(map player-html (vals players)) ] )
