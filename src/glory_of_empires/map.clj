@@ -3,7 +3,8 @@
   (:use clojure-common.utils)
   (:use clojure.test)
   (:use glory-of-empires.systems)
-  (:use glory-of-empires.ships)
+  (:require [glory-of-empires.ships :as ships])
+  (:require [glory-of-empires.svg :as svg])
   (:use glory-of-empires.races)
   (:gen-class))
 
@@ -82,41 +83,23 @@
 
 (defn new-ship [ loc-id owner type board ]
   { :pre [ (contains? board loc-id)
-           (contains? all-ship-types type) ] }
+           (ships/valid-ship-type? type) ] }
   (update-in board [ loc-id ] new-ship-to-piece owner type))
 
 ;------------------ to svg ------------------------
 
-(defn- transform [ { loc :translate scale :scale } ]
-  (let [ translate (if (nil? loc) "" (str "translate(" (Math/round (first loc)) "," (Math/round (last loc)) ")" ))
-         scale-str (if (nil? scale) "" (str "scale(" scale ")")) ]
-    { :transform (str scale-str " " translate) } ))
-
-(defn- width-height [ loc ] { :width (first loc) :height (last loc) } )
-
 (defn double-text [ text loc ]
   (let [ attr { :x 0 :y 0 :fill "white" :font-family "Arial" :font-size "36px" } ]
-    [ :g (transform { :translate loc })
+    (svg/g { :translate loc } [
       [ :text (merge attr { :x 2 :y 2 :fill "black" }) text ]
-      [ :text attr text ] ] ))
+      [ :text attr text ] ] )))
 
-(defn ship-svg [ { id :id type :type } color [ x y ] ]
-  { :pre [ (contains? all-ship-types type)
-           (string? color) ] }
-  (let [ ship-data (all-ship-types type)
-         image-name (ship-data :image-name)
-         image-file (str resources-url "Ships/" color "/Unit-" color "-" image-name ".png")
-         tile-size (ship-data :image-size)
-         center-shift (mul-vec tile-size -0.5) ]
-    [ :g (transform { :translate center-shift })
-      [ :image (merge { :x x :y y "xlink:href" image-file } (width-height tile-size))  ]] ))
-
-(defn ship-group-svg [ [ group loc ] color ] ; returns [ [:g ... ] [:g ... ] ... ]
+(defn ship-group-svg [ [ group loc ] race ] ; returns [ [:g ... ] [:g ... ] ... ]
   (if (empty? group) []
     (let [ ship (first group)
            next-loc (map + loc [50 0]) ]
-      (conj (ship-group-svg [ (rest group) next-loc ] color)
-            (ship-svg ship color loc)))))
+      (conj (ship-group-svg [ (rest group) next-loc ] race)
+            (ships/svg ship race loc)))))
 
 (defn map-polar [ clock rel-distance ]
   (polar (- 180 (* clock 30)) (* rel-distance 0.5 tile-width)))
@@ -131,32 +114,25 @@
 (defn ships-svg [ controller ships ] ; returns [ [:g ... ] [:g ... ] ... ]
   { :pre [ (not (nil? controller))
            (contains? all-races controller) ] }
-  (let [ color ((all-races controller) :unit-color)
-         sorted-ships (sort-by :type ships)
+  (let [ sorted-ships (sort-by :type ships)
          group-locs default-ship-locs ; TODO: make default locs dependent on number of planets (0, 1, 2, 3)
          grouped-ships (group-ships sorted-ships group-locs) ]
-    (mapcat #(ship-group-svg % color) grouped-ships)))
+    (mapcat #(ship-group-svg % controller) grouped-ships)))
 
 (defn piece-to-svg [ { logical-pos :logical-pos system-id :system id :id controller :controller ships :ships } ]
   (let [ center (mul-vec tile-size 0.5)
          system (get-system system-id)
          ships-content (if (or (nil? ships) (empty? ships)) [] (ships-svg controller ships)) ]
-    [ :g (transform { :translate (screen-loc logical-pos) })
-      [ :image (merge { :x 0 :y 0 "xlink:href" (str resources-url "Tiles/" (system :image)) }
-                      (width-height tile-size)) ]
-      `[ :g ~(transform { :translate center })
-         ~@ships-content
-         ~(double-text (str/upper-case (name id)) (map-polar 9 0.8)) ] ] ))
+    (svg/g { :translate (screen-loc logical-pos) } [
+      (svg/image [ 0 0 ] tile-size (str ships/resources-url "Tiles/" (system :image)))
+      (svg/g { :translate center }
+         (conj ships-content (double-text (str/upper-case (name id)) (map-polar 9 0.8)) )) ] )))
 
 (defn bounding-rect [ map-pieces ]
   (let [ s-locs (screen-locs map-pieces) ]
     [ (min-pos s-locs) (map + (max-pos s-locs) tile-size) ] ))
 
 (defn rect-size [ [ min-corner max-corner ] ] (map - max-corner min-corner))
-
-(defn- svg [ size & content ]
-  (let [ attrs (merge (width-height size) { "xmlns:xlink" "http://www.w3.org/1999/xlink" } ) ]
-    `[ :svg ~attrs ~@content ] ))
 
 (defn map-to-svg
   ( [ board ] (map-to-svg board {} ))
@@ -165,8 +141,7 @@
            scale (get opts :scale 0.5)
            bounds (bounding-rect map-pieces)
            min-corner (first bounds)
-           svg-size (mul-vec (rect-size bounds) scale)
-           trans (transform { :scale scale :translate (mul-vec min-corner -1.0) } ) ]
-      (svg svg-size `[ :g ~trans ~@(map piece-to-svg map-pieces) ] ))))
+           svg-size (mul-vec (rect-size bounds) scale) ]
+      (svg/svg svg-size (svg/g { :scale scale :translate (mul-vec min-corner -1.0) } (map piece-to-svg map-pieces) )))))
 
 (run-tests)

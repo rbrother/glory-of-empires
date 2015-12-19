@@ -19,6 +19,31 @@
         [ :span {} (race :name) ]
         [ :img { :src fighter-image } ] ] ] ))
 
+
+[:div {}
+   [:h1 {} "Players"]
+   [:div {}
+      [:h2 {}
+         [:span {} "The Emirates of Hacan"]
+         [:img {:src "http://www.brotherus.net/ti3/Ships/Yellow/Unit-Yellow-Fighter.png"}]]]
+   [:div {}
+      [:h2 {}
+         [:span {} "The Naalu Collective"]
+         [:img {:src "http://www.brotherus.net/ti3/Ships/Tan/Unit-Tan-Fighter.png"}]]]]
+
+
+[:div {}
+   [:h1 {} "Players"]
+   [:div {}
+      [:h2 {} "The Emirates of Hacan"
+        [:img {:src "http://www.brotherus.net/ti3/Ships/Yellow/Unit-Yellow-Fighter.png"}]]]
+   [:div {}
+      [:h2 {} "The Naalu Collective"
+        [:img {:src "http://www.brotherus.net/ti3/Ships/Tan/Unit-Tan-Fighter.png"}]]]]
+
+
+
+
 (defn players-html [ players ]
   `[ :div {}
      [ :h1 {} "Players" ]

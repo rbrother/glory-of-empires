@@ -2,7 +2,8 @@
   (:use clojure-common.utils)
   (:use clojure-common.xml)
   (:require [clojure.test :refer :all]
-            [glory-of-empires.map :refer :all]))
+            [glory-of-empires.map :refer :all])
+  (:require [glory-of-empires.ships :as ships]))
 
 ; Most of our tests are inline-tests in the respective functions, but for longer tests we can put here
 
@@ -38,18 +39,18 @@
 (deftest ship-rendering-test
   (testing "ship rendering"
     (let []
-      (is (= (ship-svg { :id :xyz :type :cruiser } "Yellow" [ -50 20 ] )
+      (is (= (ships/svg { :id :xyz :type :cruiser } :hacan [ -50 20 ] )
              [:g {:transform " translate(-27,-52)"}
               [:image { :x -50, :y 20, :width 55, :height 105,
                         "xlink:href" "http://www.brotherus.net/ti3/Ships/Yellow/Unit-Yellow-Cruiser.png" } ]] ))
-      (is (= (ship-group-svg [ [ { :id :abc :type :fighter } { :id :xyz :type :cruiser } ] [-50 20] ] "Yellow" )
+      (is (= (ship-group-svg [ [ { :id :abc :type :fighter } { :id :xyz :type :cruiser } ] [-50 20] ] :hacan )
              [ [:g { :transform " translate(-27,-52)"}
                  [:image {:x 0, :y 20, :width 55, :height 105,
                           "xlink:href" "http://www.brotherus.net/ti3/Ships/Yellow/Unit-Yellow-Cruiser.png"}]]
                [:g { :transform " translate(-25,-18)"}
                  [:image {:x -50, :y 20, :width 50, :height 36,
                           "xlink:href" "http://www.brotherus.net/ti3/Ships/Yellow/Unit-Yellow-Fighter.png"}]]] ))
-      (is (= (ship-group-svg [ [ { :id :abc :type :dreadnaught } { :id :xyz :type :dreadnaught } ] [-50 20] ] "Yellow" )
+      (is (= (ship-group-svg [ [ { :id :abc :type :dreadnaught } { :id :xyz :type :dreadnaught } ] [-50 20] ] :hacan )
              [  [:g { :transform " translate(-39,-79)"}
                    [:image {:x 0, :y 20, :width 79, :height 159,
                             "xlink:href" "http://www.brotherus.net/ti3/Ships/Yellow/Unit-Yellow-Dreadnaught.png" } ]]
@@ -68,7 +69,6 @@
                  [:image {:x 22.362051432357585, :y -83.45596836498032, :width 55, :height 105
                           "xlink:href" "http://www.brotherus.net/ti3/Ships/Tan/Unit-Tan-Cruiser.png"}]] ] ))
       )))
-
 
 (deftest random-map-test
   (testing "make-random-map"

@@ -1,6 +1,7 @@
 (ns glory-of-empires.ships
   (:use clojure-common.utils)
-  (:require [glory-of-empires.races :as races]))
+  (:require [glory-of-empires.races :as races])
+  (:require [glory-of-empires.svg :as svg]))
 
 (def resources-url "http://www.brotherus.net/ti3/")
 
@@ -19,7 +20,17 @@
 
 (def all-ship-types (index-by-id all-ship-types-arr))
 
+(defn valid-ship-type? [ type ] (contains? all-ship-types type))
+
 (defn ship-image-url [ { type :type :as ship } race ]
   (let [ { image-name :image-name } (all-ship-types type)
          { color :unit-color} (races/all-races race) ]
     (str resources-url "Ships/" color "/Unit-" color "-" image-name ".png")))
+
+(defn svg [ { id :id type :type :as ship } race loc ]
+  { :pre [ (valid-ship-type? type) ] }
+  (let [ ship-data (all-ship-types type)
+         tile-size (ship-data :image-size)
+         center-shift (mul-vec tile-size -0.5) ]
+    (svg/g { :translate center-shift }
+      [ (svg/image loc tile-size (ship-image-url ship race)) ] )))
