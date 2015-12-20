@@ -32,5 +32,6 @@
   (let [ ship-data (all-ship-types type)
          tile-size (ship-data :image-size)
          center-shift (mul-vec tile-size -0.5) ]
-    (svg/g { :translate center-shift }
-      [ (svg/image loc tile-size (ship-image-url ship race)) ] )))
+    (svg/g { :translate (map + center-shift loc) }
+      [ (svg/image [0 0] tile-size (ship-image-url ship race))
+        (svg/double-text (name id) [ 0 (+ (last tile-size) 24 ) ] { :size 24 }) ] )))
