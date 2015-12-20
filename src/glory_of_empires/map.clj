@@ -88,12 +88,6 @@
 
 ;------------------ to svg ------------------------
 
-(defn double-text [ text loc ]
-  (let [ attr { :x 0 :y 0 :fill "white" :font-family "Arial" :font-size "36px" } ]
-    (svg/g { :translate loc } [
-      [ :text (merge attr { :x 2 :y 2 :fill "black" }) text ]
-      [ :text attr text ] ] )))
-
 (defn ship-group-svg [ [ group loc ] race ] ; returns [ [:g ... ] [:g ... ] ... ]
   (if (empty? group) []
     (let [ ship (first group)
@@ -126,7 +120,7 @@
     (svg/g { :translate (screen-loc logical-pos) } [
       (svg/image [ 0 0 ] tile-size (str ships/resources-url "Tiles/" (system :image)))
       (svg/g { :translate center }
-         (conj ships-content (double-text (str/upper-case (name id)) (map-polar 9 0.8)) )) ] )))
+         (conj ships-content (svg/double-text (str/upper-case (name id)) (map-polar 9 0.8) {}) )) ] )))
 
 (defn bounding-rect [ map-pieces ]
   (let [ s-locs (screen-locs map-pieces) ]

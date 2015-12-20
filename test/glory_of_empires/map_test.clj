@@ -3,7 +3,8 @@
   (:use clojure-common.xml)
   (:require [clojure.test :refer :all]
             [glory-of-empires.map :refer :all])
-  (:require [glory-of-empires.ships :as ships]))
+  (:require [glory-of-empires.ships :as ships])
+  (:require [glory-of-empires.svg :as svg]))
 
 ; Most of our tests are inline-tests in the respective functions, but for longer tests we can put here
 
@@ -35,6 +36,13 @@
       [ :g {:transform " translate(-173,0)"}
         [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "36px"} "A1"]
         [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "36px"} "A1"]]]] )
+
+(deftest svg-test
+  (testing "svg"
+    (is (= (svg/double-text "Hello" [ 6 6 ] {})
+           [:g {:transform " translate(6,6)"}
+             [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "36px"} "Hello"]
+             [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "36px"} "Hello"]]))))
 
 (deftest ship-rendering-test
   (testing "ship rendering"
