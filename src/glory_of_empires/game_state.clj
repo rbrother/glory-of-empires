@@ -2,9 +2,12 @@
   (:use clojure-common.utils)
   (:use clojure.java.io))
 
-(def game (atom
-    { :map {}
-      :players {} } ))
+(def new-game-state
+  { :map {}
+    :players {}
+    :ship-counters {} } )
+
+(def game (atom new-game-state))
 
 (def game-file-path "game-state.clj")
 

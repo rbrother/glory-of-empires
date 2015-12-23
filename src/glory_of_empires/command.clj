@@ -47,6 +47,6 @@
 
 (defn new-ship [ loc-id owner type ]
   { :pre [ (contains? (:players (game)) owner) ] }
-  (board-command #(board/new-ship loc-id owner type % )))
+    (run-command #(board/new-ship loc-id owner type % )))
 
 (defn del-ship [ ship-id ] nil )

@@ -67,24 +67,34 @@
 
 (defn random-systems [ board ] (map-map-values set-random-system board))
 
-(defn swap-system [ loc-id system-id board ]
+(defn swap-system [ board loc-id system-id ]
   { :pre [ (contains? board loc-id) ] }
   (assoc-in board [ loc-id :system ] system-id))
 
 ;-------------------- ships --------------------------
 
-(defn new-ship-to-piece [ { controller :controller ships :ships :as piece } owner type ]
+(defn new-ship-to-piece [ { controller :controller ships :ships :as piece } owner type id ]
   (let [ controller (piece :controller)
-         initial-ships (or ships [])
-         new-id "de123" ]
+         initial-ships (or ships []) ]
     (if (and (not (empty? ships)) (not= controller owner))
       (throw (Exception. "Cannot add ship of different"))
-      (merge piece { :controller owner :ships (conj initial-ships { :type type :id new-id }) } ))))
+      (merge piece { :controller owner :ships (conj initial-ships { :type type :id id }) } ))))
 
-(defn new-ship [ loc-id owner type board ]
+(defn new-ship-to-map [ board loc-id owner type id ]
   { :pre [ (contains? board loc-id)
            (ships/valid-ship-type? type) ] }
-  (update-in board [ loc-id ] new-ship-to-piece owner type))
+    (update-in board [ loc-id ] new-ship-to-piece owner type id))
+
+(defn new-ship-index [ game-state type ]
+  (inc (get-in game-state [ :ship-counters type ] 0)))
+
+(defn new-ship [ loc-id owner type game-state ]
+  { :pre [ (ships/valid-ship-type? type) ] }
+    (let [ idx (new-ship-index game-state type)
+           ship-id (str (name type) idx) ]
+      (-> game-state
+        (assoc-in [ :ship-counters type ] idx )
+        (update-in [ :map ] new-ship-to-map loc-id owner type ship-id))))
 
 ;------------------ to svg ------------------------
 
