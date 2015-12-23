@@ -16,26 +16,12 @@
       :id :a1,
       :controller :hacan,
       :ships [
-        {:type :fighter, :id "de123"}
-        {:type :fighter, :id "xx123"}]}},
+        {:type :fi, :id "de123"}
+        {:type :fi, :id "xx123"}]}},
    :players
     { :hacan {:id :hacan},
       :norr {:id :norr},
       :naalu {:id :naalu}}} )
-
-(def mini-game-svg
-  [ :g {:transform " translate(0,0)"}
-    [ :image {:x 0, :y 0, "xlink:href" "http://www.brotherus.net/ti3/Tiles/Setup/Tile-Setup-Red.gif", :width 432, :height 376}]
-    [ :g {:transform "translate(216,188)"}
-      [ :g {:transform " translate(-25,-18)"}
-        [ :image {:x -112.2368680667313, :y 64.80004202599832, :width 50, :height 36,
-                 "xlink:href" "http://www.brotherus.net/ti3/Ships/Yellow/Unit-Yellow-Fighter.png" }]]
-      [ :g {:transform " translate(-25,-18)"}
-        [ :image {:x 22.362051432357585, :y -83.45596836498032, :width 50, :height 36,
-                 "xlink:href" "http://www.brotherus.net/ti3/Ships/Yellow/Unit-Yellow-Fighter.png" }]]
-      [ :g {:transform " translate(-173,0)"}
-        [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "36px"} "A1"]
-        [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "36px"} "A1"]]]] )
 
 (deftest svg-test
   (testing "svg"
@@ -47,13 +33,13 @@
 (deftest ship-rendering-test
   (testing "ship rendering"
     (let []
-      (is (= (ships/svg { :id :xyz :type :cruiser } :hacan [ -50 20 ] )
+      (is (= (ships/svg { :id :xyz :type :cr } :hacan [ -50 20 ] )
              [:g {:transform " translate(-77,-32)"}
                [:image {:x 0, :y 0, :width 55, :height 105, "xlink:href" "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Cruiser.png"} ]
                [:g {:transform " translate(0,129)"}
                  [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "24px"} "xyz"]
                  [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "24px"} "xyz"]]] ))
-      (is (= (ship-group-svg [ [ { :id :abc :type :fighter } { :id :xyz :type :cruiser } ] [-50 20] ] :hacan )
+      (is (= (ship-group-svg [ [ { :id :abc :type :fi } { :id :xyz :type :cr } ] [-50 20] ] :hacan )
              [ [:g {:transform " translate(-27,-32)"}
                   [:image {:x 0, :y 0, :width 55, :height 105, "xlink:href" "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Cruiser.png"}]
                   [:g {:transform " translate(0,129)"}
@@ -68,7 +54,7 @@
       (is (= (group-ships [ :a :b ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:b] 2 ] ] ))
       (is (= (group-ships [ :a :a ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:a] 2 ] ] ))
       (is (= (group-ships [ :a :b :c ] [ 1 2 ] )     [ [ [:a :b] 1 ] [ [:c] 2 ] ] ))
-      (is (= (ships-svg :naalu [ { :id :abc :type :cruiser } { :id :abc :type :cruiser } ] )
+      (is (= (ships-svg :naalu [ { :id :abc :type :cr } { :id :abc :type :cr } ] )
              [ [:g {:transform " translate(-140,12)"}
                   [:image {:x 0, :y 0, :width 55, :height 105, "xlink:href" "http://localhost/ti3/Ships/Tan/Unit-Tan-Cruiser.png"}]
                   [:g {:transform " translate(0,129)"}
@@ -94,10 +80,10 @@
                 :system :mecatol-rex,
                 :id :b2,
                 :controller :hacan,
-                :ships [ {:type :carrier, :id "ca6"} ] }
+                :ships [ {:type :ca, :id "ca6"} ] }
            c-map (-> b-map
                       (swap-system :b2 :mecatol-rex)
-                      (new-ship-to-map :b2 :hacan :carrier "ca6")) ]
+                      (new-ship-to-map :b2 :hacan :ca "ca6")) ]
       (is (= (location-id [ -3 4 ] [ -5 -6 ] ) :c11 ))
       (is (=
         a-map
