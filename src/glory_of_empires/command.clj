@@ -16,7 +16,11 @@
   (run-command (fn [ game ] (update game :map command))))
 
 (defn- make-board-command [ new-board ]
-  (run-command (fn [ game ] (assoc game :map new-board))))
+  (run-command
+    (fn [ game ]
+      (-> game
+          (assoc :map new-board)
+          (assoc :ship-counters {})))))
 
 ;----------- map commands --------------------
 
