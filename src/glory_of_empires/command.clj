@@ -55,3 +55,7 @@
 
 (defn del-unit [ unit-id ]
   (board-command #(board/del-unit % unit-id)))
+
+(defn move-unit [ unit-id dest ]
+  (let [ unit-ids (if (sequential? unit-id) unit-id [ unit-id ] ) ]
+    (board-command #(board/move-units % unit-ids dest))))

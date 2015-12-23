@@ -74,12 +74,11 @@
 ;-------------------- ships --------------------------
 
 (defn new-unit-to-piece [ { controller :controller ships :ships :as piece } owner type id ]
-  (let [ controller (piece :controller) ]
-    (if (and (not (empty? ships)) (not= controller owner))
-      (throw (Exception. "Cannot add ship of different owner"))
-      (-> piece
-          (assoc :controller owner)
-          (assoc-in [ :ships id ] { :type type :id id } )))))
+  (if (and (not (empty? ships)) (not= controller owner))
+    (throw (Exception. "Cannot add ship of different owner"))
+    (-> piece
+        (assoc :controller owner)
+        (assoc-in [ :ships id ] { :type type :id id :owner owner } ))))
 
 (defn new-unit-to-map [ board loc-id owner type id ]
   { :pre [ (contains? board loc-id)
@@ -102,6 +101,22 @@
 
 (defn del-unit [ board id ]
   (map-map-values #(del-unit-from-piece % id) board))
+
+(defn all-units [ board ] (apply merge (map :ships (vals board))))
+
+(defn find-unit [ board id ] ((all-units board) id))
+
+(defn move-unit [ board unit-id loc-id ]
+   (let [ { owner :owner :as unit } (find-unit board unit-id) ]
+     (-> board
+         (del-unit unit-id)
+         (assoc-in [ loc-id :ships unit-id ] unit)
+         (assoc-in [ loc-id :controller ] owner))))
+
+(defn move-units [ board unit-ids loc-id ]
+  { :pre [ (sequential? unit-ids) ] }
+  (let [ move-unit-to (fn [ new-board unit-id ] (move-unit new-board unit-id loc-id)) ]
+    (reduce move-unit-to board unit-ids)))
 
 ;------------------ to svg ------------------------
 

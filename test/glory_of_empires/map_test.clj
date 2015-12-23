@@ -88,10 +88,12 @@
                 :system :mecatol-rex,
                 :id :b2,
                 :controller :hacan,
-                :ships { :ca6 {:type :ca, :id :ca6 } } }
+                :ships { :ca6 {:type :ca, :id :ca6, :owner :hacan } } }
            c-map (-> b-map
                       (swap-system :b2 :mecatol-rex)
-                      (new-unit-to-map :b2 :hacan :ca :ca6)) ]
+                      (new-unit-to-map :b2 :hacan :ca :ca6))
+           d-map (move-unit c-map :ca6 :a2) ]
+
       (is (= (location-id [ -3 4 ] [ -5 -6 ] ) :c11 ))
       (is (=
         a-map
@@ -111,4 +113,5 @@
       (is (string? (xml-to-text (map-to-svg (random-systems a-map)))))
       (is (string? (xml-to-text (map-to-svg c-map))))
       (is (= (c-map :b2) b2-after-new-ship ))
+      (is (= ((d-map :a2) :ships) {:ca6 {:type :ca, :id :ca6, :owner :hacan}} ))
       )))
