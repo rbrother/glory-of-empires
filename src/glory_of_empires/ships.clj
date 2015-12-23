@@ -1,4 +1,5 @@
 (ns glory-of-empires.ships
+  (:require [clojure.string :as string])
   (:use clojure-common.utils)
   (:require [glory-of-empires.races :as races])
   (:require [glory-of-empires.svg :as svg]))
@@ -36,4 +37,4 @@
          center-shift (mul-vec tile-size -0.5) ]
     (svg/g { :translate (map + center-shift loc) }
       [ (svg/image [0 0] tile-size (ship-image-url ship race))
-        (svg/double-text (name id) [ 0 (+ (last tile-size) 24 ) ] { :size 24 }) ] )))
+        (svg/double-text (string/upper-case (name id)) [ 0 (+ (last tile-size) 24 ) ] { :size 22 }) ] )))

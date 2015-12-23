@@ -83,7 +83,7 @@
                 :ships [ {:type :ca, :id "ca6"} ] }
            c-map (-> b-map
                       (swap-system :b2 :mecatol-rex)
-                      (new-unit-to-map :b2 :hacan :ca "ca6")) ]
+                      (new-unit-to-map :b2 :hacan :ca :ca6)) ]
       (is (= (location-id [ -3 4 ] [ -5 -6 ] ) :c11 ))
       (is (=
         a-map

@@ -91,7 +91,7 @@
 (defn new-unit [ loc-id owner type game-state ]
   { :pre [ (ships/valid-unit-type? type) ] }
     (let [ idx (new-unit-index game-state type)
-           ship-id (str (name type) idx) ]
+           ship-id (keyword (str (name type) idx)) ]
       (-> game-state
         (assoc-in [ :ship-counters type ] idx )
         (update-in [ :map ] new-unit-to-map loc-id owner type ship-id))))
