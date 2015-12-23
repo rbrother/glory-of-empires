@@ -6,7 +6,7 @@
 ;(def resources-url "http://www.brotherus.net/ti3/")
 (def resources-url "http://localhost/ti3/")
 
-(def all-ship-types-arr
+(def all-unit-types-arr
   [ { :id :fi :name "Fighter"     :image-name "Fighter"   :image-size [ 50 36 ] }
     { :id :de :name "Destroyer"   :image-name "Destroyer" :image-size [ 42 56 ] }
     { :id :cr :name "Cruiser"     :image-name "Cruiser"   :image-size [ 55 105 ] }
@@ -19,19 +19,19 @@
     { :id :pds :name "Planetary Defence System" :image-name "PDS" :image-size [ 67 49 ] }
     { :id :sd :name "Spacedock"   :image-name "Spacedock"  :image-size [ 76 78 ] } ] )
 
-(def all-ship-types (index-by-id all-ship-types-arr))
+(def all-unit-types (index-by-id all-unit-types-arr))
 
-(defn valid-ship-type? [ type ] (contains? all-ship-types type))
+(defn valid-unit-type? [ type ] (contains? all-unit-types type))
 
 (defn ship-image-url [ { type :type :as ship } race ]
-  { :pre [ (contains? all-ship-types type) ] }
-  (let [ { image-name :image-name } (all-ship-types type)
+  { :pre [ (valid-unit-type? type) ] }
+  (let [ { image-name :image-name } (all-unit-types type)
          { color :unit-color} (races/all-races race) ]
     (str resources-url "Ships/" color "/Unit-" color "-" image-name ".png")))
 
 (defn svg [ { id :id type :type :as ship } race loc ]
-  { :pre [ (valid-ship-type? type) ] }
-  (let [ ship-data (all-ship-types type)
+  { :pre [ (valid-unit-type? type) ] }
+  (let [ ship-data (all-unit-types type)
          tile-size (ship-data :image-size)
          center-shift (mul-vec tile-size -0.5) ]
     (svg/g { :translate (map + center-shift loc) }

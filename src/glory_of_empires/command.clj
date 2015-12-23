@@ -43,10 +43,10 @@
 (defn set-players [ & player-ids ]
   (run-command #(players/set-players player-ids %)))
 
-;------------ ship commands ------------------
+;------------ unit commands ------------------
 
-(defn new-ship [ loc-id owner type ]
+(defn new-unit [ loc-id owner type ]
   { :pre [ (contains? (:players (game)) owner) ] }
-    (run-command #(board/new-ship loc-id owner type % )))
+    (run-command #(board/new-unit loc-id owner type % )))
 
-(defn del-ship [ ship-id ] nil )
+(defn del-unit [ unit-id ] nil )
