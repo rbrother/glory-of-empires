@@ -74,11 +74,12 @@
 ;-------------------- ships --------------------------
 
 (defn new-unit-to-piece [ { controller :controller ships :ships :as piece } owner type id ]
-  (let [ controller (piece :controller)
-         initial-ships (or ships []) ]
+  (let [ controller (piece :controller) ]
     (if (and (not (empty? ships)) (not= controller owner))
       (throw (Exception. "Cannot add ship of different owner"))
-      (merge piece { :controller owner :ships (conj initial-ships { :type type :id id }) } ))))
+      (-> piece
+          (assoc :controller owner)
+          (assoc-in [ :ships id ] { :type type :id id } )))))
 
 (defn new-unit-to-map [ board loc-id owner type id ]
   { :pre [ (contains? board loc-id)
@@ -95,6 +96,12 @@
       (-> game-state
         (assoc-in [ :ship-counters type ] idx )
         (update-in [ :map ] new-unit-to-map loc-id owner type ship-id))))
+
+(defn del-unit-from-piece [ piece id ]
+  (update-in piece [ :ships ] #(dissoc % id)))
+
+(defn del-unit [ board id ]
+  (map-map-values #(del-unit-from-piece % id) board))
 
 ;------------------ to svg ------------------------
 
@@ -126,7 +133,7 @@
 (defn piece-to-svg [ { logical-pos :logical-pos system-id :system id :id controller :controller ships :ships } ]
   (let [ center (mul-vec tile-size 0.5)
          system (get-system system-id)
-         ships-content (if (or (nil? ships) (empty? ships)) [] (ships-svg controller ships)) ]
+         ships-content (if (or (nil? ships) (empty? ships)) [] (ships-svg controller (vals ships))) ]
     (svg/g { :translate (screen-loc logical-pos) } [
       (svg/image [ 0 0 ] tile-size (str ships/resources-url "Tiles/" (system :image)))
       (svg/g { :translate center }

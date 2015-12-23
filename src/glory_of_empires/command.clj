@@ -53,4 +53,5 @@
   { :pre [ (contains? (:players (game)) owner) ] }
     (run-command #(board/new-unit loc-id owner type % )))
 
-(defn del-unit [ unit-id ] nil )
+(defn del-unit [ unit-id ]
+  (board-command #(board/del-unit % unit-id)))

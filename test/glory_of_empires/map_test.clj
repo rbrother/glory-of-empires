@@ -30,6 +30,15 @@
              [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "36px"} "Hello"]
              [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "36px"} "Hello"]]))))
 
+(deftest add-remove-unit-test
+  (testing "add-remove-unit"
+    (let [ start {:logical-pos [0 0], :system :setup-red, :id :a1, :controller :hacan,
+                  :ships { :fi12 {:type :fi, :id :fi12} :cr7 {:type :cr, :id :cr7 } } } ]
+    (is (= (del-unit-from-piece start :cr7)
+           {:logical-pos [0 0], :system :setup-red, :id :a1, :controller :hacan,
+                  :ships { :fi12 {:type :fi, :id :fi12} } } ))
+    )))
+
 (deftest ship-rendering-test
   (testing "ship rendering"
     (let []
@@ -37,19 +46,19 @@
              [:g {:transform " translate(-77,-32)"}
                [:image {:x 0, :y 0, :width 55, :height 105, "xlink:href" "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Cruiser.png"} ]
                [:g {:transform " translate(0,129)"}
-                 [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "24px"} "xyz"]
-                 [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "24px"} "xyz"]]] ))
+                 [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "XYZ"]
+                 [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "XYZ"]]] ))
       (is (= (ship-group-svg [ [ { :id :abc :type :fi } { :id :xyz :type :cr } ] [-50 20] ] :hacan )
              [ [:g {:transform " translate(-27,-32)"}
                   [:image {:x 0, :y 0, :width 55, :height 105, "xlink:href" "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Cruiser.png"}]
                   [:g {:transform " translate(0,129)"}
-                    [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "24px"} "xyz"]
-                    [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "24px"} "xyz"]]]
+                    [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "XYZ"]
+                    [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "XYZ"]]]
                 [:g {:transform " translate(-75,2)"}
                   [:image {:x 0, :y 0, :width 50, :height 36, "xlink:href" "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Fighter.png"}]
                   [:g {:transform " translate(0,60)"}
-                    [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "24px"} "abc"]
-                    [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "24px"} "abc"]]]]  ))
+                    [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "ABC"]
+                    [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "ABC"]]]]  ))
       (is (= (group-ships [ :a ] [ 1 2 ] )           [ [ [:a ] 1 ] ] ))
       (is (= (group-ships [ :a :b ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:b] 2 ] ] ))
       (is (= (group-ships [ :a :a ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:a] 2 ] ] ))
@@ -58,15 +67,14 @@
              [ [:g {:transform " translate(-140,12)"}
                   [:image {:x 0, :y 0, :width 55, :height 105, "xlink:href" "http://localhost/ti3/Ships/Tan/Unit-Tan-Cruiser.png"}]
                   [:g {:transform " translate(0,129)"}
-                    [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "24px"} "abc"]
-                    [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "24px"} "abc"]]]
+                    [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "ABC"]
+                    [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "ABC"]]]
                 [:g {:transform " translate(-5,-136)"}
                   [:image {:x 0, :y 0, :width 55, :height 105, "xlink:href" "http://localhost/ti3/Ships/Tan/Unit-Tan-Cruiser.png"}]
                   [:g {:transform " translate(0,129)"}
-                    [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "24px"} "abc"]
-                    [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "24px"} "abc"]]]] ))
+                    [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "ABC"]
+                    [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "ABC"]]]] ))
       )))
-
 
 (deftest random-map-test
   (testing "make-random-map"
@@ -80,7 +88,7 @@
                 :system :mecatol-rex,
                 :id :b2,
                 :controller :hacan,
-                :ships [ {:type :ca, :id "ca6"} ] }
+                :ships { :ca6 {:type :ca, :id :ca6 } } }
            c-map (-> b-map
                       (swap-system :b2 :mecatol-rex)
                       (new-unit-to-map :b2 :hacan :ca :ca6)) ]

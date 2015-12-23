@@ -19,7 +19,6 @@
         [ :span {} (race :name) ]
         [ :img { :src fighter-image } ] ] ] ))
 
-
 (defn players-html [ players ]
   `[ :div {}
      [ :h1 {} "Players" ]
