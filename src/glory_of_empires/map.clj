@@ -96,6 +96,10 @@
         (assoc-in [ :ship-counters type ] idx )
         (update-in [ :map ] new-unit-to-map loc-id owner type ship-id))))
 
+(defn new-units [ loc-id owner types game-state ]
+  (let [ new-unit-of (fn [ new-game-state type] (new-unit loc-id owner type new-game-state )) ]
+    (reduce new-unit-of game-state types)))
+
 (defn del-unit-from-piece [ piece id ]
   (update-in piece [ :ships ] #(dissoc % id)))
 

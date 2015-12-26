@@ -51,7 +51,8 @@
 
 (defn new-unit [ loc-id owner type ]
   { :pre [ (contains? (:players (game)) owner) ] }
-    (run-command #(board/new-unit loc-id owner type % )))
+  (let [ types (if (sequential? type) type [ type ]) ]
+    (run-command #(board/new-units loc-id owner types % ))))
 
 (defn del-unit [ unit-id ]
   (board-command #(board/del-unit % unit-id)))
