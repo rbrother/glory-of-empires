@@ -61,29 +61,49 @@
          bounding-rect [ (mul-vec pixel-size -0.5) (mul-vec pixel-size 0.5) ] ]
     (make-board (+ width height) (fn [ pos ] (inside-rect? (screen-loc pos) bounding-rect)))))
 
+;-------------------- map query --------------------------
+
+(defn get-loc-of [ board system-predicate ]
+  (ffirst (filter (fn [ [ system-id system ] ] (system-predicate system)) board)))
+
+; eg. :abyz-fria -> :a3
+(defn get-system-loc [ board system-id ]
+  (get-loc-of board (fn [ { system :system } ] (= system system-id))))
+
+; eg. :fria -> :a3
+(defn find-planet-loc [ board planet ]
+  { :post [ (not (nil? %)) ] }
+  (get-loc-of board (fn [ { planets :planets } ] (and planets (contains? planets planet)))))
+
 ;------------------- map operations -------------------------
 
-(defn set-random-system [ piece ] (assoc piece :system (:id (rand-nth all-systems-arr))))
-
-(defn random-systems [ board ] (map-map-values set-random-system board))
+(defn swap-piece-system [ piece system-id ]
+  (let [ { planets :planets } (get-system system-id) ]
+    (merge piece { :system system-id :planets planets } )))
 
 (defn swap-system [ board loc-id system-id ]
   { :pre [ (contains? board loc-id) ] }
-  (assoc-in board [ loc-id :system ] system-id))
+  (update-in board [ loc-id ] swap-piece-system system-id))
+
+(defn set-random-system [ piece ] (swap-piece-system piece (:id (rand-nth all-systems-arr))))
+
+(defn random-systems [ board ] (map-map-values set-random-system board))
 
 ;-------------------- ships --------------------------
 
-(defn new-unit-to-piece [ { controller :controller ships :ships :as piece } owner type id ]
-  (if (and (not (empty? ships)) (not= controller owner))
-    (throw (Exception. "Cannot add ship of different owner"))
-    (-> piece
-        (assoc :controller owner)
-        (assoc-in [ :ships id ] { :type type :id id :owner owner } ))))
+(defn new-unit-to-piece [ { system-id :id :as piece } loc-id owner type id ]
+  (let [ unit { :type type :id id :owner owner } ]
+    (if (= loc-id system-id)
+      (-> piece
+          (assoc :controller owner)
+          (assoc-in [ :ships id ] unit ))
+      (-> piece
+          (assoc-in [ :planets loc-id :units id ] unit )))))
 
 (defn new-unit-to-map [ board loc-id owner type id ]
-  { :pre [ (contains? board loc-id)
-           (ships/valid-unit-type? type) ] }
-    (update-in board [ loc-id ] new-unit-to-piece owner type id))
+  { :pre [ (ships/valid-unit-type? type) ] }
+  (let [ system-id (if (contains? board loc-id) loc-id (find-planet-loc board loc-id)) ]
+    (update-in board [ system-id ] new-unit-to-piece loc-id owner type id)))
 
 (defn new-unit-index [ game-state type ]
   (inc (get-in game-state [ :ship-counters type ] 0)))
@@ -91,10 +111,10 @@
 (defn new-unit [ loc-id owner type game-state ]
   { :pre [ (ships/valid-unit-type? type) ] }
     (let [ idx (new-unit-index game-state type)
-           ship-id (keyword (str (name type) idx)) ]
+           unit-id (keyword (str (name type) idx)) ]
       (-> game-state
         (assoc-in [ :ship-counters type ] idx )
-        (update-in [ :map ] new-unit-to-map loc-id owner type ship-id))))
+        (update-in [ :map ] new-unit-to-map loc-id owner type unit-id))))
 
 (defn new-units [ loc-id owner types game-state ]
   (let [ new-unit-of (fn [ new-game-state type] (new-unit loc-id owner type new-game-state )) ]

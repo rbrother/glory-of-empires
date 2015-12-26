@@ -8,17 +8,17 @@
 (def resources-url "http://localhost/ti3/")
 
 (def all-unit-types-arr
-  [ { :id :fi :name "Fighter"     :image-name "Fighter"   :image-size [ 50 36 ] }
-    { :id :de :name "Destroyer"   :image-name "Destroyer" :image-size [ 42 56 ] }
-    { :id :cr :name "Cruiser"     :image-name "Cruiser"   :image-size [ 55 105 ] }
-    { :id :ca :name "Carrier"     :image-name "Carrier"   :image-size [ 50 139 ] }
-    { :id :dr :name "Dreadnaught" :image-name "Dreadnaught" :image-size [ 79 159 ] }
-    { :id :ws :name "Warsun"      :image-name "Warsun"    :image-size [ 135 113 ] }
-    { :id :fl :name "Flagship"    :image-name "Flagship"  :image-size [ 200 71 ] }
-    { :id :gf :name "Ground Force" :image-name "GF"       :image-size [ 48 57 ] }
-    { :id :mu :name "Mechanised Unit" :image-name "MU"    :image-size [ 75 36 ] }
-    { :id :pds :name "Planetary Defence System" :image-name "PDS" :image-size [ 67 49 ] }
-    { :id :sd :name "Spacedock"   :image-name "Spacedock"  :image-size [ 76 78 ] } ] )
+  [ { :id :fi :type :ship :name "Fighter"     :image-name "Fighter"   :image-size [ 50 36 ] }
+    { :id :de :type :ship :name "Destroyer"   :image-name "Destroyer" :image-size [ 42 56 ] }
+    { :id :cr :type :ship :name "Cruiser"     :image-name "Cruiser"   :image-size [ 55 105 ] }
+    { :id :ca :type :ship :name "Carrier"     :image-name "Carrier"   :image-size [ 50 139 ] }
+    { :id :dr :type :ship :name "Dreadnaught" :image-name "Dreadnaught" :image-size [ 79 159 ] }
+    { :id :ws :type :ship :name "Warsun"      :image-name "Warsun"    :image-size [ 135 113 ] }
+    { :id :fl :type :ship :name "Flagship"    :image-name "Flagship"  :image-size [ 200 71 ] }
+    { :id :gf :type :ground :name "Ground Force" :image-name "GF"       :image-size [ 48 57 ] }
+    { :id :mu :type :ground :name "Mechanised Unit" :image-name "MU"    :image-size [ 75 36 ] }
+    { :id :pds :type :ground :name "Planetary Defence System" :image-name "PDS" :image-size [ 67 49 ] }
+    { :id :sd :type :ground :name "Spacedock"   :image-name "Spacedock"  :image-size [ 76 78 ] } ] )
 
 (def all-unit-types (index-by-id all-unit-types-arr))
 

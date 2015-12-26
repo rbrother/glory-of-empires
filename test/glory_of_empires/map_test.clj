@@ -76,6 +76,20 @@
                     [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "ABC"]]]] ))
       )))
 
+(deftest find-planet-test
+  (testing "find planet"
+    (let [board1
+          {:a2 {:logical-pos [-1 0], :system :setup-yellow, :id :a2},
+           :a3 {:logical-pos [-1 1], :system :setup-yellow, :id :a3},
+           :b2 {:logical-pos [0 0], :system :abyz-fria, :id :b2,
+                :planets {:abyz {:res 3, :inf 0}, :fria {:res 2, :inf 0, :tech {:blue 1}}},
+                :controller :hacan, :ships {:ca6 {:type :ca, :id :ca6, :owner :hacan}}},
+           :c1 {:logical-pos [1 -1], :system :setup-yellow, :id :c1},
+           :c2 {:logical-pos [1 0], :system :setup-yellow, :id :c2}}]
+      (is (= (get-system-loc board1 :abyz-fria) :b2))
+      (is (= (find-planet-loc board1 :abyz) :b2))
+      )))
+
 (deftest random-map-test
   (testing "make-random-map"
     (let [ a-map (round-board 2)
@@ -84,14 +98,14 @@
            correct-screen-locs [ [-324.0 -188.0] [-324.0 188.0] [0.0 -376.0] [0.0 0.0] [0.0 376.0] [324.0 -188.0] [324.0 188.0] ]
            correct-bounding-rect [ [ -324.0 -376.0 ] [ 756.0 752.0 ] ]
            b2-after-new-ship {
-                :logical-pos [0 0],
-                :system :mecatol-rex,
-                :id :b2,
-                :controller :hacan,
-                :ships { :ca6 {:type :ca, :id :ca6, :owner :hacan } } }
+              :logical-pos [0 0], :system :abyz-fria, :id :b2, :controller :hacan,
+              :ships {:ca6 {:type :ca, :id :ca6, :owner :hacan} }
+              :planets { :abyz {:res 3, :inf 0, :units {:gf2 {:type :gf, :id :gf2, :owner :hacan}}},
+                         :fria {:res 2, :inf 0, :tech {:blue 1}} } }
            c-map (-> b-map
-                      (swap-system :b2 :mecatol-rex)
-                      (new-unit-to-map :b2 :hacan :ca :ca6))
+                      (swap-system :b2 :abyz-fria)
+                      (new-unit-to-map :b2 :hacan :ca :ca6)
+                      (new-unit-to-map :abyz :hacan :gf :gf2))
            d-map (move-unit c-map :ca6 :a2) ]
 
       (is (= (location-id [ -3 4 ] [ -5 -6 ] ) :c11 ))

@@ -2,8 +2,9 @@
   (:use clojure-common.utils))
 
 (def all-systems-arr
-  [ { :id :acheron   :image "1planet/Tile-Acheron.gif" }
-    { :id :aeon      :image "1planet/Tile-Aeon.gif" }
+  [ { :id :aah       :image "1planet/Tile-Aah.gif"     :planets { :aah { :res 1 :inf 1 } } }
+    { :id :acheron   :image "1planet/Tile-Acheron.gif" :planets { :acheron { :res 1 :inf 2 :tech { :green 1 } } } }
+    { :id :aeon      :image "1planet/Tile-Aeon.gif"    :planets { :aeon { :res 1 :inf 3 :tech { :green 1 } } } }
     { :id :aker      :image "1planet/Tile-Aker.gif" }
     { :id :ammit     :image "1planet/Tile-Ammit.gif" }
     { :id :amun      :image "1planet/Tile-Amun.gif" }
@@ -49,7 +50,7 @@
     { :id :khepri    :image "1planet/Tile-Khepri.gif" }
     { :id :khnum     :image "1planet/Tile-Khnum.gif" }
     { :id :klendathu :image "1planet/Tile-Klendathu.gif" }
-    { :id :kobol     :image "1planet/Tile-Kobol.gif" }
+    { :id :kobol     :image "1planet/Tile-Kobol.gif" :planets { :kobol { :res 2 :inf 5 } } }
     { :id :laurin    :image "1planet/Tile-Laurin.gif" }
     { :id :lesab     :image "1planet/Tile-Lesab.gif" }
     { :id :lodor     :image "1planet/Tile-Lodor.gif" }
@@ -64,8 +65,8 @@
     { :id :nexus     :image "1planet/Tile-Nexus.gif" }
     { :id :niiwa-sei :image "1planet/Tile-Niiwa-Sei.gif" }
     { :id :pakhet    :image "1planet/Tile-Pakhet.gif" }
-    { :id :parzifal  :image "1planet/Tile-Parzifal.gif" }
-    { :id :perimeter :image "1planet/Tile-Perimeter.gif" }
+    { :id :parzifal  :image "1planet/Tile-Parzifal.gif" :planets { :parzifal { :res 4 :inf 3 :tech { :green 1 } } } }
+    { :id :perimeter :image "1planet/Tile-Perimeter.gif" :planets { :perimeter { :res 2 :inf 2 } } }
     { :id :petbe     :image "1planet/Tile-Petbe.gif" }
     { :id :primor    :image "1planet/Tile-Primor.gif" }
     { :id :ptah      :image "1planet/Tile-Ptah.gif" }
@@ -91,7 +92,8 @@
     { :id :wellon    :image "1planet/Tile-Wellon.gif" }
     { :id :wepwawet  :image "1planet/Tile-Wepwawet.gif" }
 
-    { :id :abyz-fria :image "2planet/Tile-Abyz-Fria.gif" }
+    { :id :abyz-fria :image "2planet/Tile-Abyz-Fria.gif"
+      :planets { :abyz { :res 3 :inf 0 } :fria { :res 2 :inf 0 :tech { :blue 1 } } } }
     { :id :achill    :image "2planet/Tile-Achill.gif" }
     { :id :aeterna-tammuz :image "2planet/Tile-AeternaTammuz.gif" }
     { :id :arinam-meer :image "2planet/Tile-Arinam-Meer.gif" }
@@ -119,7 +121,8 @@
     { :id :nadir-lucus :image "2planet/Tile-Nadir-Lucus.gif" }
     { :id :new-albion-starpoint :image "2planet/Tile-New_Albion-Starpoint.gif" }
     { :id :nummantia-hisspania :image "2planet/Tile-Nummantia-Hisspania.gif" }
-    { :id :othorAiel :image "2planet/Tile-OthorAiel.gif" }
+    { :id :othor-aiel :image "2planet/Tile-OthorAiel.gif"
+      :planets { :othor { :res 1 :inf 3 :tech { :green 1 } } :aiel { :res 2 :inf 0 :tech { :blue 1 } } } }
     { :id :pankow-prenzlberg :image "2planet/Tile-Pankow-Prenzlberg.gif" }
     { :id :perro-senno :image "2planet/Tile-Perro-Senno.gif" }
     { :id :qucenn-rarron :image "2planet/Tile-Qucenn-Rarron.gif" }
@@ -233,7 +236,7 @@
     { :id :richese   :image "HomeSystem/Tile-HS-Richese.gif" }
     { :id :romulan   :image "HomeSystem/Tile-HS-Romulan.gif" }
     { :id :rrargan   :image "HomeSystem/Tile-HS-Rrargan.gif" }
-    { :id :saar   :image "HomeSystem/Tile-HS-Saar.gif" }
+    { :id :saar   :image "HomeSystem/Tile-HS-Saar.gif" :planets { :lisis2 { :res 1 :inf 0 } :ragh { :res 2 :inf 1 } } }
     { :id :sakkra   :image "HomeSystem/Tile-HS-Sakkra.gif" }
     { :id :salarian   :image "HomeSystem/Tile-HS-Salarian.gif" }
     { :id :shabbak   :image "HomeSystem/Tile-HS-Shabbak.gif" }
@@ -303,3 +306,7 @@
 (def all-systems (index-by-id all-systems-arr))
 
 (defn get-system [ id ] (all-systems id))
+
+(defn get-planets [ system-id ] (get (get-system system-id) :planets {}))
+
+(defn has-planet? [system-id planet] (contains? (get-planets system-id) planet))
