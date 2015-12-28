@@ -8,6 +8,17 @@
 
 ; Most of our tests are inline-tests in the respective functions, but for longer tests we can put here
 
+(defn structure-compare-failed [ calculated expected ]
+  (println "expected:")
+  (println (pretty-pr expected))
+  (println "calculated:")
+  (println (pretty-pr calculated))
+  false )
+
+(defn compare-structure [ calculated expected ]
+  (if (= calculated expected) true
+    (structure-compare-failed calculated expected)))
+
 (def mini-game-state
   { :map
     { :a1 { :logical-pos [0 0],
@@ -103,11 +114,6 @@
            pieces (vals a-map)
            correct-screen-locs [ [-324.0 -188.0] [-324.0 188.0] [0.0 -376.0] [0.0 0.0] [0.0 376.0] [324.0 -188.0] [324.0 188.0] ]
            correct-bounding-rect [ [ -324.0 -376.0 ] [ 756.0 752.0 ] ]
-           b2-after-new-ship {
-              :logical-pos [0 0], :system :abyz-fria, :id :b2, :controller :hacan,
-              :ships {:ca6 {:type :ca, :id :ca6, :owner :hacan} }
-              :planets { :abyz {:res 3, :inf 0, :units {:gf2 {:type :gf, :id :gf2, :owner :hacan}}},
-                         :fria {:res 2, :inf 0, :tech {:blue 1}} } }
            c-map (-> b-map
                       (swap-system :b2 :abyz-fria)
                       (new-unit-to-map :b2 :hacan :ca :ca6)
@@ -132,6 +138,11 @@
       (is (string? (xml-to-text (map-to-svg a-map { :scale 1.0 }))))
       (is (string? (xml-to-text (map-to-svg (random-systems a-map)))))
       (is (string? (xml-to-text (map-to-svg c-map))))
-      (is (= (c-map :b2) b2-after-new-ship ))
+      (is (compare-structure (c-map :b2)
+             { :id :b2, :logical-pos [ 0 0 ], :system :abyz-fria, :controller :hacan
+               :planets {
+                  :abyz { :units { :gf2 { :id :gf2, :owner :hacan, :type :gf } } }
+                  :fria { } }
+              :ships { :ca6 { :id :ca6 :owner :hacan :type :ca } } } ))
       (is (= ((d-map :a2) :ships) {:ca6 {:type :ca, :id :ca6, :owner :hacan}} ))
       )))

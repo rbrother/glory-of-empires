@@ -78,8 +78,11 @@
 ;------------------- map operations -------------------------
 
 (defn swap-piece-system [ piece system-id ]
-  (let [ { planets :planets } (get-system system-id) ]
-    (merge piece { :system system-id :planets planets } )))
+  (let [ { planets :planets } (get-system system-id)
+         ; Keep only planets names in the map, don't drag along static planet-info
+         ; that we gan get from all-systems map when needed. This keeps the test-data manageable.
+         empty-planets-map (map-map-values (fn [orig] {}) planets) ]
+    (merge piece { :system system-id :planets empty-planets-map } )))
 
 (defn swap-system [ board loc-id system-id ]
   { :pre [ (contains? board loc-id) ] }
