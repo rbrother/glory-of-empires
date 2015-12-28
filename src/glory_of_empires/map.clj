@@ -144,12 +144,12 @@
 
 ;------------------ to svg ------------------------
 
-(defn ship-group-svg [ [ group loc ] race ] ; returns [ [:g ... ] [:g ... ] ... ]
+(defn ship-group-svg [ [ group loc ] ] ; returns [ [:g ... ] [:g ... ] ... ]
   (if (empty? group) []
     (let [ ship (first group)
            next-loc (map + loc [50 0]) ]
-      (conj (ship-group-svg [ (rest group) next-loc ] race)
-            (ships/svg ship race loc)))))
+      (conj (ship-group-svg [ (rest group) next-loc ] )
+            (ships/svg ship loc)))))
 
 (defn map-polar [ clock rel-distance ]
   (polar (- 180 (* clock 30)) (* rel-distance 0.5 tile-width)))
@@ -161,22 +161,23 @@
          ship-groups (partition ships-per-group ships-per-group [] ships) ]
     (zip ship-groups group-locs)))
 
-(defn ships-svg [ controller ships ] ; returns [ [:g ... ] [:g ... ] ... ]
-  { :pre [ (not (nil? controller))
-           (contains? all-races controller) ] }
+(defn ships-svg [ ships ] ; returns [ [:g ... ] [:g ... ] ... ]
   (let [ sorted-ships (sort-by :type ships)
          group-locs default-ship-locs ; TODO: make default locs dependent on number of planets (0, 1, 2, 3)
          grouped-ships (group-ships sorted-ships group-locs) ]
-    (mapcat #(ship-group-svg % controller) grouped-ships)))
+    (mapcat ship-group-svg grouped-ships)))
+
+(defn ground-units-svg [ planets ] nil)
 
 (defn piece-to-svg [ { logical-pos :logical-pos system-id :system id :id controller :controller ships :ships } ]
   (let [ center (mul-vec tile-size 0.5)
          system (get-system system-id)
-         ships-content (if (or (nil? ships) (empty? ships)) [] (ships-svg controller (vals ships))) ]
+         ships-content (if (or (nil? ships) (empty? ships)) [] (ships-svg (vals ships)))
+         tile-label (svg/double-text (str/upper-case (name id)) (map-polar 9 0.8) {}) ]
     (svg/g { :translate (screen-loc logical-pos) } [
       (svg/image [ 0 0 ] tile-size (str ships/resources-url "Tiles/" (system :image)))
       (svg/g { :translate center }
-         (conj ships-content (svg/double-text (str/upper-case (name id)) (map-polar 9 0.8) {}) )) ] )))
+         (conj ships-content tile-label)) ] )))
 
 (defn bounding-rect [ map-pieces ]
   (let [ s-locs (screen-locs map-pieces) ]

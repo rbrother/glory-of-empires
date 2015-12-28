@@ -24,17 +24,18 @@
 
 (defn valid-unit-type? [ type ] (contains? all-unit-types type))
 
-(defn ship-image-url [ { type :type :as ship } race ]
+(defn ship-image-url [ type race ]
   { :pre [ (valid-unit-type? type) ] }
   (let [ { image-name :image-name } (all-unit-types type)
          { color :unit-color} (races/all-races race) ]
     (str resources-url "Ships/" color "/Unit-" color "-" image-name ".png")))
 
-(defn svg [ { id :id type :type :as ship } race loc ]
-  { :pre [ (valid-unit-type? type) ] }
+(defn svg [ { id :id type :type race :owner } loc ]
+  { :pre [ (valid-unit-type? type)
+           (contains? races/all-races race) ] }
   (let [ ship-data (all-unit-types type)
          tile-size (ship-data :image-size)
          center-shift (mul-vec tile-size -0.5) ]
     (svg/g { :translate (map + center-shift loc) }
-      [ (svg/image [0 0] tile-size (ship-image-url ship race))
+      [ (svg/image [0 0] tile-size (ship-image-url type race))
         (svg/double-text (string/upper-case (name id)) [ 0 (+ (last tile-size) 24 ) ] { :size 22 }) ] )))

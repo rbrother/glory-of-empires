@@ -42,13 +42,17 @@
 (deftest ship-rendering-test
   (testing "ship rendering"
     (let []
-      (is (= (ships/svg { :id :xyz :type :cr } :hacan [ -50 20 ] )
+      (is (= (ships/svg { :id :xyz, :type :cr, :owner :hacan } [ -50 20 ] )
              [:g {:transform " translate(-77,-32)"}
                [:image {:x 0, :y 0, :width 55, :height 105, "xlink:href" "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Cruiser.png"} ]
                [:g {:transform " translate(0,129)"}
                  [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "XYZ"]
                  [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "XYZ"]]] ))
-      (is (= (ship-group-svg [ [ { :id :abc :type :fi } { :id :xyz :type :cr } ] [-50 20] ] :hacan )
+      (is (= (group-ships [ :a ] [ 1 2 ] )           [ [ [:a ] 1 ] ] ))
+      (is (= (group-ships [ :a :b ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:b] 2 ] ] ))
+      (is (= (group-ships [ :a :a ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:a] 2 ] ] ))
+      (is (= (group-ships [ :a :b :c ] [ 1 2 ] )     [ [ [:a :b] 1 ] [ [:c] 2 ] ] ))
+      (is (= (ship-group-svg [ [ { :id :abc, :type :fi, :owner :hacan } { :id :xyz, :type :cr, :owner :hacan } ] [-50 20] ] )
              [ [:g {:transform " translate(-27,-32)"}
                   [:image {:x 0, :y 0, :width 55, :height 105, "xlink:href" "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Cruiser.png"}]
                   [:g {:transform " translate(0,129)"}
@@ -59,11 +63,7 @@
                   [:g {:transform " translate(0,60)"}
                     [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "ABC"]
                     [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "ABC"]]]]  ))
-      (is (= (group-ships [ :a ] [ 1 2 ] )           [ [ [:a ] 1 ] ] ))
-      (is (= (group-ships [ :a :b ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:b] 2 ] ] ))
-      (is (= (group-ships [ :a :a ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:a] 2 ] ] ))
-      (is (= (group-ships [ :a :b :c ] [ 1 2 ] )     [ [ [:a :b] 1 ] [ [:c] 2 ] ] ))
-      (is (= (ships-svg :naalu [ { :id :abc :type :cr } { :id :abc :type :cr } ] )
+      (is (= (ships-svg [ { :id :abc :type :cr :owner :naalu } { :id :abc :type :cr :owner :naalu } ] )
              [ [:g {:transform " translate(-140,12)"}
                   [:image {:x 0, :y 0, :width 55, :height 105, "xlink:href" "http://localhost/ti3/Ships/Tan/Unit-Tan-Cruiser.png"}]
                   [:g {:transform " translate(0,129)"}

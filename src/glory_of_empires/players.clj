@@ -10,10 +10,10 @@
          (map (fn [id] { :id id } ))
          (index-by-id))))
 
-(defn- player-html [ { id :id } ]
-  { :pre [ (not (nil? id)) ] }
-  (let [ race (races/all-races id)
-         fighter-image (ships/ship-image-url { :type :fi } id) ]
+(defn- player-html [ { race-id :id } ]
+  { :pre [ (not (nil? race-id)) ] }
+  (let [ race (races/all-races race-id)
+         fighter-image (ships/ship-image-url :fi race-id) ]
     [ :div {}
       [ :h2 {}
         [ :span {} (race :name) ]
