@@ -2,7 +2,7 @@
   (:use clojure-common.utils))
 
 (defn image [ [ x y ] [ width height ] url ]
-  [ :image { :x x :y y :width width :height height "xlink:href" url } ] )
+  [ :image { :x x :y y :width width :height height :xlink:href url } ] )
 
 (defn- transform [ { loc :translate scale :scale } ]
   (let [ translate (if loc (str "translate(" (round-any (first loc)) "," (round-any (last loc)) ")" ) "" )
@@ -23,4 +23,4 @@
     (text content [ 0 0 ] (assoc opts :color "white")) ] ))
 
 (defn svg [ [ width height ] & content ]
-  `[ :svg { :width ~width :height ~height "xmlns:xlink" "http://www.w3.org/1999/xlink" } ~@content ] )
+  `[ :svg { :width ~width :height ~height :xmlns:xlink "http://www.w3.org/1999/xlink" } ~@content ] )

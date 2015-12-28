@@ -3,21 +3,9 @@
   (:use clojure-common.xml)
   (:require [clojure.test :refer :all]
             [glory-of-empires.map :refer :all])
-  (:require [glory-of-empires.ships :as ships])
-  (:require [glory-of-empires.svg :as svg]))
+  (:require [glory-of-empires.ships :as ships]))
 
 ; Most of our tests are inline-tests in the respective functions, but for longer tests we can put here
-
-(defn structure-compare-failed [ calculated expected ]
-  (println "expected:")
-  (println (pretty-pr expected))
-  (println "calculated:")
-  (println (pretty-pr calculated))
-  false )
-
-(defn compare-structure [ calculated expected ]
-  (if (= calculated expected) true
-    (structure-compare-failed calculated expected)))
 
 (def mini-game-state
   { :map
@@ -25,10 +13,12 @@
             :system :abyz-fria,
             :id :a1,
             :controller :hacan,
-            :ships { :de7 {:type :de, :id :de7 }, :ca3 {:type :ca, :id :ca3 } }
-            :planets { :abyz { :res 3 :inf 0 :loc [ -50 -100 ] }
-                      :fria { :res 2 :inf 0 :tech { :blue 1 } :loc [ 50 100 ]
-                              :units {
+            :ships {
+                :de7 {:type :de, :id :de7, :owner :hacan },
+                :ca3 {:type :ca, :id :ca3, :owner :hacan } }
+            :planets { :abyz { :controller :hacan }
+                       :fria { :controller :hacan
+                               :units {
                                  :gf1 {:type :gf, :id :gf1, :owner :hacan}
                                  :gf2 {:type :gf, :id :gf2, :owner :hacan}
                                  :sd1 {:type :sd, :id :sd1, :owner :hacan} } } } }
@@ -36,16 +26,11 @@
             :system :aah,
             :id :b1,
             :controller :norr,
-            :ships { :fi3 {:type :fi, :id :fi3 }, :fi8 {:type :fi, :id :fi8 } }
+            :ships {
+               :fi3 {:type :fi, :id :fi3, :owner :norr },
+               :fi8 {:type :fi, :id :fi8, :owner :norr } }
             :planets { :aah { :res 1 :inf 1 :loc [ 0 0 ] } } } },
     :players { :hacan {:id :hacan}, :norr {:id :norr}}} )
-
-(deftest svg-test
-  (testing "svg"
-    (is (= (svg/double-text "Hello" [ 6 6 ] {})
-           [:g {:transform " translate(6,6)"}
-             [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "36px"} "Hello"]
-             [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "36px"} "Hello"]]))))
 
 (deftest add-remove-unit-test
   (testing "add-remove-unit"
@@ -56,42 +41,46 @@
                   :ships { :fi12 {:type :fi, :id :fi12} } } ))
     )))
 
-(deftest ship-rendering-test
-  (testing "ship rendering"
-    (let []
-      (is (= (ships/svg { :id :xyz, :type :cr, :owner :hacan } [ -50 20 ] )
-             [:g {:transform " translate(-77,-32)"}
-               [:image {:x 0, :y 0, :width 55, :height 105, "xlink:href" "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Cruiser.png"} ]
-               [:g {:transform " translate(0,129)"}
-                 [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "XYZ"]
-                 [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "XYZ"]]] ))
-      (is (= (group-ships [ :a ] [ 1 2 ] )           [ [ [:a ] 1 ] ] ))
-      (is (= (group-ships [ :a :b ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:b] 2 ] ] ))
-      (is (= (group-ships [ :a :a ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:a] 2 ] ] ))
-      (is (= (group-ships [ :a :b :c ] [ 1 2 ] )     [ [ [:a :b] 1 ] [ [:c] 2 ] ] ))
-      (is (= (ship-group-svg [ [ { :id :abc, :type :fi, :owner :hacan } { :id :xyz, :type :cr, :owner :hacan } ] [-50 20] ] )
-             [ [:g {:transform " translate(-27,-32)"}
-                  [:image {:x 0, :y 0, :width 55, :height 105, "xlink:href" "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Cruiser.png"}]
-                  [:g {:transform " translate(0,129)"}
-                    [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "XYZ"]
-                    [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "XYZ"]]]
-                [:g {:transform " translate(-75,2)"}
-                  [:image {:x 0, :y 0, :width 50, :height 36, "xlink:href" "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Fighter.png"}]
-                  [:g {:transform " translate(0,60)"}
-                    [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "ABC"]
-                    [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "ABC"]]]]  ))
-      (is (= (ships-svg [ { :id :abc :type :cr :owner :naalu } { :id :abc :type :cr :owner :naalu } ] default-ship-locs )
-             [ [:g {:transform " translate(-140,12)"}
-                  [:image {:x 0, :y 0, :width 55, :height 105, "xlink:href" "http://localhost/ti3/Ships/Tan/Unit-Tan-Cruiser.png"}]
-                  [:g {:transform " translate(0,129)"}
-                    [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "ABC"]
-                    [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "ABC"]]]
-                [:g {:transform " translate(-5,-136)"}
-                  [:image {:x 0, :y 0, :width 55, :height 105, "xlink:href" "http://localhost/ti3/Ships/Tan/Unit-Tan-Cruiser.png"}]
-                  [:g {:transform " translate(0,129)"}
-                    [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "ABC"]
-                    [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "ABC"]]]] ))
-      )))
+(deftest svg-rendering-test
+  (testing "svg rendering"
+    (are [ calculated expected ] (compare-structure calculated expected)
+      (ships/svg { :id :xyz, :type :cr, :owner :hacan } [ -50 20 ] )
+         [:g {:transform " translate(-77,-32)"}
+          [:image {:x 0, :y 0, :width 55, :height 105, :xlink:href "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Cruiser.png"} ]
+          [:g {:transform " translate(0,129)"}
+           [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "XYZ"]
+           [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "XYZ"]]]
+      (group-ships [ :a ] [ 1 2 ] )           [ [ [:a ] 1 ] ]
+      (group-ships [ :a :b ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:b] 2 ] ]
+      (group-ships [ :a :a ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:a] 2 ] ]
+      (group-ships [ :a :b :c ] [ 1 2 ] )     [ [ [:a :b] 1 ] [ [:c] 2 ] ]
+      (ship-group-svg [ [ { :id :abc, :type :fi, :owner :hacan } { :id :xyz, :type :cr, :owner :hacan } ] [-50 20] ] )
+           [ [:g {:transform " translate(-27,-32)"}
+              [:image {:x 0, :y 0, :width 55, :height 105, :xlink:href "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Cruiser.png"}]
+              [:g {:transform " translate(0,129)"}
+               [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "XYZ"]
+               [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "XYZ"]]]
+             [:g {:transform " translate(-75,2)"}
+              [:image {:x 0, :y 0, :width 50, :height 36, :xlink:href "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Fighter.png"}]
+              [:g {:transform " translate(0,60)"}
+               [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "ABC"]
+               [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "ABC"]]]]
+      (ships-svg [ { :id :abc :type :cr :owner :naalu } { :id :abc :type :cr :owner :naalu } ] default-ship-locs )
+           [ [:g {:transform " translate(-140,12)"}
+              [:image {:x 0, :y 0, :width 55, :height 105, :xlink:href "http://localhost/ti3/Ships/Tan/Unit-Tan-Cruiser.png"}]
+              [:g {:transform " translate(0,129)"}
+               [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "ABC"]
+               [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "ABC"]]]
+             [:g {:transform " translate(-5,-136)"}
+              [:image {:x 0, :y 0, :width 55, :height 105, :xlink:href "http://localhost/ti3/Ships/Tan/Unit-Tan-Cruiser.png"}]
+              [:g {:transform " translate(0,129)"}
+               [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "ABC"]
+               [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "ABC"]]]]
+      (planet-units-svg (-> mini-game-state :map :a1 :planets :fria))
+          [ :g ]
+      ;(map-to-svg (mini-game-state :map))
+      ;   []
+    )))
 
 (deftest find-planet-test
   (testing "find planet"
