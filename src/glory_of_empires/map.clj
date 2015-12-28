@@ -156,28 +156,34 @@
 
 (def default-ship-locs [ (map-polar 8 0.6) (map-polar 0.5 0.4) ]) ; zero angle to down
 
+(def planet-units-locs [ [ -20 -40 ] [ -20 40 ] ])
+
 (defn group-ships [ ships group-locs ]
   (let [ ships-per-group (int (Math/ceil (/ (count ships) (count group-locs))))
          ship-groups (partition ships-per-group ships-per-group [] ships) ]
     (zip ship-groups group-locs)))
 
-(defn ships-svg [ ships ] ; returns [ [:g ... ] [:g ... ] ... ]
+(defn ships-svg [ ships group-locs ] ; returns [ [:g ... ] [:g ... ] ... ]
   (let [ sorted-ships (sort-by :type ships)
-         group-locs default-ship-locs ; TODO: make default locs dependent on number of planets (0, 1, 2, 3)
          grouped-ships (group-ships sorted-ships group-locs) ]
     (mapcat ship-group-svg grouped-ships)))
 
-(defn ground-units-svg [ planets ] nil)
+(defn planet-units-svg [ { units :units :as planet } ]
+  { :pre [ (not (nil? planet))] }
+  (if (or (not units) (empty? units)) []
+    (ships-svg (vals units) planet-units-locs)))
 
-(defn piece-to-svg [ { logical-pos :logical-pos system-id :system id :id controller :controller ships :ships } ]
+(defn piece-to-svg [ { logical-pos :logical-pos system-id :system loc-id :id controller :controller
+                       ships :ships planets :planets } ]
   (let [ center (mul-vec tile-size 0.5)
-         system (get-system system-id)
-         ships-content (if (or (nil? ships) (empty? ships)) [] (ships-svg (vals ships)))
-         tile-label (svg/double-text (str/upper-case (name id)) (map-polar 9 0.8) {}) ]
+         system-image ((get-system system-id) :image)
+         ships-content (if (or (not ships) (empty? ships)) [] (ships-svg (vals ships) default-ship-locs)) ; TODO: make default locs dependent on number of planets (0, 1, 2, 3)
+         planets-units (if (or (not planets) (empty? planets)) [] (mapcat planet-units-svg (vals planets)))
+         tile-label (svg/double-text (str/upper-case (name loc-id)) (map-polar 9 0.8) {}) ]
     (svg/g { :translate (screen-loc logical-pos) } [
-      (svg/image [ 0 0 ] tile-size (str ships/resources-url "Tiles/" (system :image)))
+      (svg/image [ 0 0 ] tile-size (str ships/resources-url "Tiles/" system-image))
       (svg/g { :translate center }
-         (conj ships-content tile-label)) ] )))
+         `[ ~@planets-units ~@ships-content ~tile-label ]) ] )))
 
 (defn bounding-rect [ map-pieces ]
   (let [ s-locs (screen-locs map-pieces) ]

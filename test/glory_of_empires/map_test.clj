@@ -10,18 +10,24 @@
 
 (def mini-game-state
   { :map
-    {:a1
-      {:logical-pos [0 0],
-      :system :setup-red,
-      :id :a1,
-      :controller :hacan,
-      :ships [
-        {:type :fi, :id "de123"}
-        {:type :fi, :id "xx123"}]}},
-   :players
-    { :hacan {:id :hacan},
-      :norr {:id :norr},
-      :naalu {:id :naalu}}} )
+    { :a1 { :logical-pos [0 0],
+            :system :abyz-fria,
+            :id :a1,
+            :controller :hacan,
+            :ships { :de7 {:type :de, :id :de7 }, :ca3 {:type :ca, :id :ca3 } }
+            :planets { :abyz { :res 3 :inf 0 :loc [ -50 -100 ] }
+                      :fria { :res 2 :inf 0 :tech { :blue 1 } :loc [ 50 100 ]
+                              :units {
+                                 :gf1 {:type :gf, :id :gf1, :owner :hacan}
+                                 :gf2 {:type :gf, :id :gf2, :owner :hacan}
+                                 :sd1 {:type :sd, :id :sd1, :owner :hacan} } } } }
+      :b1 { :logical-pos [1 0],
+            :system :aah,
+            :id :b1,
+            :controller :norr,
+            :ships { :fi3 {:type :fi, :id :fi3 }, :fi8 {:type :fi, :id :fi8 } }
+            :planets { :aah { :res 1 :inf 1 :loc [ 0 0 ] } } } },
+    :players { :hacan {:id :hacan}, :norr {:id :norr}}} )
 
 (deftest svg-test
   (testing "svg"
@@ -63,7 +69,7 @@
                   [:g {:transform " translate(0,60)"}
                     [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "ABC"]
                     [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "ABC"]]]]  ))
-      (is (= (ships-svg [ { :id :abc :type :cr :owner :naalu } { :id :abc :type :cr :owner :naalu } ] )
+      (is (= (ships-svg [ { :id :abc :type :cr :owner :naalu } { :id :abc :type :cr :owner :naalu } ] default-ship-locs )
              [ [:g {:transform " translate(-140,12)"}
                   [:image {:x 0, :y 0, :width 55, :height 105, "xlink:href" "http://localhost/ti3/Ships/Tan/Unit-Tan-Cruiser.png"}]
                   [:g {:transform " translate(0,129)"}

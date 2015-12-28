@@ -32,6 +32,7 @@
 
 (defn svg [ { id :id type :type race :owner } loc ]
   { :pre [ (valid-unit-type? type)
+           (not (nil? race))
            (contains? races/all-races race) ] }
   (let [ ship-data (all-unit-types type)
          tile-size (ship-data :image-size)

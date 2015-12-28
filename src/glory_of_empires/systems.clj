@@ -2,9 +2,9 @@
   (:use clojure-common.utils))
 
 (def all-systems-arr
-  [ { :id :aah       :image "1planet/Tile-Aah.gif"     :planets { :aah { :res 1 :inf 1 } } }
-    { :id :acheron   :image "1planet/Tile-Acheron.gif" :planets { :acheron { :res 1 :inf 2 :tech { :green 1 } } } }
-    { :id :aeon      :image "1planet/Tile-Aeon.gif"    :planets { :aeon { :res 1 :inf 3 :tech { :green 1 } } } }
+  [ { :id :aah       :image "1planet/Tile-Aah.gif"     :planets { :aah { :res 1 :inf 1 :loc [ 0 0 ] } } }
+    { :id :acheron   :image "1planet/Tile-Acheron.gif" :planets { :acheron { :res 1 :inf 2 :tech { :green 1 } :loc [ 0 0 ] } } }
+    { :id :aeon      :image "1planet/Tile-Aeon.gif"    :planets { :aeon { :res 1 :inf 3 :tech { :green 1 } :loc [ 0 0 ] } } }
     { :id :aker      :image "1planet/Tile-Aker.gif" }
     { :id :ammit     :image "1planet/Tile-Ammit.gif" }
     { :id :amun      :image "1planet/Tile-Amun.gif" }
@@ -50,7 +50,7 @@
     { :id :khepri    :image "1planet/Tile-Khepri.gif" }
     { :id :khnum     :image "1planet/Tile-Khnum.gif" }
     { :id :klendathu :image "1planet/Tile-Klendathu.gif" }
-    { :id :kobol     :image "1planet/Tile-Kobol.gif" :planets { :kobol { :res 2 :inf 5 } } }
+    { :id :kobol     :image "1planet/Tile-Kobol.gif" :planets { :kobol { :res 2 :inf 5 :loc [ 0 0 ] } } }
     { :id :laurin    :image "1planet/Tile-Laurin.gif" }
     { :id :lesab     :image "1planet/Tile-Lesab.gif" }
     { :id :lodor     :image "1planet/Tile-Lodor.gif" }
@@ -65,8 +65,8 @@
     { :id :nexus     :image "1planet/Tile-Nexus.gif" }
     { :id :niiwa-sei :image "1planet/Tile-Niiwa-Sei.gif" }
     { :id :pakhet    :image "1planet/Tile-Pakhet.gif" }
-    { :id :parzifal  :image "1planet/Tile-Parzifal.gif" :planets { :parzifal { :res 4 :inf 3 :tech { :green 1 } } } }
-    { :id :perimeter :image "1planet/Tile-Perimeter.gif" :planets { :perimeter { :res 2 :inf 2 } } }
+    { :id :parzifal  :image "1planet/Tile-Parzifal.gif" :planets { :parzifal { :res 4 :inf 3 :tech { :green 1 } :loc [ 0 0 ] } } }
+    { :id :perimeter :image "1planet/Tile-Perimeter.gif" :planets { :perimeter { :res 2 :inf 2 :loc [ 0 0 ] } } }
     { :id :petbe     :image "1planet/Tile-Petbe.gif" }
     { :id :primor    :image "1planet/Tile-Primor.gif" }
     { :id :ptah      :image "1planet/Tile-Ptah.gif" }
@@ -93,7 +93,8 @@
     { :id :wepwawet  :image "1planet/Tile-Wepwawet.gif" }
 
     { :id :abyz-fria :image "2planet/Tile-Abyz-Fria.gif"
-      :planets { :abyz { :res 3 :inf 0 } :fria { :res 2 :inf 0 :tech { :blue 1 } } } }
+      :planets { :abyz { :res 3 :inf 0 :loc [ -50 -100 ] }
+                 :fria { :res 2 :inf 0 :tech { :blue 1 } :loc [ 50 100 ] } } }
     { :id :achill    :image "2planet/Tile-Achill.gif" }
     { :id :aeterna-tammuz :image "2planet/Tile-AeternaTammuz.gif" }
     { :id :arinam-meer :image "2planet/Tile-Arinam-Meer.gif" }
