@@ -45,57 +45,62 @@
                      :special "Fleet supply limit may be exceeded in this system by 1" } } }
     { :id :hopes-end :image "1planet/Tile-Hopes_End.gif" :planets { :hopes-end { :res 3 :inf 0 :loc [ 0 0 ]
                      :special "May be exhausted for 2 shock-troops" } } }
-    { :id :inaak     :image "1planet/Tile-Inaak.gif" }
-    { :id :industrex :image "1planet/Tile-Industrex.gif" }
-    { :id :iskra     :image "1planet/Tile-Iskra.gif" }
-    { :id :ithaki    :image "1planet/Tile-Ithaki.gif" }
-    { :id :kanite    :image "1planet/Tile-Kanite.gif" }
-    { :id :kauket    :image "1planet/Tile-Kauket.gif" }
-    { :id :kazenoeki :image "1planet/Tile-Kazenoeki.gif" }
-    { :id :khepri    :image "1planet/Tile-Khepri.gif" }
-    { :id :khnum     :image "1planet/Tile-Khnum.gif" }
-    { :id :klendathu :image "1planet/Tile-Klendathu.gif" }
+    { :id :inaak     :image "1planet/Tile-Inaak.gif" :planets { :inaak { :res 0 :inf 2 } :tech { :yellow 1 } :loc [ 0 0 ] } }
+    { :id :industrex :image "1planet/Tile-Industrex.gif" :planets { :industrex { :res 2 :inf 0 } :tech { :red 2 } :loc [ 0 0 ] } }
+    { :id :iskra     :image "1planet/Tile-Iskra.gif" :planets { :iskra { :res 2 :inf 3 } :loc [ 0 0 ]
+                     :special "Can be exhausted for an action-card" } }
+    { :id :ithaki    :image "1planet/Tile-Ithaki.gif" :planets { :ithaki { :res 3 :inf 2 } :special "???" :loc [ 0 0 ] } }
+    { :id :kanite    :image "1planet/Tile-Kanite.gif" :planets { :kanite { :res 1 :inf 1 } :loc [ -75 -70 ] } }
+    { :id :kauket    :image "1planet/Tile-Kauket.gif" :planets { :kauket { :res 2 :inf 1  } :loc [ 0 0 ] } }
+    { :id :kazenoeki :image "1planet/Tile-Kazenoeki.gif" :planets { :kazenoeki { :res 2 :inf 3 } :special "???" :loc [ 0 0 ] } }
+    { :id :khepri    :image "1planet/Tile-Khepri.gif" :planets { :khepri { :res 2 :inf 0 } :loc [ 0 0 ] } }
+    { :id :khnum     :image "1planet/Tile-Khnum.gif" :planets { :khnum { :res 1 :inf 1 } :loc [ 0 0 ] } }
+    { :id :klendathu :image "1planet/Tile-Klendathu.gif" :planets { :klendathu { :res 5 :inf 0 } :loc [ 0 0 ]
+                     :special "Bug guarantine zone, PDS when non-occupied" } }
     { :id :kobol     :image "1planet/Tile-Kobol.gif" :planets { :kobol { :res 2 :inf 5 :loc [ 0 0 ] } } }
-    { :id :laurin    :image "1planet/Tile-Laurin.gif" }
-    { :id :lesab     :image "1planet/Tile-Lesab.gif" }
-    { :id :lodor     :image "1planet/Tile-Lodor.gif" }
-    { :id :lv426     :image "1planet/Tile-Lv426.gif" }
-    { :id :medusa-v  :image "1planet/Tile-Medusa_V.gif" }
-    { :id :mehar-xull :image "1planet/Tile-Mehar_Xull.gif" }
-    { :id :mirage    :image "1planet/Tile-Mirage.gif" }
-    { :id :myrkr     :image "1planet/Tile-Myrkr.gif" }
-    { :id :nanan     :image "1planet/Tile-Nanan.gif" }
-    { :id :natthar   :image "1planet/Tile-Natthar.gif" }
-    { :id :nef       :image "1planet/Tile-Nef.gif" }
-    { :id :nexus     :image "1planet/Tile-Nexus.gif" }
-    { :id :niiwa-sei :image "1planet/Tile-Niiwa-Sei.gif" }
-    { :id :pakhet    :image "1planet/Tile-Pakhet.gif" }
+    { :id :laurin    :image "1planet/Tile-Laurin.gif" :planets { :laurin { :res 2 :inf 1 } :loc [ 0 0 ] } }
+    { :id :lesab     :image "1planet/Tile-Lesab.gif" :planets { :lesab { :res 2 :inf 1 } :tech { :green 1 } :loc [ 0 0 ] } }
+    { :id :lodor     :image "1planet/Tile-Lodor.gif" :planets { :lodor { :res 3 :inf 1 } :tech { :green 1 } :loc [ 0 0 ] } }
+    { :id :lv426     :image "1planet/Tile-Lv426.gif" :planets { :lv426 { :res 1 :inf 0 } :tech { :green 1 :red 1 } :special "Hazard" :loc [ 0 0 ] } }
+    { :id :medusa-v  :image "1planet/Tile-Medusa_V.gif" :planets { :medusa-v { :res 1 :inf 6 } :loc [ 0 0 ] } }
+    { :id :mehar-xull :image "1planet/Tile-Mehar_Xull.gif" :planets { :mehar-xull { :res 1 :inf 3 } :tech { :blue 1 } :loc [ 0 0 ] } }
+    { :id :mirage    :image "1planet/Tile-Mirage.gif" :planets { :mirage { :res 1 :inf 2 } :special "Can be exhausted for 2 fighters" :loc [ 0 0 ] } }
+    { :id :myrkr     :image "1planet/Tile-Myrkr.gif" :planets { :myrkr { :res 1 :inf 2 } :loc [ 0 0 ] } }
+    { :id :nanan     :image "1planet/Tile-Nanan.gif"   :planets { :nanan { :res 1 :inf 2 } :tech { :blue 1 } :loc [ 0 0 ] } }
+    { :id :natthar   :image "1planet/Tile-Natthar.gif" :planets { :natthar { :res 3 :inf 0 } :loc [ 0 0 ] } }
+    { :id :nef       :image "1planet/Tile-Nef.gif"     :planets { :nef { :res 2 :inf 0 } :tech { :red 1 } :loc [ 0 0 ] } }
+    { :id :nexus     :image "1planet/Tile-Nexus.gif"   :planets { :nexus { :res 0 :inf 3 } :loc [ 0 0 ] } }
+    { :id :niiwa-sei :image "1planet/Tile-Niiwa-Sei.gif" :planets { :niiwa-sei { :res 3 :inf 2 } :tech { :yellow 1 } :loc [ 0 0 ] } }
+    { :id :pakhet    :image "1planet/Tile-Pakhet.gif"   :planets { :pakhet { :res 1 :inf 1 } :loc [ 0 0 ] } }
     { :id :parzifal  :image "1planet/Tile-Parzifal.gif" :planets { :parzifal { :res 4 :inf 3 :tech { :green 1 } :loc [ 0 0 ] } } }
     { :id :perimeter :image "1planet/Tile-Perimeter.gif" :planets { :perimeter { :res 2 :inf 2 :loc [ 0 0 ] } } }
-    { :id :petbe     :image "1planet/Tile-Petbe.gif" }
-    { :id :primor    :image "1planet/Tile-Primor.gif" }
-    { :id :ptah      :image "1planet/Tile-Ptah.gif" }
-    { :id :qetesh    :image "1planet/Tile-Qetesh.gif" }
-    { :id :quann     :image "1planet/Tile-Quann.gif" }
-    { :id :radon     :image "1planet/Tile-Radon.gif" }
-    { :id :saudor    :image "1planet/Tile-Saudor.gif" }
-    { :id :sem-lore  :image "1planet/Tile-Sem-Lore.gif" }
-    { :id :shai      :image "1planet/Tile-Shai.gif" }
-    { :id :shool     :image "1planet/Tile-Shool.gif" }
-    { :id :solitude  :image "1planet/Tile-Solitude.gif" }
-    { :id :sulako    :image "1planet/Tile-Sulako.gif" }
-    { :id :suuth     :image "1planet/Tile-Suuth.gif" }
-    { :id :tarmann   :image "1planet/Tile-Tarmann.gif" }
-    { :id :tefnut    :image "1planet/Tile-Tefnut.gif" }
-    { :id :tempesta  :image "1planet/Tile-Tempesta.gif" }
-    { :id :tenenit   :image "1planet/Tile-Tenenit.gif" }
-    { :id :theom     :image "1planet/Tile-Theom.gif" }
-    { :id :thibah    :image "1planet/Tile-Thibah.gif" }
-    { :id :ubuntu    :image "1planet/Tile-Ubuntu.gif" }
-    { :id :vefut2    :image "1planet/Tile-Vefut_II.gif" }
-    { :id :wadjet    :image "1planet/Tile-Wadjet.gif" }
-    { :id :wellon    :image "1planet/Tile-Wellon.gif" }
-    { :id :wepwawet  :image "1planet/Tile-Wepwawet.gif" }
+
+    { :id :petbe     :image "1planet/Tile-Petbe.gif"   :planets { :petbe { :res 1 :inf 1 :loc [ 0 0 ] } } }
+    { :id :primor    :image "1planet/Tile-Primor.gif"  :planets { :primor { :res 2 :inf 1 :loc [ 0 0 ] :special "Exhaust for 2 GF" } } }
+    { :id :ptah      :image "1planet/Tile-Ptah.gif"    :planets { :ptah { :res 1 :inf 1 :loc [ 0 0 ] } } }
+    { :id :qetesh    :image "1planet/Tile-Qetesh.gif"  :planets { :qetesh { :res 3 :inf 1 :tech { :green 1 } :loc [ -75 -70 ] } } }
+    { :id :quann     :image "1planet/Tile-Quann.gif"   :planets { :quann { :res 2 :inf 1 :tech { :green 1 } :loc [ -75 -70 ] } } }
+    { :id :radon     :image "1planet/Tile-Radon.gif"   :planets { :radon { :res 1 :inf 3 :loc [ 75 -70 ] :special "???" } } }
+    { :id :saudor    :image "1planet/Tile-Saudor.gif"  :planets { :saudor { :res 2 :inf 2 :loc [ 0 0 ] } } }
+    { :id :sem-lore  :image "1planet/Tile-Sem-Lore.gif" :planets { :sem-lore { :res 3 :inf 2 :tech { :yellow 1 } :loc [ 0 0 ] } } }
+    { :id :shai      :image "1planet/Tile-Shai.gif"    :planets { :shai { :res 3 :inf 0 :loc [ 0 0 ] } } }
+    { :id :shool     :image "1planet/Tile-Shool.gif"   :planets { :shool { :res 2 :inf 2 :tech { :yellow 1 } :loc [ -75 -70 ] } } }
+    { :id :solitude  :image "1planet/Tile-Solitude.gif" :planets { :solitude { :res 3 :inf 4 :loc [ 0 0 ]
+                     :special "Max 1 GF on planet at status (rest killed). No PDS, No Space-dock possible."} } }
+    { :id :sulako    :image "1planet/Tile-Sulako.gif"  :planets { :sulako { :res 2 :inf 3 :loc [ -75 -70 ] } } }
+    { :id :suuth     :image "1planet/Tile-Suuth.gif"   :planets { :suuth { :res 2 :inf 2 :loc [ 0 0 ]
+                     :special "First to conquer gains free tech" } } }
+    { :id :tarmann   :image "1planet/Tile-Tarmann.gif" :planets { :tarmann { :res 1 :inf 1 :loc [ 0 0 ] } }}
+    { :id :tefnut    :image "1planet/Tile-Tefnut.gif"  :planets { :tefnut { :res 3 :inf 1 :tech { :green 1 } :loc [ -75 -70 ] } } }
+    { :id :tempesta  :image "1planet/Tile-Tempesta.gif" :planets { :tempesta { :res 1 :inf 1 :tech { :blue 2 } :loc [ 0 0 ] } } }
+    { :id :tenenit   :image "1planet/Tile-Tenenit.gif" :planets { :tenenit { :res 1 :inf 1 :loc [ 0 0 ] } } }
+    { :id :theom     :image "1planet/Tile-Theom.gif"   :planets { :theom { :res 3 :inf 4 :tech { :green 1 } :loc [ -70 50 ] } } }
+    { :id :thibah    :image "1planet/Tile-Thibah.gif"  :planets { :thibah { :res 1 :inf 1 :loc [ 0 0 ] } } }
+    { :id :ubuntu    :image "1planet/Tile-Ubuntu.gif"  :planets { :ubuntu { :res 2 :inf 1 :loc [ 0 0 ] } } }
+    { :id :wadjet    :image "1planet/Tile-Wadjet.gif"  :planets { :wadjet { :res 3 :inf 1 :tech { :green 1 } :loc [ -75 -70 ] } } }
+    { :id :vefut2    :image "1planet/Tile-Vefut_II.gif" :planets { :vefut2 { :res 2 :inf 0 :tech { :red 1 } :loc [ 0 0 ] } } }
+    { :id :wellon    :image "1planet/Tile-Wellon.gif"  :planets { :wellon { :res 1 :inf 2 :loc [ 0 0 ] } } }
+    { :id :wepwawet  :image "1planet/Tile-Wepwawet.gif" :planets { :wepwawet { :res 2 :inf 1 :loc [ 0 0 ] } } }
 
     { :id :abyz-fria :image "2planet/Tile-Abyz-Fria.gif"
       :planets { :abyz { :res 3 :inf 0 :loc [ -75 -70 ] }

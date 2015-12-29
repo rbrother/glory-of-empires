@@ -5,7 +5,8 @@
 
 (deftest svg-test
   (testing "svg"
-    (is (= (svg/double-text "Hello" [ 6 6 ] {})
-           [:g {:transform " translate(6,6)"}
-              [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "36px"} "Hello"]
-              [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "36px"} "Hello"]]))))
+    (are [ calculated expected ] (compare-structure calculated expected)
+    (svg/double-text "Hello" [ 6 6 ] {})
+      [ :g { :id "shaded-text" :transform " translate(6,6)" }
+        [ :text { :fill "black" :font-family "Arial" :font-size "36px" :x 2 :y 2 } "Hello" ]
+        [ :text { :fill "white" :font-family "Arial" :font-size "36px" :x 0 :y 0 } "Hello" ] ])))

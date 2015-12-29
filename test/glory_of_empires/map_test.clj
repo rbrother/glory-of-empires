@@ -48,28 +48,6 @@
       (group-ships [ :a :b ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:b] 2 ] ]
       (group-ships [ :a :a ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:a] 2 ] ]
       (group-ships [ :a :b :c ] [ 1 2 ] )     [ [ [:a :b] 1 ] [ [:c] 2 ] ]
-      (ship-group-svg [ [ { :id :abc, :type :fi, :owner :hacan } { :id :xyz, :type :cr, :owner :hacan } ] [-50 20] ] )
-           [ [:g {:transform " translate(-27,-32)"}
-              [:image {:x 0, :y 0, :width 55, :height 105, :xlink:href "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Cruiser.png"}]
-              [:g {:transform " translate(0,129)"}
-               [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "XYZ"]
-               [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "XYZ"]]]
-             [:g {:transform " translate(-75,2)"}
-              [:image {:x 0, :y 0, :width 50, :height 36, :xlink:href "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Fighter.png"}]
-              [:g {:transform " translate(0,60)"}
-               [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "ABC"]
-               [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "ABC"]]]]
-      (ships-svg [ { :id :abc :type :cr :owner :naalu } { :id :abc :type :cr :owner :naalu } ] default-ship-locs )
-           [ [:g {:transform " translate(-140,12)"}
-              [:image {:x 0, :y 0, :width 55, :height 105, :xlink:href "http://localhost/ti3/Ships/Tan/Unit-Tan-Cruiser.png"}]
-              [:g {:transform " translate(0,129)"}
-               [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "ABC"]
-               [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "ABC"]]]
-             [:g {:transform " translate(-5,-136)"}
-              [:image {:x 0, :y 0, :width 55, :height 105, :xlink:href "http://localhost/ti3/Ships/Tan/Unit-Tan-Cruiser.png"}]
-              [:g {:transform " translate(0,129)"}
-               [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "ABC"]
-               [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "ABC"]]]]
       (map-to-svg (mini-game-state :map)) []
     )))
 
