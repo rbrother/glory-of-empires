@@ -8,17 +8,18 @@
 (def resources-url "http://localhost/ti3/")
 
 (def all-unit-types-arr
-  [ { :id :fi :type :ship :name "Fighter"     :image-name "Fighter"   :image-size [ 50 36 ] }
-    { :id :de :type :ship :name "Destroyer"   :image-name "Destroyer" :image-size [ 42 56 ] }
-    { :id :cr :type :ship :name "Cruiser"     :image-name "Cruiser"   :image-size [ 55 105 ] }
-    { :id :ca :type :ship :name "Carrier"     :image-name "Carrier"   :image-size [ 50 139 ] }
-    { :id :dr :type :ship :name "Dreadnaught" :image-name "Dreadnaught" :image-size [ 79 159 ] }
-    { :id :ws :type :ship :name "Warsun"      :image-name "Warsun"    :image-size [ 135 113 ] }
-    { :id :fl :type :ship :name "Flagship"    :image-name "Flagship"  :image-size [ 200 71 ] }
-    { :id :gf :type :ground :name "Ground Force" :image-name "GF"       :image-size [ 48 57 ] }
-    { :id :mu :type :ground :name "Mechanised Unit" :image-name "MU"    :image-size [ 75 36 ] }
-    { :id :pds :type :ground :name "Planetary Defence System" :image-name "PDS" :image-size [ 67 49 ] }
-    { :id :sd :type :ground :name "Spacedock"   :image-name "Spacedock"  :image-size [ 76 78 ] } ] )
+  [ { :id :fi :type :ship :name "Fighter"     :individual-ids false :image-name "Fighter"   :image-size [ 50 36 ] }
+    { :id :de :type :ship :name "Destroyer"   :individual-ids true  :image-name "Destroyer" :image-size [ 42 56 ] }
+    { :id :cr :type :ship :name "Cruiser"     :individual-ids true  :image-name "Cruiser"   :image-size [ 55 105 ] }
+    { :id :ca :type :ship :name "Carrier"     :individual-ids true  :image-name "Carrier"   :image-size [ 50 139 ] }
+    { :id :dr :type :ship :name "Dreadnaught" :individual-ids true  :image-name "Dreadnaught" :image-size [ 79 159 ] }
+    { :id :ws :type :ship :name "Warsun"      :individual-ids true  :image-name "Warsun"    :image-size [ 135 113 ] }
+    { :id :fl :type :ship :name "Flagship"    :individual-ids true  :image-name "Flagship"  :image-size [ 200 71 ] }
+    { :id :gf :type :ground :name "Ground Force" :individual-ids false :image-name "GF"     :image-size [ 48 57 ] }
+    { :id :st :type :ground :name "Shocktroop" :individual-ids false :image-name "ST"       :image-size [ 48 57 ] }
+    { :id :mu :type :ground :name "Mechanised Unit" :individual-ids false :image-name "MU"  :image-size [ 75 36 ] }
+    { :id :pds :type :ground :name "Planetary Defence System" :individual-ids false  :image-name "PDS" :image-size [ 67 49 ] }
+    { :id :sd :type :ground :name "Spacedock" :individual-ids false  :image-name "Spacedock" :image-size [ 76 78 ] } ] )
 
 (def all-unit-types (index-by-id all-unit-types-arr))
 
@@ -34,9 +35,11 @@
   { :pre [ (valid-unit-type? type)
            (not (nil? race))
            (contains? races/all-races race) ] }
-  (let [ ship-data (all-unit-types type)
-         tile-size (ship-data :image-size)
-         center-shift (mul-vec tile-size -0.5) ]
-    (svg/g { :translate (map + center-shift loc) }
-      [ (svg/image [0 0] tile-size (ship-image-url type race))
-        (svg/double-text (string/upper-case (name id)) [ 0 (+ (last tile-size) 24 ) ] { :size 22 }) ] )))
+  (let [ { tile-size :image-size needs-label? :individual-ids } (all-unit-types type)
+         center-shift (mul-vec tile-size -0.5)
+         final-loc (map round-any (map + center-shift loc))
+         url (ship-image-url type race)
+         id-label (svg/double-text (string/upper-case (name id)) [ 0 (* 0.75 (last tile-size)) ] { :size 22 }) ]
+    (if needs-label?
+      (svg/g { :translate final-loc } [ (svg/image [0 0] tile-size url) id-label ] )
+      (svg/image final-loc tile-size url) )))

@@ -2,7 +2,7 @@
   (:require [clojure.string :as str])
   (:use clojure-common.utils)
   (:use clojure.test)
-  (:use glory-of-empires.systems)
+  (:require [glory-of-empires.systems :as systems])
   (:require [glory-of-empires.ships :as ships])
   (:require [glory-of-empires.svg :as svg])
   (:use glory-of-empires.races)
@@ -78,17 +78,17 @@
 ;------------------- map operations -------------------------
 
 (defn swap-piece-system [ piece system-id ]
-  (let [ { planets :planets } (get-system system-id)
+  (let [ planets ((systems/get-system system-id) :planets)
          ; Keep only planets names in the map, don't drag along static planet-info
          ; that we gan get from all-systems map when needed. This keeps the test-data manageable.
-         empty-planets-map (map-map-values (fn [orig] {}) planets) ]
+         empty-planets-map (if planets (map-map-values (fn [_] {}) planets) {}) ]
     (merge piece { :system system-id :planets empty-planets-map } )))
 
 (defn swap-system [ board loc-id system-id ]
   { :pre [ (contains? board loc-id) ] }
   (update-in board [ loc-id ] swap-piece-system system-id))
 
-(defn set-random-system [ piece ] (swap-piece-system piece (:id (rand-nth all-systems-arr))))
+(defn set-random-system [ piece ] (swap-piece-system piece (systems/random-system-id)))
 
 (defn random-systems [ board ] (map-map-values set-random-system board))
 
@@ -147,46 +147,55 @@
 
 ;------------------ to svg ------------------------
 
-(defn ship-group-svg [ [ group loc ] ] ; returns [ [:g ... ] [:g ... ] ... ]
-  (if (empty? group) []
-    (let [ ship (first group)
-           next-loc (map + loc [50 0]) ]
-      (conj (ship-group-svg [ (rest group) next-loc ] )
-            (ships/svg ship loc)))))
-
 (defn map-polar [ clock rel-distance ]
+  { :pre [ (>= clock 0) (<= clock 12) (>= rel-distance 0) (<= rel-distance 1) ] }
   (polar (- 180 (* clock 30)) (* rel-distance 0.5 tile-width)))
 
-(def default-ship-locs [ (map-polar 8 0.6) (map-polar 0.5 0.4) ]) ; zero angle to down
+(def default-ship-locs [ [ -90 80 ] [ 90 -80 ] ]) ; suitable for standard 2-planet system
 
-(def planet-units-locs [ [ -20 -40 ] [ -20 40 ] ])
+(def planet-units-locs [ [ 0 -30 ] [ 0 30 ] ])
+
+(def ship-horiz-spacing 50)
 
 (defn group-ships [ ships group-locs ]
   (let [ ships-per-group (int (Math/ceil (/ (count ships) (count group-locs))))
          ship-groups (partition ships-per-group ships-per-group [] ships) ]
     (zip ship-groups group-locs)))
 
+(defn ship-group-svg [ [ group loc ] ] ; returns [ [:g ... ] [:g ... ] ... ]
+  (if (empty? group) []
+    (let [ ship (first group)
+           next-loc (map + loc [ ship-horiz-spacing 0 ]) ]
+      (conj (ship-group-svg [ (rest group) next-loc ] )
+            (ships/svg ship loc)))))
+
+(defn center-group [ [ group [ x y ] ] ]
+  (let [ group-width (* (dec (count group)) ship-horiz-spacing) ]
+    [ group [ (- x (* 0.5 group-width)) y ] ] ))
+
 (defn ships-svg [ ships group-locs ] ; returns [ [:g ... ] [:g ... ] ... ]
   (let [ sorted-ships (sort-by :type ships)
-         grouped-ships (group-ships sorted-ships group-locs) ]
+         grouped-ships (map center-group (group-ships sorted-ships group-locs)) ]
     (mapcat ship-group-svg grouped-ships)))
 
-(defn planet-units-svg [ { units :units :as planet } ]
-  { :pre [ (not (nil? planet))] }
-  (if (or (not units) (empty? units)) []
-    (ships-svg (vals units) planet-units-locs)))
+(defn planet-units-svg [ [ planet-id { units :units } ] system-info ]
+  (if (or (not units) (empty? units)) nil
+    (let [ planet-info (-> system-info :planets planet-id) ]
+      (svg/g { :translate (planet-info :loc) :id (str (name planet-id) "-ground-units") }
+        (ships-svg (vals units) planet-units-locs)))))
 
 (defn piece-to-svg [ { logical-pos :logical-pos system-id :system loc-id :id controller :controller
                        ships :ships planets :planets } ]
   (let [ center (mul-vec tile-size 0.5)
-         system-image ((get-system system-id) :image)
+         system-info (systems/get-system system-id)
          ships-content (if (or (not ships) (empty? ships)) [] (ships-svg (vals ships) default-ship-locs)) ; TODO: make default locs dependent on number of planets (0, 1, 2, 3)
-         planets-units (if (or (not planets) (empty? planets)) [] (mapcat planet-units-svg (vals planets)))
-         tile-label (svg/double-text (str/upper-case (name loc-id)) (map-polar 9 0.8) {}) ]
-    (svg/g { :translate (screen-loc logical-pos) } [
-      (svg/image [ 0 0 ] tile-size (str ships/resources-url "Tiles/" system-image))
-      (svg/g { :translate center }
-         `[ ~@planets-units ~@ships-content ~tile-label ]) ] )))
+         planets-units (if (or (not planets) (empty? planets)) []
+                         (filter #(not (nil? %)) (map #(planet-units-svg % system-info) planets)))
+         tile-label (svg/double-text (str/upper-case (name loc-id)) [ 25 200 ] { :id (str (name system-id) "-loc-label") }) ]
+    (svg/g { :translate (screen-loc logical-pos) :id (str (name system-id) "-system") } [
+      (svg/image [ 0 0 ] tile-size (str ships/resources-url "Tiles/" (system-info :image)))
+      (svg/g { :translate center :id (str (name system-id) "-units") } `[ ~@planets-units ~@ships-content ])
+      tile-label ] )))
 
 (defn bounding-rect [ map-pieces ]
   (let [ s-locs (screen-locs map-pieces) ]

@@ -11,14 +11,14 @@
 
 (defn g [ opts content ]
   { :pre [ (map? opts) (sequential? content) ] }
-  `[ :g ~(transform opts) ~@content ] )
+  `[ :g ~(merge (transform opts) (select-keys opts [:id])) ~@content ] )
 
 (defn text [ content [ x y ] { color :color font :font size :size } ]
   [ :text { :x x :y y :fill (or color "white")
             :font-family (or font "Arial") :font-size (str (or size "36") "px") } content ] )
 
 (defn double-text [ content loc opts ]
-  (g { :translate loc } [
+  (g { :translate loc :id (get opts :id "shaded-text") } [
     (text content [ 2 2 ] (assoc opts :color "black"))
     (text content [ 0 0 ] (assoc opts :color "white")) ] ))
 

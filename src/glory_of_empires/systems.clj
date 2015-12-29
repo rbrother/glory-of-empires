@@ -5,41 +5,46 @@
   [ { :id :aah       :image "1planet/Tile-Aah.gif"     :planets { :aah { :res 1 :inf 1 :loc [ 0 0 ] } } }
     { :id :acheron   :image "1planet/Tile-Acheron.gif" :planets { :acheron { :res 1 :inf 2 :tech { :green 1 } :loc [ 0 0 ] } } }
     { :id :aeon      :image "1planet/Tile-Aeon.gif"    :planets { :aeon { :res 1 :inf 3 :tech { :green 1 } :loc [ 0 0 ] } } }
-    { :id :aker      :image "1planet/Tile-Aker.gif" }
-    { :id :ammit     :image "1planet/Tile-Ammit.gif" }
-    { :id :amun      :image "1planet/Tile-Amun.gif" }
-    { :id :andjety   :image "1planet/Tile-Andjety.gif" }
-    { :id :anhur     :image "1planet/Tile-Anhur.gif" }
-    { :id :ankh      :image "1planet/Tile-Ankh.gif" }
-    { :id :anuket    :image "1planet/Tile-Anuket.gif" }
-    { :id :apis      :image "1planet/Tile-Apis.gif" }
-    { :id :asgard    :image "1planet/Tile-Asgard.gif" }
-    { :id :asgard3   :image "1planet/Tile-Asgard_III.gif" }
-    { :id :astennu   :image "1planet/Tile-Astennu.gif" }
-    { :id :aten      :image "1planet/Tile-Aten.gif" }
-    { :id :babi      :image "1planet/Tile-Babi.gif" }
-    { :id :bakha     :image "1planet/Tile-Bakha.gif" }
-    { :id :bast      :image "1planet/Tile-Bast.gif" }
-    { :id :beriyil   :image "1planet/Tile-Beriyil.gif" }
-    { :id :bes       :image "1planet/Tile-Bes.gif" }
-    { :id :capha     :image "1planet/Tile-Capha.gif" }
-    { :id :chensit   :image "1planet/Tile-Chensit.gif" }
-    { :id :chnum     :image "1planet/Tile-Chnum.gif" }
-    { :id :chuuka    :image "1planet/Tile-Chuuka.gif" }
-    { :id :cicerus   :image "1planet/Tile-Cicerus.gif" }
-    { :id :coruscant :image "1planet/Tile-Coruscant.gif" }
-    { :id :dedun     :image "1planet/Tile-Dedun.gif" }
-    { :id :deimo     :image "1planet/Tile-Deimo.gif" }
-    { :id :discworld :image "1planet/Tile-Discworld.gif" }
-    { :id :dune      :image "1planet/Tile-Dune.gif" }
-    { :id :elnath    :image "1planet/Tile-Elnath.gif" }
-    { :id :everra    :image "1planet/Tile-Everra.gif" }
-    { :id :faunus    :image "1planet/Tile-Faunus.gif" }
-    { :id :fiorina   :image "1planet/Tile-Fiorina.gif" }
-    { :id :floyd4    :image "1planet/Tile-FloydIV.gif" }
-    { :id :garbozia  :image "1planet/Tile-Garbozia.gif" }
-    { :id :heimat    :image "1planet/Tile-Heimat.gif" }
-    { :id :hopes-end :image "1planet/Tile-Hopes_End.gif" }
+    { :id :aker      :image "1planet/Tile-Aker.gif"    :planets { :aker { :res 1 :inf 2 :loc [ 0 0 ] } } }
+    { :id :ammit     :image "1planet/Tile-Ammit.gif"   :planets { :ammit { :res 1 :inf 0 :loc [ 0 0 ] } } }
+    { :id :amun      :image "1planet/Tile-Amun.gif"    :planets { :amun { :res 0 :inf 1 :loc [ 0 0 ] } } }
+    { :id :andjety   :image "1planet/Tile-Andjety.gif" :planets { :andjety { :res 3 :inf 0 :loc [ 0 0 ] } } }
+    { :id :anhur     :image "1planet/Tile-Anhur.gif"   :planets { :anhur { :res 2 :inf 1 :loc [ 0 0 ] } } }
+    { :id :ankh      :image "1planet/Tile-Ankh.gif"    :planets { :ankh { :res 2 :inf 2 :loc [ 0 0 ] } } }
+    { :id :anuket    :image "1planet/Tile-Anuket.gif"  :planets { :anuket { :res 1 :inf 1 :loc [ 0 0 ] } } }
+    { :id :apis      :image "1planet/Tile-Apis.gif"    :planets { :apis { :res 0 :inf 2 :loc [ 0 0 ] } } }
+    { :id :asgard    :image "1planet/Tile-Asgard.gif"  :planets { :asgard { :res 2 :inf 2 :loc [ 0 0 ] :special "Red artifact, refresh for 2 storm troops" } } }
+    { :id :asgard3   :image "1planet/Tile-Asgard_III.gif" :planets { :asgard3 { :res 1 :inf 3 :tech { :red 1 } :loc [ 0 0 ]
+                     :special "Occupier gains: Built-in space-dock unit, 3 PDS with deep-space-cannon, 9 fighter support. Invading ground forces -1 on combat."} } }
+    { :id :astennu   :image "1planet/Tile-Astennu.gif" :planets { :astennu { :res 2 :inf 0 :loc [ 0 0 ] } } }
+    { :id :aten      :image "1planet/Tile-Aten.gif"    :planets { :aten { :res 0 :inf 3 :loc [ 0 0 ] } } }
+    { :id :babi      :image "1planet/Tile-Babi.gif"    :planets { :babi { :res 2 :inf 0 :loc [ 0 0 ] } } }
+    { :id :bakha     :image "1planet/Tile-Bakha.gif"   :planets { :bakha { :res 2 :inf 3 :loc [ 0 0 ] } } }
+    { :id :bast      :image "1planet/Tile-Bast.gif"    :planets { :bast { :res 1 :inf 1 :loc [ 0 0 ] } } }
+    { :id :beriyil   :image "1planet/Tile-Beriyil.gif" :planets { :beriyil { :res 1 :inf 1 :loc [ 0 0 ] } } }
+    { :id :bes       :image "1planet/Tile-Bes.gif"     :planets { :bes { :res 1 :inf 1 :loc [ 0 0 ] } } }
+    { :id :capha     :image "1planet/Tile-Capha.gif"   :planets { :capha { :res 3 :inf 0 :loc [ 0 0 ] } } }
+    { :id :chensit   :image "1planet/Tile-Chensit.gif" :planets { :chensit { :res 1 :inf 1 :loc [ 0 0 ] } } }
+    { :id :chnum     :image "1planet/Tile-Chnum.gif"   :planets { :chnum { :res 2 :inf 0 :loc [ 0 0 ] } } }
+    { :id :chuuka    :image "1planet/Tile-Chuuka.gif"  :planets { :chuuka { :res 1 :inf 0 :tech { :blue 1 } :loc [ 0 0 ] } } }
+    { :id :cicerus   :image "1planet/Tile-Cicerus.gif" :planets { :cicerus { :res 2 :inf 2 :loc [ 0 0 ] } } }
+    { :id :coruscant :image "1planet/Tile-Coruscant.gif" :planets { :coruscant { :res 2 :inf 4 :loc [ 0 0 ] } } }
+
+    { :id :dedun     :image "1planet/Tile-Dedun.gif" :planets { :dedun { :res 2 :inf 0 :tech { :green 1 } :loc [ 0 0 ] } } }
+    { :id :deimo     :image "1planet/Tile-Deimo.gif" :planets { :deimo { :res 0 :inf 1 :loc [ 0 0 ]
+                     :special "Occupier gains: Built-in space-dock with no fighter support and unlimited prod capacity." } } }
+    { :id :discworld :image "1planet/Tile-Discworld.gif" :planets { :discworld { :res 3 :inf 3 :tech { :any 1 } :loc [ 0 0 ] } } }
+    { :id :dune      :image "1planet/Tile-Dune.gif" :planets { :dune { :res 0 :inf 4 :tech { :green 1 } :loc [ 0 0 ] } } }
+    { :id :elnath    :image "1planet/Tile-Elnath.gif" :planets { :elnath { :res 2 :inf 0 :tech { :blue 1 } :loc [ 0 0 ] } } }
+    { :id :everra    :image "1planet/Tile-Everra.gif" :type :nebula, :planets { :everra { :res 3 :inf 1 :loc [ 0 0 ] } } }
+    { :id :faunus    :image "1planet/Tile-Faunus.gif" :planets { :faunus { :res 1 :inf 3 :tech { :green 2 } :loc [ 0 0 ] } } }
+    { :id :fiorina   :image "1planet/Tile-Fiorina.gif" :planets { :fiorina { :res 2 :inf 1 :tech { :green 1 } :loc [ 0 0 ] } } }
+    { :id :floyd4    :image "1planet/Tile-FloydIV.gif" :planets { :floyd4 { :res 0 :inf 2 :tech { :red 1 } :loc [ 0 0 ] } } }
+    { :id :garbozia  :image "1planet/Tile-Garbozia.gif" :planets { :garbozia { :res 2 :inf 1 :tech { :green 1 } :loc [ 0 0 ] } } }
+    { :id :heimat    :image "1planet/Tile-Heimat.gif" :planets { :heimat { :res 3 :inf 2 :loc [ 0 0 ]
+                     :special "Fleet supply limit may be exceeded in this system by 1" } } }
+    { :id :hopes-end :image "1planet/Tile-Hopes_End.gif" :planets { :hopes-end { :res 3 :inf 0 :loc [ 0 0 ]
+                     :special "May be exhausted for 2 shock-troops" } } }
     { :id :inaak     :image "1planet/Tile-Inaak.gif" }
     { :id :industrex :image "1planet/Tile-Industrex.gif" }
     { :id :iskra     :image "1planet/Tile-Iskra.gif" }
@@ -93,8 +98,8 @@
     { :id :wepwawet  :image "1planet/Tile-Wepwawet.gif" }
 
     { :id :abyz-fria :image "2planet/Tile-Abyz-Fria.gif"
-      :planets { :abyz { :res 3 :inf 0 :loc [ -50 -100 ] }
-                 :fria { :res 2 :inf 0 :tech { :blue 1 } :loc [ 50 100 ] } } }
+      :planets { :abyz { :res 3 :inf 0 :loc [ -75 -70 ] }
+                 :fria { :res 2 :inf 0 :tech { :blue 1 } :loc [ 75 70 ] } } }
     { :id :achill    :image "2planet/Tile-Achill.gif" }
     { :id :aeterna-tammuz :image "2planet/Tile-AeternaTammuz.gif" }
     { :id :arinam-meer :image "2planet/Tile-Arinam-Meer.gif" }
@@ -147,25 +152,25 @@
     { :id :elder-uhuru-amani :image "3planet/Tile-Elder-Uhuru-Amani.gif" }
     { :id :tianshang-tiangu-changtian :image "3planet/Tile-Tianshang-Tiangu-Changtian.gif" }
 
-    { :id :akoytay   :image "HomeSystem/Tile-HS-Akoytay.gif" }
-    { :id :alkari   :image "HomeSystem/Tile-HS-Alkari.gif" }
-    { :id :alliance   :image "HomeSystem/Tile-HS-Alliance.gif" }
-    { :id :altair   :image "HomeSystem/Tile-HS-Altair.gif" }
-    { :id :andorian   :image "HomeSystem/Tile-HS-Andorian.gif" }
-    { :id :arborec   :image "HomeSystem/Tile-HS-Arborec.gif" }
-    { :id :asari   :image "HomeSystem/Tile-HS-Asari.gif" }
-    { :id :asgard   :image "HomeSystem/Tile-HS-Asgard.gif" }
-    { :id :atreides   :image "HomeSystem/Tile-HS-Atreides.gif" }
-    { :id :bajoran   :image "HomeSystem/Tile-HS-Bajoran.gif" }
-    { :id :batarian   :image "HomeSystem/Tile-HS-Batarian.gif" }
-    { :id :bene-gesserit   :image "HomeSystem/Tile-HS-Bene_Gesserit.gif" }
-    { :id :bene-tleilaxu   :image "HomeSystem/Tile-HS-Bene_Tleilaxu.gif" }
-    { :id :betazoid   :image "HomeSystem/Tile-HS-Betazoid.gif" }
-    { :id :bolian   :image "HomeSystem/Tile-HS-Bolian.gif" }
-    { :id :bulrathi   :image "HomeSystem/Tile-HS-Bulrathi.gif" }
-    { :id :caitian   :image "HomeSystem/Tile-HS-Caitian.gif" }
-    { :id :cannibals   :image "HomeSystem/Tile-HS-Cannibals.gif" }
-    { :id :cardassian   :image "HomeSystem/Tile-HS-Cardassian.gif" }
+    { :id :akoytay   :type :home-system   :image "HomeSystem/Tile-HS-Akoytay.gif" }
+    { :id :alkari    :type :home-system   :image "HomeSystem/Tile-HS-Alkari.gif" }
+    { :id :alliance  :type :home-system   :image "HomeSystem/Tile-HS-Alliance.gif" }
+    { :id :altair    :type :home-system   :image "HomeSystem/Tile-HS-Altair.gif" }
+    { :id :andorian  :type :home-system   :image "HomeSystem/Tile-HS-Andorian.gif" }
+    { :id :arborec   :type :home-system   :image "HomeSystem/Tile-HS-Arborec.gif" }
+    { :id :asari     :type :home-system   :image "HomeSystem/Tile-HS-Asari.gif" }
+    { :id :asgard    :type :home-system   :image "HomeSystem/Tile-HS-Asgard.gif" }
+    { :id :atreides  :type :home-system   :image "HomeSystem/Tile-HS-Atreides.gif" }
+    { :id :bajoran   :type :home-system   :image "HomeSystem/Tile-HS-Bajoran.gif" }
+    { :id :batarian  :type :home-system   :image "HomeSystem/Tile-HS-Batarian.gif" }
+    { :id :bene-gesserit  :type :home-system :image "HomeSystem/Tile-HS-Bene_Gesserit.gif" }
+    { :id :bene-tleilaxu  :type :home-system :image "HomeSystem/Tile-HS-Bene_Tleilaxu.gif" }
+    { :id :betazoid  :type :home-system   :image "HomeSystem/Tile-HS-Betazoid.gif" }
+    { :id :bolian    :type :home-system   :image "HomeSystem/Tile-HS-Bolian.gif" }
+    { :id :bulrathi  :type :home-system   :image "HomeSystem/Tile-HS-Bulrathi.gif" }
+    { :id :caitian   :type :home-system   :image "HomeSystem/Tile-HS-Caitian.gif" }
+    { :id :cannibals :type :home-system   :image "HomeSystem/Tile-HS-Cannibals.gif" }
+    { :id :cardassian  :type :home-system  :image "HomeSystem/Tile-HS-Cardassian.gif" }
     { :id :cartel   :image "HomeSystem/Tile-HS-Cartel.gif" }
     { :id :centauri   :image "HomeSystem/Tile-HS-Centauri.gif" }
     { :id :chaos   :image "HomeSystem/Tile-HS-Chaos.gif" }
@@ -274,37 +279,41 @@
     { :id :yssaril   :image "HomeSystem/Tile-HS-Yssaril.gif" }
     { :id :zzedajin   :image "HomeSystem/Tile-HS-Zzedajin.gif" }
 
-    { :id :ancient-minefield :image "Special/Tile-Ancient_Minefield.gif" }
-    { :id :asteroid-field :image "Special/Tile-Asteroid_Field.gif" }
-    { :id :babylon5 :image "Special/Tile-Babylon_5.gif" }
-    { :id :blackHole :image "Special/Tile-BlackHole.gif" }
-    { :id :citadel :image "Special/Tile-Citadel.gif" }
-    { :id :cormund :image "Special/Tile-Cormund.gif" }
     { :id :empty :image "Special/Tile-Empty.gif" }
     { :id :galactic-storm :image "Special/Tile-Galactic_Storm.gif" }
     { :id :gravity-well :image "Special/Tile-Gravity_Well.gif" }
     { :id :gravity-rift :image "Special/Tile-Gravity_rift.gif" }
     { :id :ion-storm :image "Special/Tile-Ion_Storm.gif" }
+    { :id :ancient-minefield :image "Special/Tile-Ancient_Minefield.gif" }
+    { :id :asteroid-field :image "Special/Tile-Asteroid_Field.gif" }
+    { :id :blackHole :image "Special/Tile-BlackHole.gif" }
+    { :id :pulsar :image "Special/Tile-Pulsar.gif" }
+    { :id :nebula, :type :nebula, :image "Special/Tile-Nebula.gif" }
+
+    { :id :babylon5 :image "Special/Tile-Babylon_5.gif" }
+    { :id :citadel :image "Special/Tile-Citadel.gif" }
+    { :id :cormund :image "Special/Tile-Cormund.gif" }
     { :id :mecatol-rex :image "Special/Tile-Mecatol_Rex.gif" }
     { :id :mecatol-rex09 :image "Special/Tile-Mecatol_Rex09.gif" }
     { :id :muaat-supernova :image "Special/Tile-Muaat-Supernova.gif" }
-    { :id :nebula :image "Special/Tile-Nebula.gif" }
     { :id :old-mecatol-rex :image "Special/Tile-OldMecatolRex.gif" }
     { :id :orion2 :image "Special/Tile-Orion2.gif" }
-    { :id :pulsar :image "Special/Tile-Pulsar.gif" }
     { :id :quantum-singularity :image "Special/Tile-Quantum_Singularity.gif" }
     { :id :summer-palace :image "Special/Tile-Summer_Palace.gif" }
     { :id :Supernova :image "Special/Tile-Supernova.gif" }
     { :id :wormhole-a :image "Special/Tile-Wormhole_A.gif" }
     { :id :wormhole-b :image "Special/Tile-Wormhole_B.gif" }
-    { :id :setup-dark-blue :image "Setup/Tile-Setup-DarkBlue.gif" }
-    { :id :setup-light-blue :image "Setup/Tile-Setup-LightBlue.gif" }
-    { :id :setup-medium-blue :image "Setup/Tile-Setup-MediumBlue.gif" }
-    { :id :setup-red :image "Setup/Tile-Setup-Red.gif" }
-    { :id :setup-yellow :image "Setup/Tile-Setup-Yellow.gif" } ] )
-    { :id :hs-back   :image "HomeSystem/Tile-HS-Back.gif" }
+
+    { :id :setup-dark-blue, :type :setup, :image "Setup/Tile-Setup-DarkBlue.gif" }
+    { :id :setup-light-blue, :type :setup, :image "Setup/Tile-Setup-LightBlue.gif" }
+    { :id :setup-medium-blue, :type :setup, :image "Setup/Tile-Setup-MediumBlue.gif" }
+    { :id :setup-red, :type :setup, :image "Setup/Tile-Setup-Red.gif" }
+    { :id :setup-yellow, :type :setup, :image "Setup/Tile-Setup-Yellow.gif" } ] )
+    { :id :hs-back, :type :setup,   :image "HomeSystem/Tile-HS-Back.gif" }
 
 (def all-systems (index-by-id all-systems-arr))
+
+(defn random-system-id [] (:id (rand-nth all-systems-arr)))
 
 (defn get-system [ id ] (all-systems id))
 

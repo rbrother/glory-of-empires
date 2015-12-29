@@ -44,12 +44,6 @@
 (deftest svg-rendering-test
   (testing "svg rendering"
     (are [ calculated expected ] (compare-structure calculated expected)
-      (ships/svg { :id :xyz, :type :cr, :owner :hacan } [ -50 20 ] )
-         [:g {:transform " translate(-77,-32)"}
-          [:image {:x 0, :y 0, :width 55, :height 105, :xlink:href "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Cruiser.png"} ]
-          [:g {:transform " translate(0,129)"}
-           [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "XYZ"]
-           [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "XYZ"]]]
       (group-ships [ :a ] [ 1 2 ] )           [ [ [:a ] 1 ] ]
       (group-ships [ :a :b ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:b] 2 ] ]
       (group-ships [ :a :a ] [ 1 2 ] )        [ [ [:a ] 1 ] [ [:a] 2 ] ]
@@ -76,10 +70,7 @@
               [:g {:transform " translate(0,129)"}
                [:text {:x 2, :y 2, :fill "black", :font-family "Arial", :font-size "22px"} "ABC"]
                [:text {:x 0, :y 0, :fill "white", :font-family "Arial", :font-size "22px"} "ABC"]]]]
-      (planet-units-svg (-> mini-game-state :map :a1 :planets :fria))
-          [ :g ]
-      ;(map-to-svg (mini-game-state :map))
-      ;   []
+      (map-to-svg (mini-game-state :map)) []
     )))
 
 (deftest find-planet-test
@@ -102,12 +93,7 @@
            b-map (rect-board 3 2)
            pieces (vals a-map)
            correct-screen-locs [ [-324.0 -188.0] [-324.0 188.0] [0.0 -376.0] [0.0 0.0] [0.0 376.0] [324.0 -188.0] [324.0 188.0] ]
-           correct-bounding-rect [ [ -324.0 -376.0 ] [ 756.0 752.0 ] ]
-           c-map (-> b-map
-                      (swap-system :b2 :abyz-fria)
-                      (new-unit-to-map :b2 :hacan :ca :ca6)
-                      (new-unit-to-map :abyz :hacan :gf :gf2))
-           d-map (move-unit c-map :ca6 :a2) ]
+           correct-bounding-rect [ [ -324.0 -376.0 ] [ 756.0 752.0 ] ] ]
 
       (is (= (location-id [ -3 4 ] [ -5 -6 ] ) :c11 ))
       (is (=
@@ -126,12 +112,4 @@
       (is (= (rect-size correct-bounding-rect) [ 1080.0 1128.0 ] ))
       (is (string? (xml-to-text (map-to-svg a-map { :scale 1.0 }))))
       (is (string? (xml-to-text (map-to-svg (random-systems a-map)))))
-      (is (string? (xml-to-text (map-to-svg c-map))))
-      (is (compare-structure (c-map :b2)
-             { :id :b2, :logical-pos [ 0 0 ], :system :abyz-fria, :controller :hacan
-               :planets {
-                  :abyz { :units { :gf2 { :id :gf2, :owner :hacan, :type :gf } } }
-                  :fria { } }
-              :ships { :ca6 { :id :ca6 :owner :hacan :type :ca } } } ))
-      (is (= ((d-map :a2) :ships) {:ca6 {:type :ca, :id :ca6, :owner :hacan}} ))
       )))
