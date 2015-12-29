@@ -173,8 +173,18 @@
   (let [ group-width (* (dec (count group)) ship-horiz-spacing) ]
     [ group [ (- x (* 0.5 group-width)) y ] ] ))
 
+; Allows showing multiple fighters (and GF etc.) as <Fighter><Count> instead of individual icons.
+(defn collapse-fighters [ [ { type1 :type count :count :as first } { type2 :type } & rrest :as all ] ]
+  (if (and type1 type2)
+    (let [ { individual-ids :individual-ids } (ships/all-unit-types type1) ]
+      (if (and (not individual-ids) (= type1 type2))
+        (let [ new-first (assoc first :count (inc (or count 1))) ]
+          (collapse-fighters (cons new-first rrest)))
+        (cons first (collapse-fighters (rest all)))))
+    all))
+
 (defn ships-svg [ ships group-locs ] ; returns [ [:g ... ] [:g ... ] ... ]
-  (let [ sorted-ships (sort-by :type ships)
+  (let [ sorted-ships (collapse-fighters (sort-by :type ships))
          grouped-ships (map center-group (group-ships sorted-ships group-locs)) ]
     (mapcat ship-group-svg grouped-ships)))
 

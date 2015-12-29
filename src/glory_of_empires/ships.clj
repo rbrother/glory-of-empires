@@ -31,15 +31,18 @@
          { color :unit-color} (races/all-races race) ]
     (str resources-url "Ships/" color "/Unit-" color "-" image-name ".png")))
 
-(defn svg [ { id :id type :type race :owner } loc ]
+(defn svg [ { id :id type :type race :owner count :count } loc ]
   { :pre [ (valid-unit-type? type)
            (not (nil? race))
            (contains? races/all-races race) ] }
-  (let [ { tile-size :image-size needs-label? :individual-ids } (all-unit-types type)
+  (let [ { tile-size :image-size individual-ships? :individual-ids } (all-unit-types type)
          center-shift (mul-vec tile-size -0.5)
          final-loc (map round-any (map + center-shift loc))
-         url (ship-image-url type race)
-         id-label (svg/double-text (string/upper-case (name id)) [ 0 (* 0.75 (last tile-size)) ] { :size 22 }) ]
-    (if needs-label?
-      (svg/g { :translate final-loc } [ (svg/image [0 0] tile-size url) id-label ] )
-      (svg/image final-loc tile-size url) )))
+         id-label (fn [] (svg/double-text (string/upper-case (name id)) [ 0 (* 0.75 (last tile-size)) ] { :size 22 }))
+         count-label (fn [ count ] (svg/double-text (str count) [ (first tile-size) 40 ] { :size 45 } )) ]
+    (svg/g { :translate final-loc }
+       (concat [ (svg/image [0 0] tile-size (ship-image-url type race)) ]
+               (cond
+                 individual-ships? [ (id-label) ]
+                 (and count (> count 1)) [ (count-label count) ]
+                 :else [ ] )))))

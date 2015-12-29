@@ -14,9 +14,13 @@
             :id :a1,
             :controller :hacan,
             :ships {
-                :de7 {:type :de, :id :de7, :owner :hacan },
+                :dr7 {:type :dr, :id :dr7, :owner :hacan },
                 :ca3 {:type :ca, :id :ca3, :owner :hacan } }
-            :planets { :abyz { :controller :hacan }
+            :planets { :abyz { :controller :hacan
+                               :units {
+                                 :gf3 {:type :gf, :id :gf3, :owner :hacan }
+                                 :pds1 {:type :pds, :id :pds1, :owner :hacan }
+                                 :pds2 {:type :pds, :id :pds2, :owner :hacan } }}
                        :fria { :controller :hacan
                                :units {
                                  :gf1 {:type :gf, :id :gf1, :owner :hacan}
