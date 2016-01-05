@@ -46,3 +46,12 @@
                  individual-ships? [ (id-label) ]
                  (and count (> count 1)) [ (count-label count) ]
                  :else [ ] )))))
+
+(def horiz-spacing 50)
+
+(defn group-svg [ [ group loc ] ] ; returns [ [:g ... ] [:g ... ] ... ]
+  (if (empty? group) []
+    (let [ ship (first group)
+           next-loc (map + loc [ horiz-spacing 0 ]) ]
+      (conj (group-svg [ (rest group) next-loc ] )
+            (svg ship loc)))))

@@ -172,8 +172,6 @@
     (= planets-count 3)
       [ [ 0 0 ] [ 90 -80 ] [ -90 -90 ] [ 90 110 ] ] ))
 
-(def ship-horiz-spacing 50)
-
 (def planet-units-locs [ [ 0 -30 ] [ 0 30 ] ])
 
 (defn group-ships [ ships group-locs ]
@@ -181,15 +179,8 @@
          ship-groups (partition ships-per-group ships-per-group [] ships) ]
     (zip ship-groups group-locs)))
 
-(defn ship-group-svg [ [ group loc ] ] ; returns [ [:g ... ] [:g ... ] ... ]
-  (if (empty? group) []
-    (let [ ship (first group)
-           next-loc (map + loc [ ship-horiz-spacing 0 ]) ]
-      (conj (ship-group-svg [ (rest group) next-loc ] )
-            (ships/svg ship loc)))))
-
 (defn center-group [ [ group [ x y ] ] ]
-  (let [ group-width (* (dec (count group)) ship-horiz-spacing) ]
+  (let [ group-width (* (dec (count group)) ships/horiz-spacing) ]
     [ group [ (- x (* 0.5 group-width)) y ] ] ))
 
 ; Allows showing multiple fighters (and GF etc.) as <Fighter><Count> instead of individual icons.
@@ -205,7 +196,7 @@
 (defn ships-svg [ ships group-locs ] ; returns [ [:g ... ] [:g ... ] ... ]
   (let [ sorted-ships (collapse-fighters (sort-by :type ships))
          grouped-ships (map center-group (group-ships sorted-ships group-locs)) ]
-    (mapcat ship-group-svg grouped-ships)))
+    (mapcat ships/group-svg grouped-ships)))
 
 (defn planet-units-svg [ [ planet-id { units :units } ] system-info ]
   (if (or (not units) (empty? units)) nil
