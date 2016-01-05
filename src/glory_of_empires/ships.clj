@@ -38,7 +38,7 @@
   (let [ { tile-size :image-size individual-ships? :individual-ids } (all-unit-types type)
          center-shift (mul-vec tile-size -0.5)
          final-loc (map round-any (map + center-shift loc))
-         id-label (fn [] (svg/double-text (string/upper-case (name id)) [ 0 (* 0.75 (last tile-size)) ] { :size 22 }))
+         id-label (fn [] (svg/double-text (string/upper-case (name id)) [ 0 (+ 20 (last tile-size)) ] { :size 20 }))
          count-label (fn [ count ] (svg/double-text (str count) [ (first tile-size) 40 ] { :size 45 } )) ]
     (svg/g { :translate final-loc }
        (concat [ (svg/image [0 0] tile-size (ship-image-url type race)) ]
