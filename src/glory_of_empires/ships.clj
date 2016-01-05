@@ -35,11 +35,11 @@
   { :pre [ (valid-unit-type? type)
            (not (nil? race))
            (contains? races/all-races race) ] }
-  (let [ { tile-size :image-size individual-ships? :individual-ids } (all-unit-types type)
-         center-shift (mul-vec tile-size -0.5)
+  (let [ { [ width height :as tile-size ] :image-size individual-ships? :individual-ids } (all-unit-types type)
+         center-shift [ 0 (* -0.5 height) ] ; Only need to center vertically. Horizontal centering done at group level
          final-loc (map round-any (map + center-shift loc))
-         id-label (fn [] (svg/double-text (string/upper-case (name id)) [ 0 (+ 20 (last tile-size)) ] { :size 20 }))
-         count-label (fn [ count ] (svg/double-text (str count) [ (first tile-size) 40 ] { :size 45 } )) ]
+         id-label (fn [] (svg/double-text (string/upper-case (name id)) [ 0 (+ 20 height) ] { :size 20 }))
+         count-label (fn [ count ] (svg/double-text (str count) [ width 40 ] { :size 45 } )) ]
     (svg/g { :translate final-loc }
        (concat [ (svg/image [0 0] tile-size (ship-image-url type race)) ]
                (cond
@@ -47,11 +47,14 @@
                  (and count (> count 1)) [ (count-label count) ]
                  :else [ ] )))))
 
-(def horiz-spacing 50)
+(defn width [ { type :type :as ship } ]
+  (let [ { [ tile-width tile-height ] :image-size } (all-unit-types type) ]
+    tile-width ))
 
 (defn group-svg [ [ group loc ] ] ; returns [ [:g ... ] [:g ... ] ... ]
   (if (empty? group) []
-    (let [ ship (first group)
-           next-loc (map + loc [ horiz-spacing 0 ]) ]
+    (let [ { type :type count :count :as ship } (first group)
+           { [ tile-width tile-height ] :image-size } (all-unit-types type)
+           next-loc (map + loc [ (+ 1 tile-width) 0 ]) ]
       (conj (group-svg [ (rest group) next-loc ] )
             (svg ship loc)))))

@@ -180,7 +180,7 @@
     (zip ship-groups group-locs)))
 
 (defn center-group [ [ group [ x y ] ] ]
-  (let [ group-width (* (dec (count group)) ships/horiz-spacing) ]
+  (let [ group-width (apply + (map #(ships/width %) group)) ]
     [ group [ (- x (* 0.5 group-width)) y ] ] ))
 
 ; Allows showing multiple fighters (and GF etc.) as <Fighter><Count> instead of individual icons.
