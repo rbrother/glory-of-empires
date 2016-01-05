@@ -154,11 +154,27 @@
   { :pre [ (>= clock 0) (<= clock 12) (>= rel-distance 0) (<= rel-distance 1) ] }
   (polar (- 180 (* clock 30)) (* rel-distance 0.5 tile-width)))
 
-(def default-ship-locs [ [ -90 80 ] [ 90 -80 ] ]) ; suitable for standard 2-planet system
-
-(def planet-units-locs [ [ 0 -30 ] [ 0 30 ] ])
+(defn default-ship-locs [ planets-count ship-count ]
+  (cond
+    (= planets-count 0)
+      (cond
+        (<= ship-count 4) [ [ 0 0 ] ]
+        :else [ [ 0 -80 ] [ 0 80 ] ] )
+    (= planets-count 1)
+      (cond
+        (<= ship-count 2) [ [ 120 0 ] ]
+        (<= ship-count 4) [ [ 120 0 ] [ -120 0 ] ]
+        :else [ [ 120 0 ] [ -120 0 ] [ 0 -120 ] ] )
+    (= planets-count 2)
+      (cond
+        (<= ship-count 6) [ [ -90 80 ] [ 90 -80 ] ]
+        :else [ [ -90 80 ] [ 90 -80 ] [ 0 0 ] ] )
+    (= planets-count 3)
+      [ [ 0 0 ] [ 90 -80 ] [ -90 -90 ] [ 90 110 ] ] ))
 
 (def ship-horiz-spacing 50)
+
+(def planet-units-locs [ [ 0 -30 ] [ 0 30 ] ])
 
 (defn group-ships [ ships group-locs ]
   (let [ ships-per-group (int (Math/ceil (/ (count ships) (count group-locs))))
@@ -201,7 +217,8 @@
                        ships :ships planets :planets } ]
   (let [ center (mul-vec tile-size 0.5)
          system-info (systems/get-system system-id)
-         ships-content (if (or (not ships) (empty? ships)) [] (ships-svg (vals ships) default-ship-locs)) ; TODO: make default locs dependent on number of planets (0, 1, 2, 3)
+         ship-locs (default-ship-locs (count (system-info :planets)) (count ships))
+         ships-content (if (or (not ships) (empty? ships)) [] (ships-svg (vals ships) ship-locs)) ; TODO: make default locs dependent on number of planets (0, 1, 2, 3)
          planets-units (if (or (not planets) (empty? planets)) []
                          (filter #(not (nil? %)) (map #(planet-units-svg % system-info) planets)))
          tile-label (svg/double-text (str/upper-case (name loc-id)) [ 25 200 ] { :id (str (name system-id) "-loc-label") }) ]
