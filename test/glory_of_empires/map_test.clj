@@ -121,7 +121,6 @@
            pieces (vals a-map)
            correct-screen-locs [ [-324.0 -188.0] [-324.0 188.0] [0.0 -376.0] [0.0 0.0] [0.0 376.0] [324.0 -188.0] [324.0 188.0] ]
            correct-bounding-rect [ [ -324.0 -376.0 ] [ 756.0 752.0 ] ] ]
-
       (is (= (location-id [ -3 4 ] [ -5 -6 ] ) :c11 ))
       (is (=
         a-map
@@ -137,6 +136,5 @@
       (is (= (max-pos correct-screen-locs) [ 324.0 376.0 ] ))
       (is (= (bounding-rect pieces) correct-bounding-rect ))
       (is (= (rect-size correct-bounding-rect) [ 1080.0 1128.0 ] ))
-      (is (string? (xml-to-text (map-to-svg a-map { :scale 1.0 }))))
-      (is (string? (xml-to-text (map-to-svg (random-systems a-map)))))
+      (is (map? (random-systems a-map)))
       )))

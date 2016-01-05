@@ -1,7 +1,7 @@
 (ns glory-of-empires.systems
   (:use clojure-common.utils))
 
-(def all-systems-arr
+(def planet-systems-arr
   [ ; 1 planet
     { :id :aah       :image "1planet/Tile-Aah.gif"     :planets { :aah { :res 1 :inf 1 :loc [ 0 0 ] } } }
     { :id :acheron   :image "1planet/Tile-Acheron.gif" :planets { :acheron { :res 1 :inf 2 :tech { :green 1 } :loc [ 0 0 ] } } }
@@ -14,7 +14,6 @@
     { :id :ankh      :image "1planet/Tile-Ankh.gif"    :planets { :ankh { :res 2 :inf 2 :loc [ 0 0 ] } } }
     { :id :anuket    :image "1planet/Tile-Anuket.gif"  :planets { :anuket { :res 1 :inf 1 :loc [ 0 0 ] } } }
     { :id :apis      :image "1planet/Tile-Apis.gif"    :planets { :apis { :res 0 :inf 2 :loc [ 0 0 ] } } }
-    { :id :asgard    :image "1planet/Tile-Asgard.gif"  :planets { :asgard { :res 2 :inf 2 :loc [ 0 0 ] :special "Red artifact, refresh for 2 storm troops" } } }
     { :id :asgard3   :image "1planet/Tile-Asgard_III.gif" :planets { :asgard3 { :res 1 :inf 3 :tech { :red 1 } :loc [ 0 0 ]
                      :special "Occupier gains: Built-in space-dock unit, 3 PDS with deep-space-cannon, 9 fighter support. Invading ground forces -1 on combat."} } }
     { :id :astennu   :image "1planet/Tile-Astennu.gif" :planets { :astennu { :res 2 :inf 0 :loc [ 0 0 ] } } }
@@ -258,8 +257,9 @@
     { :id :tianshang-tiangu-changtian :image "3planet/Tile-Tianshang-Tiangu-Changtian.gif"
       :planets { :tianshang { :res 1 :inf 1 :loc [ 50 -50 ] }
                  :tiangu-xing { :res 1 :inf 1 :loc [ -70 0 ] }
-                 :changtian { :res 2 :inf 0 :special "Exhaust for 2 TG" :loc [ 50 50 ] } }}
+                 :changtian { :res 2 :inf 0 :special "Exhaust for 2 TG" :loc [ 50 50 ] } }} ] )
 
+(def home-systems-arr [
     ; Regular homesystems
     { :id :arborec   :type :home-system   :image "HomeSystem/Tile-HS-Arborec.gif" }
     { :id :creuss    :type :home-system   :image "HomeSystem/Tile-HS-Creuss.gif" }
@@ -389,37 +389,49 @@
     { :id :vulcan   :type :home-system  :image "HomeSystem/Tile-HS-Vulcan.gif" }
     { :id :xel-naga :type :home-system  :image "HomeSystem/Tile-HS-XelNaga.gif" }
     { :id :xindi    :type :home-system  :image "HomeSystem/Tile-HS-Xindi.gif" }
-    { :id :zzedajin :type :home-system  :image "HomeSystem/Tile-HS-Zzedajin.gif" }
+    { :id :zzedajin :type :home-system  :image "HomeSystem/Tile-HS-Zzedajin.gif" } ] )
 
+(def special-systems-arr [
     ; Special systems
-    { :id :empty :image "Special/Tile-Empty.gif" }
-    { :id :galactic-storm :image "Special/Tile-Galactic_Storm.gif" }
-    { :id :gravity-well :image "Special/Tile-Gravity_Well.gif" }
-    { :id :gravity-rift :image "Special/Tile-Gravity_rift.gif" }
-    { :id :ion-storm :image "Special/Tile-Ion_Storm.gif" }
+    { :id :empty           :image "Special/Tile-Empty.gif" }
+    { :id :galactic-storm  :image "Special/Tile-Galactic_Storm.gif" }
+    { :id :gravity-well    :image "Special/Tile-Gravity_Well.gif" }
+    { :id :gravity-rift    :image "Special/Tile-Gravity_rift.gif" }
+    { :id :ion-storm       :image "Special/Tile-Ion_Storm.gif" }
     { :id :ancient-minefield :image "Special/Tile-Ancient_Minefield.gif" }
-    { :id :asteroid-field :image "Special/Tile-Asteroid_Field.gif" }
-    { :id :blackHole :image "Special/Tile-BlackHole.gif" }
-    { :id :pulsar :image "Special/Tile-Pulsar.gif" }
+    { :id :asteroid-field   :image "Special/Tile-Asteroid_Field.gif" }
+    { :id :blackHole       :image "Special/Tile-BlackHole.gif" }
+    { :id :pulsar          :image "Special/Tile-Pulsar.gif" }
     { :id :nebula, :type :nebula, :image "Special/Tile-Nebula.gif" }
-    { :id :wormhole-a :image "Special/Tile-Wormhole_A.gif" }
-    { :id :wormhole-b :image "Special/Tile-Wormhole_B.gif" }
-    { :id :supernova :image "Special/Tile-Supernova.gif" }
-    { :id :quantum-singularity :image "Special/Tile-Quantum_Singularity.gif" }
+    { :id :wormhole-a      :image "Special/Tile-Wormhole_A.gif" }
+    { :id :wormhole-b      :image "Special/Tile-Wormhole_B.gif" }
+    { :id :supernova       :image "Special/Tile-Supernova.gif" }
+    { :id :quantum-singularity :image "Special/Tile-Quantum_Singularity.gif" } ])
 
+(def setup-systems-arr [
     { :id :setup-dark-blue, :type :setup, :image "Setup/Tile-Setup-DarkBlue.gif" }
     { :id :setup-light-blue, :type :setup, :image "Setup/Tile-Setup-LightBlue.gif" }
     { :id :setup-medium-blue, :type :setup, :image "Setup/Tile-Setup-MediumBlue.gif" }
     { :id :setup-red, :type :setup, :image "Setup/Tile-Setup-Red.gif" }
-    { :id :setup-yellow, :type :setup, :image "Setup/Tile-Setup-Yellow.gif" } ] )
-    { :id :hs-back, :type :setup,   :image "HomeSystem/Tile-HS-Back.gif" }
+    { :id :setup-yellow, :type :setup, :image "Setup/Tile-Setup-Yellow.gif" }
+    { :id :hs-back, :type :setup,   :image "HomeSystem/Tile-HS-Back.gif" } ] )
 
-(def all-systems (index-by-id all-systems-arr))
+(def all-systems (index-by-id (concat planet-systems-arr home-systems-arr special-systems-arr setup-systems-arr)))
 
-(defn random-system-id [] (:id (rand-nth all-systems-arr)))
-
-(defn get-system [ id ] (all-systems id))
+(defn get-system [ id ]
+  { :pre (contains? all-systems id) }
+  (all-systems id))
 
 (defn get-planets [ system-id ] (get (get-system system-id) :planets {}))
 
 (defn has-planet? [system-id planet] (contains? (get-planets system-id) planet))
+
+(defn pick-random-planets [ count ]
+  (loop [ systems [], n count, all-systems (map :id planet-systems-arr) ]
+    (if (zero? n) systems
+      (let [ system (rand-nth all-systems)
+             remaining (remove #(= system %) all-systems) ]
+        (recur (conj systems system) (dec n) remaining)))))
+
+(defn pick-random-special-systems [ count ]
+  (repeat count :empty))
