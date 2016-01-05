@@ -78,28 +78,22 @@
 ;------------------- map operations -------------------------
 
 (defn swap-piece-system [ piece system-id ]
-  { :pre [ (not (nil? system-id))
-           (not (nil? (systems/get-system system-id))) ]}
+  { :pre [ (keyword? system-id) ]}
   (let [ planets ((systems/get-system system-id) :planets)
          ; Keep only planets names in the map, don't drag along static planet-info
          ; that we gan get from all-systems map when needed. This keeps the test-data manageable.
          empty-planets-map (if planets (map-map-values (fn [_] {}) planets) {}) ]
     (merge piece { :system system-id :planets empty-planets-map } )))
 
-(defn swap-system [ board loc-id system-id ]
-  { :pre [ (contains? board loc-id) ] }
+(defn swap-system [ board [ loc-id system-id ] ]
+  { :pre [ (contains? board loc-id) (keyword? system-id) ] }
   (update-in board [ loc-id ] swap-piece-system system-id))
 
-(defn random-systems [ board ]
-  (let [ planet-system-ratio 1
-         planet-systems-count (int (* planet-system-ratio (count board)))
-         special-systems-count (- (count board) planet-systems-count 1)
-         planet-systems (systems/pick-random-planets planet-systems-count)
-         special-systems (systems/pick-random-special-systems special-systems-count)
-         all-systems (concat planet-systems special-systems [systems/get-system :mecatol-rex])
-         systems-and-locs (map #(list %1 %2) (keys board) all-systems)
-         swapper (fn [ current-board [ loc-id system-id ] ] (swap-system current-board loc-id system-id)) ]
-    (reduce swapper board systems-and-locs)))
+(defn random-systems [ board & opt ]
+  (let [ planet-system-ratio (or (first opt) 0.70)
+         systems (systems/pick-random-systems (count board) planet-system-ratio)
+         systems-and-locs (map vector (keys board) systems ) ]
+    (reduce swap-system board systems-and-locs)))
 
 ;-------------------- ships --------------------------
 

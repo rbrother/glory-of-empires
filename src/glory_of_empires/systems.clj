@@ -33,7 +33,6 @@
     { :id :deimo     :image "1planet/Tile-Deimo.gif" :planets { :deimo { :res 0 :inf 1 :loc [ 0 0 ]
                      :special "Occupier gains: Built-in space-dock with no fighter support and unlimited prod capacity." } } }
     { :id :discworld :image "1planet/Tile-Discworld.gif" :planets { :discworld { :res 3 :inf 3 :tech { :any 1 } :loc [ 0 0 ] } } }
-    { :id :dune      :image "1planet/Tile-Dune.gif" :planets { :dune { :res 0 :inf 4 :tech { :green 1 } :loc [ 0 0 ] } } }
     { :id :elnath    :image "1planet/Tile-Elnath.gif" :planets { :elnath { :res 2 :inf 0 :tech { :blue 1 } :loc [ 0 0 ] } } }
     { :id :everra    :image "1planet/Tile-Everra.gif" :type :nebula, :planets { :everra { :res 3 :inf 1 :loc [ 0 0 ] } } }
     { :id :faunus    :image "1planet/Tile-Faunus.gif" :planets { :faunus { :res 1 :inf 3 :tech { :green 2 } :loc [ 0 0 ] } } }
@@ -61,7 +60,6 @@
     { :id :lesab     :image "1planet/Tile-Lesab.gif" :planets { :lesab { :res 2 :inf 1 } :tech { :green 1 } :loc [ 0 0 ] } }
     { :id :lodor     :image "1planet/Tile-Lodor.gif" :planets { :lodor { :res 3 :inf 1 } :tech { :green 1 } :loc [ 0 0 ] } }
     { :id :lv426     :image "1planet/Tile-Lv426.gif" :planets { :lv426 { :res 1 :inf 0 } :tech { :green 1 :red 1 } :special "Hazard" :loc [ 0 0 ] } }
-    { :id :medusa-v  :image "1planet/Tile-Medusa_V.gif" :planets { :medusa-v { :res 1 :inf 6 } :loc [ 0 0 ] } }
     { :id :mehar-xull :image "1planet/Tile-Mehar_Xull.gif" :planets { :mehar-xull { :res 1 :inf 3 } :tech { :blue 1 } :loc [ 0 0 ] } }
     { :id :mirage    :image "1planet/Tile-Mirage.gif" :planets { :mirage { :res 1 :inf 2 } :special "Can be exhausted for 2 fighters" :loc [ 0 0 ] } }
     { :id :myrkr     :image "1planet/Tile-Myrkr.gif" :planets { :myrkr { :res 1 :inf 2 } :loc [ 0 0 ] } }
@@ -101,13 +99,7 @@
     { :id :wepwawet  :image "1planet/Tile-Wepwawet.gif" :planets { :wepwawet { :res 2 :inf 1 :loc [ 0 0 ] } } }
 
     ; TODO: Move following tiles to 1-planet folder
-    { :id :babylon-5 :image "Special/Tile-Babylon_5.gif" :planets { :babylon-5 { :res 1 :inf 6 :loc [ 0 0 ] } } }
-    { :id :citadel :image "Special/Tile-Citadel.gif" :planets { :citadel { :res 1 :inf 6 :loc [ 0 0 ] } } }
     { :id :cormund :image "Special/Tile-Cormund.gif" :planets { :cormund { :res 2 :inf 0 :special "Gravity rift" :loc [ 0 0 ] } } }
-    { :id :mecatol-rex :image "Special/Tile-Mecatol_Rex.gif" :planets { :mecatol-rex { :res 1 :inf 6 :loc [ 0 0 ] } } }
-    { :id :mecatol-rex09 :image "Special/Tile-Mecatol_Rex09.gif" :planets { :mecatol-rex { :res 0 :inf 9 :loc [ 0 0 ] } } }
-    { :id :old-mecatol-rex :image "Special/Tile-OldMecatolRex.gif" :planets { :mecatol-rex { :res 4 :inf 10 :loc [ 0 0 ] } } }
-    { :id :orion2 :image "Special/Tile-Orion2.gif" :planets { :orion { :res 4 :inf 6 :loc [ 0 0 ] } } }
 
     ; 2 planets
     { :id :abyz-fria :image "2planet/Tile-Abyz-Fria.gif"
@@ -392,21 +384,31 @@
     { :id :zzedajin :type :home-system  :image "HomeSystem/Tile-HS-Zzedajin.gif" } ] )
 
 (def special-systems-arr [
-    ; Special systems
-    { :id :empty           :image "Special/Tile-Empty.gif" }
+    { :id :empty          :image "Special/Tile-Empty.gif" }
+    { :id :wormhole-a     :image "Special/Tile-Wormhole_A.gif" }
+    { :id :wormhole-b     :image "Special/Tile-Wormhole_B.gif" }
+    { :id :asteroid-field  :image "Special/Tile-Asteroid_Field.gif" }
+    { :id :ion-storm      :image "Special/Tile-Ion_Storm.gif" }
+    { :id :nebula         :type :nebula :image "Special/Tile-Nebula.gif" }
+    { :id :supernova      :image "Special/Tile-Supernova.gif" }
+    { :id :gravity-rift    :image "Special/Tile-Gravity_rift.gif" }
+    { :id :ancient-minefield  :image "Special/Tile-Ancient_Minefield.gif" }
     { :id :galactic-storm  :image "Special/Tile-Galactic_Storm.gif" }
     { :id :gravity-well    :image "Special/Tile-Gravity_Well.gif" }
-    { :id :gravity-rift    :image "Special/Tile-Gravity_rift.gif" }
-    { :id :ion-storm       :image "Special/Tile-Ion_Storm.gif" }
-    { :id :ancient-minefield :image "Special/Tile-Ancient_Minefield.gif" }
-    { :id :asteroid-field   :image "Special/Tile-Asteroid_Field.gif" }
-    { :id :blackHole       :image "Special/Tile-BlackHole.gif" }
+    { :id :black-hole       :image "Special/Tile-BlackHole.gif" }
     { :id :pulsar          :image "Special/Tile-Pulsar.gif" }
-    { :id :nebula, :type :nebula, :image "Special/Tile-Nebula.gif" }
-    { :id :wormhole-a      :image "Special/Tile-Wormhole_A.gif" }
-    { :id :wormhole-b      :image "Special/Tile-Wormhole_B.gif" }
-    { :id :supernova       :image "Special/Tile-Supernova.gif" }
     { :id :quantum-singularity :image "Special/Tile-Quantum_Singularity.gif" } ])
+
+(def king-systems-arr [
+    ; Only one of these to the center
+    { :id :babylon-5 :image "Special/Tile-Babylon_5.gif" :planets { :babylon-5 { :res 1 :inf 6 :loc [ 0 0 ] } } }
+    { :id :citadel :image "Special/Tile-Citadel.gif" :planets { :citadel { :res 1 :inf 6 :loc [ 0 0 ] } } }
+    { :id :mecatol-rex :image "Special/Tile-Mecatol_Rex.gif" :planets { :mecatol-rex { :res 1 :inf 6 :loc [ 0 0 ] } } }
+    { :id :mecatol-rex09 :image "Special/Tile-Mecatol_Rex09.gif" :planets { :mecatol-rex { :res 0 :inf 9 :loc [ 0 0 ] } } }
+    { :id :old-mecatol-rex :image "Special/Tile-OldMecatolRex.gif" :planets { :mecatol-rex { :res 4 :inf 10 :loc [ 0 0 ] } } }
+    { :id :orion2 :image "Special/Tile-Orion2.gif" :planets { :orion { :res 4 :inf 6 :loc [ 0 0 ] } } }
+    { :id :dune      :image "1planet/Tile-Dune.gif" :planets { :dune { :res 0 :inf 4 :tech { :green 1 } :loc [ 0 0 ] } } }
+    { :id :medusa-v  :image "1planet/Tile-Medusa_V.gif" :planets { :medusa-v { :res 1 :inf 6 } :loc [ 0 0 ] } } ] )
 
 (def setup-systems-arr [
     { :id :setup-dark-blue, :type :setup, :image "Setup/Tile-Setup-DarkBlue.gif" }
@@ -416,10 +418,10 @@
     { :id :setup-yellow, :type :setup, :image "Setup/Tile-Setup-Yellow.gif" }
     { :id :hs-back, :type :setup,   :image "HomeSystem/Tile-HS-Back.gif" } ] )
 
-(def all-systems (index-by-id (concat planet-systems-arr home-systems-arr special-systems-arr setup-systems-arr)))
+(def all-systems (index-by-id (concat planet-systems-arr home-systems-arr special-systems-arr king-systems-arr setup-systems-arr)))
 
 (defn get-system [ id ]
-  { :pre (contains? all-systems id) }
+  { :pre [ (if (not (all-systems id)) (do (println id "not found") false) true) ] }
   (all-systems id))
 
 (defn get-planets [ system-id ] (get (get-system system-id) :planets {}))
@@ -433,5 +435,16 @@
              remaining (remove #(= system %) all-systems) ]
         (recur (conj systems system) (dec n) remaining)))))
 
-(defn pick-random-special-systems [ count ]
-  (repeat count :empty))
+(def special-systems-pick-list
+  [ :wormhole-a :wormhole-b :empty
+    :asteroid-field :empty :ion-storm :empty :nebula :empty :supernova :empty :gravity-rift :empty
+    :asteroid-field :empty :ion-storm :empty :nebula :empty :supernova :empty :gravity-rift :empty
+    :wormhole-a :wormhole-b :empty
+    :ancient-minefield :empty :galactic-storm :empty :gravity-well :empty :black-hole :empty :pulsar :empty :quantum-singularity ] )
+
+(defn pick-special-systems [ count ] (take count special-systems-pick-list))
+
+(defn pick-random-systems [ count planet-system-ratio ]
+  (let [ planets-count (int (* planet-system-ratio count))
+         specials-count (- count planets-count) ]
+    (shuffle (concat (pick-random-planets planets-count) (pick-special-systems specials-count)))))
