@@ -28,10 +28,10 @@
 
 (defn group-ships "Groups seq of ships to equally-sized groups in given location positions"
   { :test (fn [] (are [ calculated expected ] (= calculated expected)
-      (group-ships [ :a ] [ :loc1 :loc2 ] )           [ [ [:a ] :loc1 ] ]
-      (group-ships [ :a :b ] [ :loc1 :loc2 ] )        [ [ [:a ] :loc1 ] [ [:b] :loc2 ] ]
-      (group-ships [ :a :b :c ] [ :loc1 :loc2 ] )     [ [ [:a :b] :loc1 ] [ [:c] :loc2 ] ] )) }
-  [ ships group-locs ]
+      (group-ships [ :loc1 :loc2 ] [ :a ] )           [ [ [:a ] :loc1 ] ]
+      (group-ships [ :loc1 :loc2 ] [ :a :b ] )        [ [ [:a ] :loc1 ] [ [:b] :loc2 ] ]
+      (group-ships [ :loc1 :loc2 ] [ :a :b :c ] )     [ [ [:a :b] :loc1 ] [ [:c] :loc2 ] ] )) }
+  [ group-locs ships ]
     (let [ ships-per-group (int (Math/ceil (/ (count ships) (count group-locs))))
            ship-groups (partition ships-per-group ships-per-group [] ships) ]
       (zip ship-groups group-locs)))
@@ -41,20 +41,29 @@
     (let [ group-width (apply + (map #(ships/width %) group)) ]
       [ group [ (- x (* 0.5 group-width)) y ] ] ))
 
-; Allows showing multiple fighters (and GF etc.) as <Fighter><Count> instead of individual icons.
-(defn collapse-fighters [ [ { type1 :type count :count :as first } { type2 :type } & rrest :as all ] ]
-  (if (and type1 type2)
-    (let [ { individual-ids :individual-ids } (ships/all-unit-types type1) ]
-      (if (and (not individual-ids) (= type1 type2))
-        (let [ new-first (assoc first :count (inc (or count 1))) ]
-          (collapse-fighters (cons new-first rrest)))
-        (cons first (collapse-fighters (rest all)))))
-    all))
+(defn- collapse-group-id "Fighters, gf, etc. with same collapse-group-id are grouped to single item with count"
+  [ { type :type individual-id :id } ]
+    (let [ { individual-ids :individual-ids } (ships/all-unit-types type) ]
+      (if individual-ids individual-id type)))
 
-(defn ships-svg [ ships group-locs ] ; returns [ [:g ... ] [:g ... ] ... ]
-  (let [ sorted-ships (collapse-fighters (sort-by :type ships))
-         grouped-ships (map center-group (group-ships sorted-ships group-locs)) ]
-    (mapcat ships/group-svg grouped-ships)))
+(defn- collapse-group [ [ first & rest :as group ] ]
+  (if (single? group) first
+    (-> first (assoc :count (count group)) (dissoc :id))))
+
+(defn collapse-fighters "Allows showing multiple fighters (and GF etc.) as <Fighter><Count> instead of individual icons."
+  [ sorted-ships ]
+  (->> sorted-ships
+       (partition-by collapse-group-id)
+       (map collapse-group)))
+
+(defn ships-svg "Generates SVG for all ships distributed to given group locations"
+  [ ships group-locs ]
+  (->> ships
+       (sort-by :type)
+       (collapse-fighters)
+       (group-ships group-locs)
+       (map center-group)
+       (mapcat ships/group-svg)))
 
 (defn planet-units-svg [ [ planet-id { units :units } ] system-info ]
   (if (or (not units) (empty? units)) nil

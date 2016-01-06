@@ -29,3 +29,11 @@
             :planets { :aah { :res 1 :inf 1 :loc [ 0 0 ] } } } },
     :players { :hacan {:id :hacan}, :norr {:id :norr}}} )
 
+
+(def many-ships [
+  {:type :cr, :id :cr1, :owner :norr }
+  {:type :cr, :id :cr2, :owner :norr }
+  {:type :fi, :id :fi1, :owner :norr }
+  {:type :fi, :id :fi2, :owner :norr }
+  {:type :fi, :id :fi3, :owner :norr }
+  {:type :dr, :id :dr1, :owner :norr } ] )

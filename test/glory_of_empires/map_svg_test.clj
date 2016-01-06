@@ -11,6 +11,11 @@
   (testing "svg rendering"
     (are [ calculated expected ] (compare-structure calculated expected)
       (bounding-rect (vals mini-map))         [ [0.0 0.0] [756.0 564.0] ]
+      (collapse-fighters many-ships)
+         [ { :id :cr1 :owner :norr :type :cr }
+           { :id :cr2 :owner :norr :type :cr }
+           { :count 3 :owner :norr :type :fi }
+           { :id :dr1 :owner :norr :type :dr } ]
       (render (mini-game-state :map))
         [   :svg
             { :height 282.0 :width 378.0 :xmlns:xlink "http://www.w3.org/1999/xlink" }
