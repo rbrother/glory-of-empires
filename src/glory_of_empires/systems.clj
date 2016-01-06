@@ -1,6 +1,15 @@
 (ns glory-of-empires.systems
   (:use clojure-common.utils))
 
+(def tile-width 432 )
+(def tile-height 376 )
+(def tile-size [ tile-width tile-height ] )
+
+(defn screen-loc [ [ logical-x logical-y ] ]
+  { :pre [ (integer? logical-x) (integer? logical-y) ] }
+  [ (* logical-x tile-width 0.75)
+    (* tile-height (+ (* logical-x 0.5) logical-y)) ] )
+
 (def planet-systems-arr
   [ ; 1 planet
     { :id :aah       :image "1planet/Tile-Aah.gif"     :planets { :aah { :res 1 :inf 1 :loc [ 0 0 ] } } }
