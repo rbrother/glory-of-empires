@@ -52,6 +52,8 @@
          count-label-width (if count 30 0) ]
     (+ image-width count-label-width)))
 
+(defn group-width [ ships ] (apply + (map width ships)))
+
 (defn group-svg [ [ group [ x y :as loc ] ] ] ; returns [ [:g ... ] [:g ... ] ... ]
   (if (empty? group) []
     (let [ { type :type count :count :as ship } (first group)

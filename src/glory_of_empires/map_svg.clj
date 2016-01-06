@@ -26,20 +26,15 @@
 
 (def planet-units-locs [ [ 0 -30 ] [ 0 30 ] ])
 
+(defn center-group-to-loc "Moves group of ships in given position to left to center the group horizontally"
+  [ group [ x y ] ]
+      [ group [ (+ x (* -0.5 (ships/group-width group))) y ] ] )
+
 (defn group-ships "Groups seq of ships to equally-sized groups in given location positions"
-  { :test (fn [] (are [ calculated expected ] (= calculated expected)
-      (group-ships [ :loc1 :loc2 ] [ :a ] )           [ [ [:a ] :loc1 ] ]
-      (group-ships [ :loc1 :loc2 ] [ :a :b ] )        [ [ [:a ] :loc1 ] [ [:b] :loc2 ] ]
-      (group-ships [ :loc1 :loc2 ] [ :a :b :c ] )     [ [ [:a :b] :loc1 ] [ [:c] :loc2 ] ] )) }
   [ group-locs ships ]
     (let [ ships-per-group (int (Math/ceil (/ (count ships) (count group-locs))))
            ship-groups (partition ships-per-group ships-per-group [] ships) ]
-      (zip ship-groups group-locs)))
-
-(defn center-group "Moves group of ships in given position to left to center the group horizontally"
-  [ [ group [ x y ] ] ]
-    (let [ group-width (apply + (map #(ships/width %) group)) ]
-      [ group [ (- x (* 0.5 group-width)) y ] ] ))
+      (map center-group-to-loc ship-groups group-locs)))
 
 (defn- collapse-group-id "Fighters, gf, etc. with same collapse-group-id are grouped to single item with count"
   [ { type :type individual-id :id } ]
@@ -61,7 +56,6 @@
   [ ships group-locs ]
   (->> ships
        (group-ships group-locs)
-       (map center-group)
        (mapcat ships/group-svg)))
 
 (defn planet-units-svg [ [ planet-id { units :units } ] system-info ]
