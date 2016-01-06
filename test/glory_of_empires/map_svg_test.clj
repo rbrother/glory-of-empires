@@ -27,29 +27,25 @@
                     [   :g
                         { :id "abyz-fria-units" :transform " translate(216,188)" }
                         [   :g
-                            { :id "abyz-ground-units" :transform " translate(-75,-70)" }
-                            [   :g
-                                { :transform " translate(-24,-58)" }
-                                [ :image { :height 57 :width 48 :x 0 :xlink:href "http://localhost/ti3/Ships/Yellow/Unit-Yellow-GF.png" :y 0 } ] ]
-                            [   :g
-                                { :transform " translate(-48,6)" }
-                                [ :image { :height 49 :width 67 :x 0 :xlink:href "http://localhost/ti3/Ships/Yellow/Unit-Yellow-PDS.png" :y 0 } ]
-                                [   :g
-                                    { :id "shaded-text" :transform " translate(67,40)" }
-                                    [ :text { :fill "black" :font-family "Arial" :font-size "45px" :x 2 :y 2 } "2" ]
-                                    [ :text { :fill "white" :font-family "Arial" :font-size "45px" :x 0 :y 0 } "2" ] ] ] ]
+                            { :transform " translate(-99,-128)" }
+                            [ :image { :height 57 :width 48 :x 0 :xlink:href "http://localhost/ti3/Ships/Yellow/Unit-Yellow-GF.png" :y 0 } ] ]
                         [   :g
-                            { :id "fria-ground-units" :transform " translate(75,70)" }
+                            { :transform " translate(-123,-64)" }
+                            [ :image { :height 49 :width 67 :x 0 :xlink:href "http://localhost/ti3/Ships/Yellow/Unit-Yellow-PDS.png" :y 0 } ]
                             [   :g
-                                { :transform " translate(-39,-58)" }
-                                [ :image { :height 57 :width 48 :x 0 :xlink:href "http://localhost/ti3/Ships/Yellow/Unit-Yellow-GF.png" :y 0 } ]
-                                [   :g
-                                    { :id "shaded-text" :transform " translate(48,40)" }
-                                    [ :text { :fill "black" :font-family "Arial" :font-size "45px" :x 2 :y 2 } "2" ]
-                                    [ :text { :fill "white" :font-family "Arial" :font-size "45px" :x 0 :y 0 } "2" ] ] ]
+                                { :id "shaded-text" :transform " translate(67,40)" }
+                                [ :text { :fill "black" :font-family "Arial" :font-size "45px" :x 2 :y 2 } "2" ]
+                                [ :text { :fill "white" :font-family "Arial" :font-size "45px" :x 0 :y 0 } "2" ] ] ]
+                        [   :g
+                            { :transform " translate(36,12)" }
+                            [ :image { :height 57 :width 48 :x 0 :xlink:href "http://localhost/ti3/Ships/Yellow/Unit-Yellow-GF.png" :y 0 } ]
                             [   :g
-                                { :transform " translate(-38,-9)" }
-                                [ :image { :height 78 :width 76 :x 0 :xlink:href "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Spacedock.png" :y 0 } ] ] ]
+                                { :id "shaded-text" :transform " translate(48,40)" }
+                                [ :text { :fill "black" :font-family "Arial" :font-size "45px" :x 2 :y 2 } "2" ]
+                                [ :text { :fill "white" :font-family "Arial" :font-size "45px" :x 0 :y 0 } "2" ] ] ]
+                        [   :g
+                            { :transform " translate(37,61)" }
+                            [ :image { :height 78 :width 76 :x 0 :xlink:href "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Spacedock.png" :y 0 } ] ]
                         [   :g
                             { :transform " translate(-115,11)" }
                             [ :image { :height 139 :width 50 :x 0 :xlink:href "http://localhost/ti3/Ships/Yellow/Unit-Yellow-Carrier.png" :y 0 } ]
@@ -97,4 +93,4 @@
                     [   :g
                         { :id "aah-loc-label" :transform " translate(25,200)" }
                         [ :text { :fill "black" :font-family "Arial" :font-size "36px" :x 2 :y 2 } "B1" ]
-                        [ :text { :fill "white" :font-family "Arial" :font-size "36px" :x 0 :y 0 } "B1" ] ] ] ] ]    )))
+                        [ :text { :fill "white" :font-family "Arial" :font-size "36px" :x 0 :y 0 } "B1" ] ] ] ] ]   )))

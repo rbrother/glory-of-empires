@@ -24,17 +24,20 @@
     (= planets-count 3)
       [ [ 0 0 ] [ 90 -80 ] [ -90 -90 ] [ 90 110 ] ] ))
 
-(def planet-units-locs [ [ 0 -30 ] [ 0 30 ] ])
+(defn planet-units-locs [ system-info planet-id ship-count ] ; allow ship-count param to be compatible with default-ship-locs
+  (let [ planet-loc (-> system-info (:planets) (planet-id) (:loc)) ]
+    (map (fn [ loc ] (map + loc planet-loc)) [ [ 0 -30 ] [ 0 30 ] ] )))
 
 (defn center-group-to-loc "Moves group of ships in given position to left to center the group horizontally"
   [ group [ x y ] ]
       [ group [ (+ x (* -0.5 (ships/group-width group))) y ] ] )
 
-(defn group-ships "Groups seq of ships to equally-sized groups in given location positions"
-  [ group-locs ships ]
-    (let [ ships-per-group (int (Math/ceil (/ (count ships) (count group-locs))))
-           ship-groups (partition ships-per-group ships-per-group [] ships) ]
-      (map center-group-to-loc ship-groups group-locs)))
+(defn group-units "Groups seq of ships to equally-sized groups in given location positions"
+  [ group-locs-func units ]
+    (let [ group-locs (group-locs-func (count units))
+           units-per-group (int (Math/ceil (/ (count units) (count group-locs))))
+           unit-groups (partition units-per-group units-per-group [] units) ]
+      (map center-group-to-loc unit-groups group-locs)))
 
 (defn- collapse-group-id "Fighters, gf, etc. with same collapse-group-id are grouped to single item with count"
   [ { type :type individual-id :id } ]
@@ -52,33 +55,31 @@
        (partition-by collapse-group-id)
        (map collapse-group)))
 
-(defn ships-svg "Generates SVG for all ships distributed to given group locations"
-  [ ships group-locs ]
-  (->> ships
-       (group-ships group-locs)
+(defn units-svg "Generates SVG for all ships in system (or units on planet) distributed to given group locations"
+  [ [ units-map group-locs-func ] ]
+  (->> (vals units-map)
+       (collapse-fighters)
+       (group-units group-locs-func)
        (mapcat ships/group-svg)))
 
-(defn planet-units-svg [ [ planet-id { units :units } ] system-info ]
-  (if (or (not units) (empty? units)) nil
-    (let [ planet-info (-> system-info :planets planet-id) ]
-      (svg/g { :translate (planet-info :loc) :id (str (name planet-id) "-ground-units") }
-        (ships-svg (collapse-fighters (vals units)) planet-units-locs)))))
+(defn planetary-formations [ planets-map system-info ]
+  (let [ planetary-formation (fn [ [ planet-id { units :units} ] ]
+                               [ (or units {}) (partial planet-units-locs system-info planet-id) ] ) ]
+    (map planetary-formation planets-map)))
 
 (defn piece-to-svg [ { logical-pos :logical-pos system-id :system loc-id :id controller :controller
                        ships :ships planets :planets } ]
   (let [ center (mul-vec systems/tile-size 0.5)
          system-info (systems/get-system system-id)
-         sorted-ships (collapse-fighters (vals (or ships {})))
-         ship-locs (default-ship-locs (count (system-info :planets)) (count sorted-ships))
-         ships-content (if (empty? sorted-ships) [] (ships-svg sorted-ships ship-locs))
-         planets-units (if (or (not planets) (empty? planets)) []
-                         (->> planets
-                              (map #(planet-units-svg % system-info))
-                              (filter #(not (nil? %)))))
+         planet-count (count (or planets []))
+         ships-formation [ ships (partial default-ship-locs planet-count) ]
+         planetary-formations (planetary-formations (or planets {}) system-info)
+         unit-formations (conj (vec planetary-formations) ships-formation) ; [ [ units-map locs-func ] [ units-map locs-func ] ... ]
+         all-units-svg (mapcat units-svg unit-formations)
          tile-label (svg/double-text (str/upper-case (name loc-id)) [ 25 200 ] { :id (str (name system-id) "-loc-label") }) ]
     (svg/g { :translate (systems/screen-loc logical-pos) :id (str (name system-id) "-system") } [
       (svg/image [ 0 0 ] systems/tile-size (str ships/resources-url "Tiles/" (system-info :image)))
-      (svg/g { :translate center :id (str (name system-id) "-units") } `[ ~@planets-units ~@ships-content ])
+      (svg/g { :translate center :id (str (name system-id) "-units") } all-units-svg)
       tile-label ] )))
 
 (defn bounding-rect [ map-pieces ]
