@@ -15,8 +15,8 @@
     (= planets-count 1)
       (cond
         (<= ship-count 2) [ [ 120 0 ] ]
-        (<= ship-count 4) [ [ 120 0 ] [ -120 0 ] ]
-        :else [ [ 120 0 ] [ -120 0 ] [ 0 -120 ] ] )
+        (<= ship-count 4) [ [ 120 0 ] [ 0 -120 ] ]
+        :else [ [ 120 0 ] [ 0 -120 ] [ -120 0 ] ] )
     (= planets-count 2)
       (cond
         (<= ship-count 6) [ [ -90 80 ] [ 90 -80 ] ]
@@ -51,16 +51,15 @@
     (-> first (assoc :count (count group)) (dissoc :id))))
 
 (defn collapse-fighters "Allows showing multiple fighters (and GF etc.) as <Fighter><Count> instead of individual icons."
-  [ sorted-ships ]
-  (->> sorted-ships
+  [ ships ]
+  (->> ships
+       (sort-by :type)
        (partition-by collapse-group-id)
        (map collapse-group)))
 
 (defn ships-svg "Generates SVG for all ships distributed to given group locations"
   [ ships group-locs ]
   (->> ships
-       (sort-by :type)
-       (collapse-fighters)
        (group-ships group-locs)
        (map center-group)
        (mapcat ships/group-svg)))
@@ -69,16 +68,19 @@
   (if (or (not units) (empty? units)) nil
     (let [ planet-info (-> system-info :planets planet-id) ]
       (svg/g { :translate (planet-info :loc) :id (str (name planet-id) "-ground-units") }
-        (ships-svg (vals units) planet-units-locs)))))
+        (ships-svg (collapse-fighters (vals units)) planet-units-locs)))))
 
 (defn piece-to-svg [ { logical-pos :logical-pos system-id :system loc-id :id controller :controller
                        ships :ships planets :planets } ]
   (let [ center (mul-vec systems/tile-size 0.5)
          system-info (systems/get-system system-id)
-         ship-locs (default-ship-locs (count (system-info :planets)) (count ships))
-         ships-content (if (or (not ships) (empty? ships)) [] (ships-svg (vals ships) ship-locs)) ; TODO: make default locs dependent on number of planets (0, 1, 2, 3)
+         sorted-ships (collapse-fighters (vals (or ships {})))
+         ship-locs (default-ship-locs (count (system-info :planets)) (count sorted-ships))
+         ships-content (if (empty? sorted-ships) [] (ships-svg sorted-ships ship-locs))
          planets-units (if (or (not planets) (empty? planets)) []
-                         (filter #(not (nil? %)) (map #(planet-units-svg % system-info) planets)))
+                         (->> planets
+                              (map #(planet-units-svg % system-info))
+                              (filter #(not (nil? %)))))
          tile-label (svg/double-text (str/upper-case (name loc-id)) [ 25 200 ] { :id (str (name system-id) "-loc-label") }) ]
     (svg/g { :translate (systems/screen-loc logical-pos) :id (str (name system-id) "-system") } [
       (svg/image [ 0 0 ] systems/tile-size (str ships/resources-url "Tiles/" (system-info :image)))

@@ -47,14 +47,14 @@
                  (and count (> count 1)) [ (count-label count) ]
                  :else [ ] )))))
 
-(defn width [ { type :type :as ship } ]
-  (let [ { [ tile-width tile-height ] :image-size } (all-unit-types type) ]
-    tile-width ))
+(defn width [ { type :type count :count :as ship } ]
+  (let [ { [ image-width _ ] :image-size } (all-unit-types type)
+         count-label-width (if count 30 0) ]
+    (+ image-width count-label-width)))
 
-(defn group-svg [ [ group loc ] ] ; returns [ [:g ... ] [:g ... ] ... ]
+(defn group-svg [ [ group [ x y :as loc ] ] ] ; returns [ [:g ... ] [:g ... ] ... ]
   (if (empty? group) []
     (let [ { type :type count :count :as ship } (first group)
-           { [ tile-width tile-height ] :image-size } (all-unit-types type)
-           next-loc (map + loc [ (+ 1 tile-width) 0 ]) ]
+           next-loc [ (+ x (width ship) 1) y ] ]
       (conj (group-svg [ (rest group) next-loc ] )
             (svg ship loc)))))
