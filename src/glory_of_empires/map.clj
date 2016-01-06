@@ -75,7 +75,7 @@
   { :post [ (not (nil? %)) ] }
   (get-loc-of board (fn [ { planets :planets } ] (and planets (contains? planets planet)))))
 
-;------------------- map operations -------------------------
+;------------------- map piece operations -------------------------
 
 (defn swap-piece-system [ piece system-id ]
   { :pre [ (keyword? system-id) ]}
@@ -221,8 +221,6 @@
 (defn bounding-rect [ map-pieces ]
   (let [ s-locs (screen-locs map-pieces) ]
     [ (min-pos s-locs) (map + (max-pos s-locs) tile-size) ] ))
-
-(defn rect-size [ [ min-corner max-corner ] ] (map - max-corner min-corner))
 
 (defn map-to-svg
   ( [ board ] (map-to-svg board {} ))

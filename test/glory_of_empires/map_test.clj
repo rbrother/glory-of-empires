@@ -36,13 +36,42 @@
             :planets { :aah { :res 1 :inf 1 :loc [ 0 0 ] } } } },
     :players { :hacan {:id :hacan}, :norr {:id :norr}}} )
 
-(deftest add-remove-unit-test
-  (testing "add-remove-unit"
-    (let [ start {:logical-pos [0 0], :system :setup-red, :id :a1, :controller :hacan,
-                  :ships { :fi12 {:type :fi, :id :fi12} :cr7 {:type :cr, :id :cr7 } } } ]
-    (is (= (del-unit-from-piece start :cr7)
-           {:logical-pos [0 0], :system :setup-red, :id :a1, :controller :hacan,
-                  :ships { :fi12 {:type :fi, :id :fi12} } } ))
+(deftest map-creation-test
+  (testing "make-random-map"
+    (let [ a-map (round-board 2)
+           b-map (rect-board 3 2)
+           pieces (vals a-map) ]
+    (are [ calculated expected ] (compare-structure calculated expected)
+      (location-id [ -3 4 ] [ -5 -6 ] ) :c11
+      a-map
+        { :a2 { :id :a2 :logical-pos [ -1 0 ] :system :setup-yellow }
+          :a3 { :id :a3 :logical-pos [ -1 1 ] :system :setup-yellow }
+          :b1 { :id :b1 :logical-pos [ 0 -1 ] :system :setup-yellow }
+          :b2 { :id :b2 :logical-pos [ 0 0 ] :system :setup-red }
+          :b3 { :id :b3 :logical-pos [ 0 1 ] :system :setup-yellow }
+          :c1 { :id :c1 :logical-pos [ 1 -1 ] :system :setup-yellow }
+          :c2 { :id :c2 :logical-pos [ 1 0 ] :system :setup-yellow } }
+      (screen-locs pieces)
+         [ [-324.0 -188.0] [-324.0 188.0] [0.0 -376.0] [0.0 0.0] [0.0 376.0] [324.0 -188.0] [324.0 188.0] ]
+      (bounding-rect pieces)
+         [ [ -324.0 -376.0 ] [ 756.0 752.0 ] ]   ))))
+
+(deftest random-systems-test
+  (testing "random-systems-test"
+    (let [ standard-map (random-systems (round-board 3))
+           all-planet-map (random-systems (round-board 3) 1.0) ]
+      (are [ calculated expected ] (= calculated expected)
+           (count standard-map) 19
+           (->> standard-map (map last) (map :system) (distinct) (count)) 18 ; Two empty systems -> 18 distinct systems
+           (->> all-planet-map (map last) (map :system) (distinct) (count)) 19 ; All distinct planets
+           ))))
+
+(deftest unit-operations-test
+  (testing "unit-operations-test"
+    (are [ calculated expected ] (compare-structure calculated expected)
+         1 1
+         ;;;;;;;;;;;;;; CONTINUE TEST FROM MINI-TEST-STATE
+
     )))
 
 (deftest svg-rendering-test
@@ -134,29 +163,4 @@
            :c2 {:logical-pos [1 0], :system :setup-yellow, :id :c2}}]
       (is (= (get-system-loc board1 :abyz-fria) :b2))
       (is (= (find-planet-loc board1 :abyz) :b2))
-      )))
-
-(deftest random-map-test
-  (testing "make-random-map"
-    (let [ a-map (round-board 2)
-           b-map (rect-board 3 2)
-           pieces (vals a-map)
-           correct-screen-locs [ [-324.0 -188.0] [-324.0 188.0] [0.0 -376.0] [0.0 0.0] [0.0 376.0] [324.0 -188.0] [324.0 188.0] ]
-           correct-bounding-rect [ [ -324.0 -376.0 ] [ 756.0 752.0 ] ] ]
-      (is (= (location-id [ -3 4 ] [ -5 -6 ] ) :c11 ))
-      (is (=
-        a-map
-        { :a2 { :id :a2 :logical-pos [ -1 0 ] :system :setup-yellow }
-          :a3 { :id :a3 :logical-pos [ -1 1 ] :system :setup-yellow }
-          :b1 { :id :b1 :logical-pos [ 0 -1 ] :system :setup-yellow }
-          :b2 { :id :b2 :logical-pos [ 0 0 ] :system :setup-red }
-          :b3 { :id :b3 :logical-pos [ 0 1 ] :system :setup-yellow }
-          :c1 { :id :c1 :logical-pos [ 1 -1 ] :system :setup-yellow }
-          :c2 { :id :c2 :logical-pos [ 1 0 ] :system :setup-yellow } } ))
-      (is (= (screen-locs pieces) correct-screen-locs ))
-      (is (= (min-pos correct-screen-locs) [-324.0 -376.0] ))
-      (is (= (max-pos correct-screen-locs) [ 324.0 376.0 ] ))
-      (is (= (bounding-rect pieces) correct-bounding-rect ))
-      (is (= (rect-size correct-bounding-rect) [ 1080.0 1128.0 ] ))
-      (is (map? (random-systems a-map)))
       )))
