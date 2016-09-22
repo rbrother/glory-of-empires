@@ -16,9 +16,21 @@
       (reset! game (load-from-file game-file-path))
       nil))
 
-(defn- save-game [ state ]
+(def save-agent (agent nil))
+
+(defn- save-game [ agent-state state ]
   (write-to-file game-file-path state))
 
-(defn save-game-async []
+(defn- save-game-async []
   (let [ state @game ]
-    (-> (Thread. (save-game state)) .start)))
+    (send-off save-agent save-game state)))
+
+(defn- increment-counter [ game ]
+  (assoc game :counter (inc (get game :counter 0))))
+
+(defn- game-update-func [ inner-func ]
+  (fn [ game ] (increment-counter (inner-func game))))
+
+(defn swap-game [ func ]
+  (swap! game (game-update-func func))
+  (save-game-async))

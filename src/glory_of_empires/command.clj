@@ -8,8 +8,7 @@
 (defn- game [] @game-state/game)
 
 (defn- run-command [ command ]
-  (swap! game-state/game command)
-  (game-state/save-game-async)
+  (game-state/swap-game command)
   "ok")
 
 (defn- board-command [ command ]
