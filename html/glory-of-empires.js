@@ -1,8 +1,6 @@
-window.onload = function() {
-  RefreshView();
-}
+var dataUrl = 'http://www.brotherus.net/glory-of-empires/'
 
-var url = "http://localhost:3000/";
+var url = "http://empires.brotherus.net/empires";
 
 function ExecuteCommand() {
   var command = "(command/" + $("#command").val() + ")";
@@ -23,24 +21,34 @@ function ViewExampleChanged() {
   RefreshView();
 }
 
-// Make view refresh periodically (but update the view only if game-state changed)
-function RefreshView() {
-  var viewDef = "(view/" + $("#viewDefinition").val() + ")"; 
-  $.post( url, viewDef, function (fromServer, status){
-    $("#view").html( fromServer );
-  });
-
+function OpenView() {
+  window.open( dataUrl + "view.html?view=" + $("#viewDefinition").val() );
 }
 
+function LoadView(viewDefinition) {
+  var viewDef = "(view/" + viewDefinition + ")"; 
+  console.log('posting: ' + viewDef);
+  $.post( url, viewDef, function (fromServer, status){
+	  console.log('received view from server');
+      $("#view").html( fromServer );
+  });
+}
 
-// ---------------------------------------------------
+function GetURLParameter(paramName) {
+	console.log('GetURLParameter: ' + paramName);
+    var sPageURL = decodeURIComponent(window.location.search.substring(1));
+    var sURLVariables = sPageURL.split('&');
+	var result = '';
+    for (var i = 0; i < sURLVariables.length; i++) {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == paramName) {
+            return sParameterName[1];
+        }
+    }
+}
 
-// window.onload = function() { setInterval(animate, 40); }
-
-// We can even make animations of SVG-elements
-function animate() {
-  laatta1 = $("#laatta1");
-  laatta1.setAttribute("x",x);
-  x = x + 1;
+// Make view refresh periodically (but update the view only if game-state changed)
+function RefreshView() {
+	LoadView( $("#viewDefinition").val() );
 }
 

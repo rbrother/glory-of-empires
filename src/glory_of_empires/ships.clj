@@ -4,8 +4,7 @@
   (:require [glory-of-empires.races :as races])
   (:require [glory-of-empires.svg :as svg]))
 
-;(def resources-url "http://www.brotherus.net/ti3/")
-(def resources-url "http://localhost/ti3/")
+(def resources-url "http://www.brotherus.net/ti3/")
 
 (def all-unit-types-arr
   [ { :id :fi :type :ship :name "Fighter"     :individual-ids false :image-name "Fighter"   :image-size [ 50 36 ] }
