@@ -5,13 +5,12 @@
     <title>Glory of Empires</title>
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="glory-of-empires.js"></script>
-	<script type="text/javascript">
-		window.onload = function() {
-			var view = GetURLParameter("view");
-			console.log('view: ' + view);
-			LoadView(view);
-		}
-	</script>
+    <script type="text/javascript">
+        window.onload = function() {
+            currentView = GetURLParameter("view");
+            LoadViewIfChanged();
+        }
+    </script>
   </head>
   <body style="background: #202020; color: white;">
     <div id="view" style="margin: 8px;"></div>

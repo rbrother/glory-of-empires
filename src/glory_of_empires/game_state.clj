@@ -11,6 +11,8 @@
 
 (def game-file-path "game-state.clj")
 
+(defn game-counter [] (get @game :counter 0))
+
 (defn load-game []
   (if (.exists (as-file game-file-path))
       (reset! game (load-from-file game-file-path))

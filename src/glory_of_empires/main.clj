@@ -3,6 +3,7 @@
   (:use clojure-common.xml)
   (:require [glory-of-empires.command :as command])
   (:require [glory-of-empires.view :as view])
+  (:require [glory-of-empires.info :as info])
   (:require [glory-of-empires.game-state :as game-state])
   (:gen-class))
 
@@ -21,10 +22,20 @@
   (binding [*ns* (find-ns 'glory-of-empires.main)]
     (eval (read-string message))))
 
+; example post request
+;{ :headers {origin http://www.brotherus.net, ...}, :server-port 80,
+; :content-type application/x-www-form-urlencoded; charset=UTF-8, :character-encoding UTF-8, :uri /, :server-name empires.brotherus.net,
+; :query-string nil, :body #object[org.eclipse.jetty.server.HttpInputOverHTTP 0x1d2abf3 HttpInputOverHTTP@1d2abf3],
+; :scheme :http, :request-method :post}
+
+; example get request from http://empires.brotherus.net/empires/page.html?a=66
+; { :uri /page.html, :server-name empires.brotherus.net, :query-string a=66,  :request-method :get}
+
+(defn handle-get [] nil)
+
 (defn handler [request]
-  (println "------------ request received -----------")
   (let [ message (slurp (:body request)) ]
-    (println message)
+    (println (str (new java.util.Date) ": " message))
     (reply (try (eval-input message) (catch Throwable e (handle-exception e))))))
 
 (defn -main [& args]

@@ -6,11 +6,11 @@
     <!--  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> -->
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="glory-of-empires.js"></script>
-	<script type="text/javascript">
-		window.onload = function() {
-		  RefreshView();
-		}	
-	</script>
+    <script type="text/javascript">
+        window.onload = function() {
+            LoadViewIfChanged();
+        }    
+    </script>
   </head>
   <body style="background: #202020; color: white;">
     <table>
@@ -44,7 +44,7 @@
       </tr>
       <tr>
         <td>View</td>
-        <td><input style="width: 300px;" id="viewDefinition" value="board" onchange="RefreshView();"/></td>
+        <td><input style="width: 300px;" id="viewDefinition" value="board" onchange="ViewDefinitionChanged();"/></td>
         <td><button type="button" onclick="OpenView();">Open</button></td>
         <td>Examples</td>
         <td>
