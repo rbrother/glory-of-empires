@@ -76,9 +76,10 @@
          planetary-formations (planetary-formations (or planets {}) system-info)
          unit-formations (conj (vec planetary-formations) ships-formation) ; [ [ units-map locs-func ] [ units-map locs-func ] ... ]
          all-units-svg (mapcat units-svg unit-formations)
-         tile-label (svg/double-text (str/upper-case (name loc-id)) [ 25 200 ] { :id (str (name system-id) "-loc-label") }) ]
-    (svg/g { :translate (systems/screen-loc logical-pos) :id (str (name system-id) "-system") } [
-      (svg/image [ 0 0 ] systems/tile-size (str ships/resources-url "Tiles/" (system-info :image)))
+         tile-label (svg/double-text (str/upper-case (name loc-id)) [ 25 200 ] { :id (str (name system-id) "-loc-label") })
+         system-id (str (name system-id) "-system") ]
+    (svg/g { :translate (systems/screen-loc logical-pos) :id system-id } [
+      (svg/image [ 0 0 ] systems/tile-size (str ships/resources-url "Tiles/" (system-info :image)) (str "system-" (name loc-id)) )
       (svg/g { :translate center :id (str (name system-id) "-units") } all-units-svg)
       tile-label ] )))
 

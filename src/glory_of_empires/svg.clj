@@ -1,8 +1,10 @@
 (ns glory-of-empires.svg
   (:use clojure-common.utils))
 
-(defn image [ [ x y ] [ width height ] url ]
-  [ :image { :x x :y y :width width :height height :xlink:href url } ] )
+(defn image [ [ x y ] [ width height ] url id ]
+  [ :image (merge
+             { :x x :y y :width width :height height :xlink:href url }
+             (if id { :onclick (str "clicked('" id "')") } {} ) ) ] )
 
 (defn- transform [ { loc :translate scale :scale } ]
   (let [ translate (if loc (str "translate(" (round-any (first loc)) "," (round-any (last loc)) ")" ) "" )

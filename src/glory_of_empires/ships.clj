@@ -40,7 +40,7 @@
          id-label (fn [] (svg/double-text (string/upper-case (name id)) [ 0 (+ 20 height) ] { :size 20 }))
          count-label (fn [ count ] (svg/double-text (str count) [ width 40 ] { :size 45 } )) ]
     (svg/g { :translate final-loc }
-       (concat [ (svg/image [0 0] tile-size (ship-image-url type race)) ]
+       (concat [ (svg/image [0 0] tile-size (ship-image-url type race) (str "unit-" (name (or id type))) ) ]
                (cond
                  individual-ships? [ (id-label) ]
                  (and count (> count 1)) [ (count-label count) ]

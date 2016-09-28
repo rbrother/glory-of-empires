@@ -4,14 +4,15 @@ var url = "http://empires.brotherus.net/empires";
 
 var viewCounter = -1; // used for detecting if game state has changed
 var currentView = "board";
-var refreshPeriod = 500; // ms
+var refreshPeriod = 2000; // ms
+var viewRefreshCount = 0;
 
 $.ajaxSetup({
     type: 'POST',
     timeout: 5000,
     error: function(xhr) {
         console.log('Timeout from AJAX, trying again soon...');
-        window.setTimeout( LoadViewIfChanged, 5000 );
+        ScheduleViewRefresh( 5000 );
     }});
 
 // *************** Functions serving the main glory-of-empires.html ***************
@@ -22,6 +23,7 @@ function ExecuteCommand() {
   $("#commandResult").html( "" )
   $.post( url, command, function (fromServer, status){
       $("#commandResult").html( " ➔ " + fromServer );
+      ReloadViewNow(); 
   });
 }
 
@@ -45,7 +47,21 @@ function OpenView() {
 
 // ***************** Shared functions for all windows *****************
 
+function clicked(id) {
+    console.log('-- Clicked on: ' + id);
+}
+
+function ScheduleViewRefresh( time ) {
+    // Condition to prevent multiple refresh-loops being started if we
+    // already have a view refresh pending
+    if ( viewRefreshCount < 1 ) {
+        window.setTimeout( LoadViewIfChanged, time );
+        viewRefreshCount = viewRefreshCount + 1;
+    }
+}
+
 function LoadViewIfChanged() {
+    viewRefreshCount = viewRefreshCount - 1;    
     $.post( url, "(info/view-counter)", ViewCounterReceived );
 }
 
@@ -53,7 +69,7 @@ function ViewCounterReceived(serverResponse, status) {
     var newCount = parseInt(serverResponse);    
     if (newCount == viewCounter) {
         console.log('View up-to-date ' + Date());
-        window.setTimeout( LoadViewIfChanged, refreshPeriod );
+        ScheduleViewRefresh( refreshPeriod );
     } else {
         viewCounter = newCount;
         ReloadViewNow();
@@ -66,7 +82,7 @@ function ReloadViewNow() {
     $.post( url, viewDef, function (fromServer, status){
         console.log('received view from server');
         $("#view").html( fromServer );
-        window.setTimeout( LoadViewIfChanged, refreshPeriod );
+        ScheduleViewRefresh( refreshPeriod );
     });
 }
 
