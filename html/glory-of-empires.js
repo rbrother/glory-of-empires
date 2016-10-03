@@ -62,7 +62,7 @@ function ScheduleViewRefresh( time ) {
 
 function LoadViewIfChanged() {
     viewRefreshCount = viewRefreshCount - 1;    
-    $.post( url, "(info/view-counter)", ViewCounterReceived );
+    $.post( url, "(game-state/game-counter)", ViewCounterReceived );
 }
 
 function ViewCounterReceived(serverResponse, status) {
@@ -77,7 +77,7 @@ function ViewCounterReceived(serverResponse, status) {
 }
 
 function ReloadViewNow() {
-    var viewDef = "(view/" + currentView + ")"; 
+    var viewDef = "(xml-to-text (view/" + currentView + "))"; 
     console.log('posting: ' + viewDef);
     $.post( url, viewDef, function (fromServer, status){
         console.log('received view from server');

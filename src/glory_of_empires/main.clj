@@ -3,24 +3,25 @@
   (:use clojure-common.xml)
   (:require [glory-of-empires.command :as command])
   (:require [glory-of-empires.view :as view])
-  (:require [glory-of-empires.info :as info])
   (:require [glory-of-empires.game-state :as game-state])
   (:gen-class))
 
 ;----------------- web server ----------------------
 
-(defn reply [ content ]
+(defn reply [ text-content ]
   { :status 200
     :headers {"Content-Type" "text/html" "Access-Control-Allow-Origin" "*"}
-    :body (xml-to-text content) }  )
+    :body (str text-content) }  )
 
 (defn handle-exception [ ex ]
   (println (clojure.stacktrace/print-stack-trace ex))
   [ :span { :style "color: #ff0000;" } (.getMessage ex) ] )
 
-(defn eval-input [ message ]
+(defn eval-input [ message-str ]
   (binding [*ns* (find-ns 'glory-of-empires.main)]
-    (eval (read-string message))))
+    (let [ message (read-string message-str) ]
+      ; here we could inspect and test the incoming expression and its parts before evaluation
+      (eval message))))
 
 ; example post request
 ;{ :headers {origin http://www.brotherus.net, ...}, :server-port 80,
