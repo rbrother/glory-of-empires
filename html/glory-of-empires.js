@@ -21,7 +21,8 @@ function ExecuteCommand() {
   var command = "(command/" + $("#command").val() + ")";
   $("#currentCommand").html(command);
   $("#commandResult").html( "" )
-  $.post( url, command, function (fromServer, status){
+  var message = BuildMessage("command", command);
+  $.post( url, message, function (fromServer, status){
       $("#commandResult").html( " ➔ " + fromServer );
       ReloadViewNow(); 
   });
@@ -47,6 +48,16 @@ function OpenView() {
 
 // ***************** Shared functions for all windows *****************
 
+function quoted(s) { return "\"" + s + "\""; }
+
+function BuildMessage(messageType, func) {
+    return "{ :game " + $("#game option:selected").text() + 
+            " :role " + $("#role option:selected").text() + 
+            " :password " + quoted( $("#password").val() ) + 
+            " :message-type :" + messageType + 
+            " :func " + func + " }";
+}
+
 function clicked(id) {
     console.log('-- Clicked on: ' + id);
 }
@@ -62,7 +73,8 @@ function ScheduleViewRefresh( time ) {
 
 function LoadViewIfChanged() {
     viewRefreshCount = viewRefreshCount - 1;    
-    $.post( url, "(game-state/game-counter)", ViewCounterReceived );
+    var message = BuildMessage("info", "(game-state/game-counter)");
+    $.post( url, message, ViewCounterReceived );
 }
 
 function ViewCounterReceived(serverResponse, status) {
@@ -77,14 +89,26 @@ function ViewCounterReceived(serverResponse, status) {
 }
 
 function ReloadViewNow() {
-    var viewDef = "(xml-to-text (view/" + currentView + "))"; 
-    console.log('posting: ' + viewDef);
-    $.post( url, viewDef, function (fromServer, status){
+    LoadViewInner(currentView, "view", true);
+    if ($("#RoleSelector").length > 0) {
+        LoadViewInner("role-selector", "RoleSelector", false);
+    }
+}
+
+function LoadViewInner(view, targetWidgetId, scheduleNew) {
+    var viewDef = "(xml-to-text (view/" + view + "))"; 
+    var message = BuildMessage("view", viewDef);
+    console.log('posting: ' + message);
+    $.post( url, message, function (fromServer, status){
         console.log('received view from server');
-        $("#view").html( fromServer );
-        ScheduleViewRefresh( refreshPeriod );
+        $("#" + targetWidgetId).html( fromServer );
+        if (scheduleNew) {
+            ScheduleViewRefresh( refreshPeriod );
+        }
     });
 }
+
+
 
 function GetURLParameter(paramName) {
     console.log('GetURLParameter: ' + paramName);

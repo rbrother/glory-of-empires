@@ -10,7 +10,7 @@
         (let [ m (@game :map) ]
           (if (or (nil? m) (empty? m)) "No map" (map-svg/render m opts))))))
 
-  (defn players [] (players/players-html (@game :players)))
+  (defn players [] (players/players-html @game))
 
   (defn vertical [ & views ]
     `[ :div {}
@@ -19,3 +19,8 @@
   (defn horizontal [ & views ]
     `[ :table {} [ :tr {}
         ~@(map (fn [view] [ :td { :style "vertical-align: top;" } view] ) views) ]] )
+
+  (defn role-selector []
+    (let [ ids (cons :game-master (players/ids @game)) ]
+    `[ :select { :id "role" }
+       ~@(map (fn [player] [ :option {} (str player) ]) ids) ] ))

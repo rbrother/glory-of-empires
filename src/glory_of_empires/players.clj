@@ -15,11 +15,12 @@
   (let [ race (races/all-races race-id)
          fighter-image (ships/ship-image-url :fi race-id) ]
     [ :div {}
-      [ :h2 {}
-        [ :span {} (race :name) ]
+      [ :h3 {}
+        [ :span {} (str race-id " - " (race :name)) ]
         [ :img { :src fighter-image } ] ] ] ))
 
-(defn players-html [ players ]
+(defn ids [ game-state ] (keys (game-state :players)))
+
+(defn players-html [ game-state ]
   `[ :div {}
-     [ :h1 {} "Players" ]
-     ~@(map player-html (vals players)) ] )
+     ~@(map player-html (vals (game-state :players))) ] )

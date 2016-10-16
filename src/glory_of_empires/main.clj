@@ -15,13 +15,14 @@
 
 (defn handle-exception [ ex ]
   (println (clojure.stacktrace/print-stack-trace ex))
-  [ :span { :style "color: #ff0000;" } (.getMessage ex) ] )
+  [ :span { :style "color: #ff3030;" } (.getMessage ex) ] )
 
 (defn eval-input [ message-str ]
   (binding [*ns* (find-ns 'glory-of-empires.main)]
-    (let [ message (read-string message-str) ]
-      ; here we could inspect and test the incoming expression and its parts before evaluation
-      (eval message))))
+    (let [ message (read-string message-str)
+           { game-id :game role :role password :password message-type :message-type func :func } message ]
+      ; here distinguish by message-type
+      (eval func))))
 
 ; example post request
 ;{ :headers {origin http://www.brotherus.net, ...}, :server-port 80,
@@ -37,7 +38,7 @@
 (defn handler [request]
   (let [ message (slurp (:body request)) ]
     (println (str (new java.util.Date) ": " message))
-    (reply (try (eval-input message) (catch Throwable e (handle-exception e))))))
+    (reply (try (eval-input message) (catch Throwable e (xml-to-text (handle-exception e)))))))
 
 (defn -main [& args]
   (game-state/load-game)

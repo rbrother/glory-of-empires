@@ -15,6 +15,27 @@
   <body style="background: #202020; color: white;">
     <table>
       <tr>
+        <td>Game</td>
+        <td id="GameSelector">
+            <select style="width: 300px;" id="game">
+                <option>:sandbox</option>
+            </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Role</td>
+        <td id="RoleSelector">
+            <select style="width: 300px;" id="role">
+                <option>:gm</option>
+            </select>
+        </td>
+        <td></td>
+        <td>Password</td>
+        <td>
+            <input type="password" id="password"/> 
+        </td>
+      </tr>
+      <tr>
         <td>Command</td>
         <td><input style="width: 300px;" id="command"  autofocus="true"/></td>
         <td><button type="button" onclick="ExecuteCommand();">Execute</button></td>
@@ -34,13 +55,15 @@
             <option>move-unit :ca1 :a2</option>
             <option>move-unit [ :ca1 :ca2 ] :b1</option>
             <option>move-unit [ :gf7 :pds3 ] :ca1 (not working yet)</option>
-            <option>move  :ca1 [ :gf7 :pds3 ] :meer (not working yet)</option>            
+            <option>move :ca1 [ :gf7 :pds3 ] :meer (not working yet)</option>            
           </select>
         </td>
-        <td>
-          <span id="currentCommand" style="color: green;"></span>
-          <span id="commandResult" style="color: white;"></span>
-        </td>
+      </tr>
+      <tr>
+        <td id="currentCommand" colspan="5" style="color: green;"></td>
+      </tr>
+      <tr>
+        <td id="commandResult" colspan="5" style="color: white;"></td>
       </tr>
       <tr>
         <td>View</td>
