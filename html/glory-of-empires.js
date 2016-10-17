@@ -96,8 +96,7 @@ function ReloadViewNow() {
 }
 
 function LoadViewInner(view, targetWidgetId, scheduleNew) {
-    var viewDef = "(xml-to-text (view/" + view + "))"; 
-    var message = BuildMessage("view", viewDef);
+    var message = BuildMessage("view", "(view/" + view + ")");
     console.log('posting: ' + message);
     $.post( url, message, function (fromServer, status){
         console.log('received view from server');

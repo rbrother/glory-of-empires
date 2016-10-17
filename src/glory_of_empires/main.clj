@@ -20,9 +20,9 @@
 (defn eval-input [ message-str ]
   (binding [*ns* (find-ns 'glory-of-empires.main)]
     (let [ message (read-string message-str)
-           { game-id :game role :role password :password message-type :message-type func :func } message ]
-      ; here distinguish by message-type
-      (eval func))))
+           { game-id :game role :role password :password message-type :message-type func :func } message
+           result (eval func) ]
+      (if (= message-type :view) (xml-to-text result) result))))
 
 ; example post request
 ;{ :headers {origin http://www.brotherus.net, ...}, :server-port 80,
