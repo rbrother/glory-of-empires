@@ -1,26 +1,25 @@
 (ns glory-of-empires.view
   (:require [glory-of-empires.map-svg :as map-svg])
-  (:use glory-of-empires.game-state)
   (:require [glory-of-empires.players :as players]))
 
   (defn board
-    ( [] (board {}) )
-    ( [ opts ]
+    ( [ game ] (board game {}) )
+    ( [ game opts ]
       (if (number? opts) (board { :scale opts })
-        (let [ m (@game :map) ]
+        (let [ m (game :map) ]
           (if (or (nil? m) (empty? m)) "No map" (map-svg/render m opts))))))
 
-  (defn players [] (players/players-html @game))
+  (defn players [ game ] (players/players-html game))
 
-  (defn vertical [ & views ]
+  (defn vertical [ game & views ]
     `[ :div {}
        ~@(map (fn [view] [ :div {} view] ) views) ] )
 
-  (defn horizontal [ & views ]
+  (defn horizontal [ game & views ]
     `[ :table {} [ :tr {}
         ~@(map (fn [view] [ :td { :style "vertical-align: top;" } view] ) views) ]] )
 
-  (defn role-selector []
-    (let [ ids (cons :game-master (players/ids @game)) ]
+  (defn role-selector [ game ]
+    (let [ ids (cons :game-master (players/ids game)) ]
     `[ :select { :id "role" }
        ~@(map (fn [player] [ :option {} (str player) ]) ids) ] ))

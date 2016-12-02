@@ -1,25 +1,16 @@
 (ns glory-of-empires.command
   (:require [glory-of-empires.map :as board])
-  (:require [glory-of-empires.game-state :as game-state])
   (:require [glory-of-empires.players :as players]))
+
+; There commands do not actually do anything, but they
+; return game-updating func for the specified command
 
 ;------------ command helpers ---------------
 
-(defn- game [] @game-state/game)
-
-(defn- run-command [ command ]
-  (game-state/swap-game command)
-  "ok")
-
-(defn- board-command [ command ]
-  (run-command (fn [ game ] (update game :map command))))
+(defn- board-command [ command ] (fn [ game ] (update game :map command)))
 
 (defn- make-board-command [ new-board ]
-  (run-command
-    (fn [ game ]
-      (-> game
-          (assoc :map new-board)
-          (assoc :ship-counters {})))))
+  (fn [ game ] (merge game { :map new-board :ship-counters {} } )))
 
 ;----------- map commands --------------------
 
@@ -44,14 +35,13 @@
 ;------------- players -----------------
 
 (defn set-players [ & player-ids ]
-  (run-command #(players/set-players player-ids %)))
+  #(players/set-players player-ids %))
 
 ;------------ unit commands ------------------
 
 (defn new-unit [ loc-id owner type ]
-  { :pre [ (contains? (:players (game)) owner) ] }
   (let [ types (if (sequential? type) type [ type ]) ]
-    (run-command #(board/new-units loc-id owner types % ))))
+    #(board/new-units loc-id owner types % )))
 
 (defn del-unit [ unit-id ]
   (board-command #(board/del-unit % unit-id)))
@@ -59,3 +49,4 @@
 (defn move-unit [ unit-id dest ]
   (let [ unit-ids (if (sequential? unit-id) unit-id [ unit-id ] ) ]
     (board-command #(board/move-units % unit-ids dest))))
+

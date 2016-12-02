@@ -21,8 +21,12 @@
   (binding [*ns* (find-ns 'glory-of-empires.main)]
     (let [ message (read-string message-str)
            { game-id :game role :role password :password message-type :message-type func :func } message
-           result (eval func) ]
-      (if (= message-type :view) (xml-to-text result) result))))
+           game (game-state/game game-id)
+           func-with-game (apply list (conj (vec func) game)) ]
+      (case message-type
+        :info (eval func-with-game)
+        :view (xml-to-text (eval func-with-game))
+        :command (do (game-state/swap-game (eval func) game-id) "ok") ))))
 
 ; example post request
 ;{ :headers {origin http://www.brotherus.net, ...}, :server-port 80,
@@ -41,5 +45,5 @@
     (reply (try (eval-input message) (catch Throwable e (xml-to-text (handle-exception e)))))))
 
 (defn -main [& args]
-  (game-state/load-game)
+  (game-state/load-games)
   (run-jetty handler {:port 3000} ) )
