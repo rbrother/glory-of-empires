@@ -4,6 +4,7 @@
   (:require [glory-of-empires.command :as command])
   (:require [glory-of-empires.view :as view])
   (:require [glory-of-empires.game-state :as game-state])
+  (:require [glory-of-empires.login :as login])
   (:gen-class))
 
 ;----------------- web server ----------------------
@@ -37,12 +38,14 @@
 ; example get request from http://empires.brotherus.net/empires/page.html?a=66
 ; { :uri /page.html, :server-name empires.brotherus.net, :query-string a=66,  :request-method :get}
 
-(defn handle-get [] nil)
-
 (defn handler [request]
-  (let [ message (slurp (:body request)) ]
-    (println (str (new java.util.Date) ": " message))
-    (reply (try (eval-input message) (catch Throwable e (xml-to-text (handle-exception e)))))))
+  (case (:request-method request)
+    :post
+      (let [ message (slurp (:body request)) ]
+        (println (str (new java.util.Date) ": " message))
+        (reply (try (eval-input message) (catch Throwable e (xml-to-text (handle-exception e))))))
+    :get
+      (reply (str "<!DOCTYPE html>" (xml-to-text (login/login-page (game-state/game-names)))))))
 
 (defn -main [& args]
   (game-state/load-games)

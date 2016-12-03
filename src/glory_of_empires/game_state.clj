@@ -15,6 +15,8 @@
 
 (defn game [ id ] (@games id))
 
+(defn game-names [] (map str (keys @games)) )
+
 (defn game-counter [ game ] (get game :counter 0))
 
 (defn load-games []
