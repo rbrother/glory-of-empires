@@ -13,3 +13,9 @@
 
 (defn select [ id options ]
   `[ :select { :id id } ~@(map (fn [opt] [ :option {} opt ]) options) ] )
+
+(defn- make-col [ col ] [ :td col ] )
+
+(defn- make-row [ row ] `[ :tr ~@(map make-col row) ] )
+
+(defn table [ & rows ] `[ :table ~@(map make-row rows) ] )
