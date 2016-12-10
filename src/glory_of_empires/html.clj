@@ -11,8 +11,8 @@
       [ :script extra-script ] ]
     `[ :body { :style "background: #202020; color: white;" } ~@body-content ] ] )
 
-(defn select [ id options ]
-  `[ :select { :id id } ~@(map (fn [opt] [ :option {} opt ]) options) ] )
+(defn select [ attrs options ]
+  `[ :select ~attrs ~@(map (fn [opt] [ :option {} opt ]) options) ] )
 
 (defn- make-col [ col ] [ :td col ] )
 
