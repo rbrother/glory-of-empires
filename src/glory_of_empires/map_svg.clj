@@ -1,7 +1,6 @@
 (ns glory-of-empires.map-svg
   (:require [clojure.string :as str])
   (:use clojure-common.utils)
-  (:use clojure.test)
   (:require [glory-of-empires.systems :as systems])
   (:require [glory-of-empires.ships :as ships])
   (:require [glory-of-empires.svg :as svg]))
@@ -96,5 +95,3 @@
            svg-size (mul-vec (rect-size bounds) scale) ]
       (svg/svg svg-size (svg/g { :scale scale :translate (mul-vec min-corner -1.0) }
                                (map piece-to-svg map-pieces) )))))
-
-(run-tests)

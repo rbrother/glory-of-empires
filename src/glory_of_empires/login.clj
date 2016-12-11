@@ -13,7 +13,7 @@
   ")
 
 (defn login-page [ game-names ]
-  (html/page "Glory of Empires login" ""
+  (html/page "Glory of Empires login" login-script
     [ [ :h1 "Glory of Empires" ]
       [ :h3 "Select Existing game" ]
       (html/table

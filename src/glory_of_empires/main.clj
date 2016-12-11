@@ -5,6 +5,7 @@
   (:require [glory-of-empires.view :as view])
   (:require [glory-of-empires.game-state :as game-state])
   (:require [glory-of-empires.login :as login])
+  (:require [glory-of-empires.html :as html])
   (:gen-class))
 
 ;----------------- web server ----------------------
@@ -38,15 +39,35 @@
 ; example get request from http://empires.brotherus.net/empires/page.html?a=66
 ; { :uri /page.html, :server-name empires.brotherus.net, :query-string a=66,  :request-method :get}
 
+; Call from repl.
+; Allow modifications to source files to take effect without restart (only for development, disable for production)
+(defn reload []
+  (use 'glory-of-empires.main :reload-all))
+
+(defn static-page [ path ] (slurp path :encoding "UTF-8"))
+
+(defn- handle-get [ uri query ]
+  (cond
+    (= uri "/favicon.ico") ""
+    (re-matches #"\/html\/.+" uri) (static-page (subs uri 1))
+    :else (login/login-page (game-state/game-names))))
+
 (defn handler [request]
-  (case (:request-method request)
-    :post
-      (let [ message (slurp (:body request)) ]
-        (println (str (new java.util.Date) ": " message))
-        (reply (try (eval-input message) (catch Throwable e (xml-to-text (handle-exception e))))))
-    :get
-      (reply (str "<!DOCTYPE html>" (xml-to-text (login/login-page (game-state/game-names)))))))
+  (reload)
+  (println "------------")
+  (reply
+    (case (:request-method request)
+      :post
+        (let [ message (slurp (:body request)) ]
+          (println (str (new java.util.Date) ": " message))
+          (try (eval-input message) (catch Throwable e (xml-to-text (handle-exception e)))))
+      :get
+        (let [ { uri :uri query :query } request ]
+          (println uri query)
+          (handle-get uri query)))))
 
 (defn -main [& args]
   (game-state/load-games)
-  (run-jetty handler {:port 3000} ) )
+  (run-jetty handler {:port 3000} ))
+
+(defn runbg [] (.start (Thread. -main))) ; Call from repl

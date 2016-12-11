@@ -1,15 +1,20 @@
 (ns glory-of-empires.html
-  (:use clojure-common.utils))
+  (:use clojure-common.utils)
+  (:require [clojure-common.xml :as xml]))
+
+(def xhtml-dtd "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"
+   \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">" )
 
 (defn page [ title extra-script body-content ]
-  [ :html
-    [ :head
-      [ :meta { :charset "UTF-8" } ]
-      [ :title title ]
-      [ :script { :src "/glory-of-empires/jquery.min.js" } ]
-      [ :script { :src "/glory-of-empires/glory-of-empires.js" } ]
-      [ :script extra-script ] ]
-    `[ :body { :style "background: #202020; color: white;" } ~@body-content ] ] )
+  (str xhtml-dtd (xml/xml-to-text
+    [ :html { :xmlns "http://www.w3.org/1999/xhtml" }
+      [ :head
+        [ :meta { :charset "UTF-8" } ]
+        [ :title title ]
+        [ :script { :src "/html/jquery.min.js" } ]
+        [ :script { :src "/html/glory-of-empires.js" } ]
+        [ :script extra-script ] ]
+      `[ :body { :style "background: #202020; color: white;" } ~@body-content ] ] )))
 
 (defn select [ attrs options ]
   `[ :select ~attrs ~@(map (fn [opt] [ :option {} opt ]) options) ] )
