@@ -1,11 +1,9 @@
-var dataUrl = 'http://empires.brotherus.net/glory-of-empires/'
-
-var url = "http://empires.brotherus.net/empires";
-
 var viewCounter = -1; // used for detecting if game state has changed
 var currentView = "board";
 var refreshPeriod = 2000; // ms
 var viewRefreshCount = 0;
+
+var url = decodeURIComponent(window.location.origin + window.location.pathname); // eg. "http://localhost:3000" + "/game"
 
 $.ajaxSetup({
     type: 'POST',
@@ -24,7 +22,7 @@ function ExecuteCommand() {
   var message = BuildMessage("command", command);
   $.post( url, message, function (fromServer, status){
       $("#commandResult").html( " ➔ " + fromServer );
-      ReloadViewNow(); 
+      ReloadViewNow();
   });
 }
 
@@ -43,7 +41,7 @@ function ViewDefinitionChanged() {
 }
 
 function OpenView() {
-    window.open( dataUrl + "view.html?view=" + $("#viewDefinition").val() );
+    window.open( "view.html?view=" + $("#viewDefinition").val() );
 }
 
 // ***************** Shared functions for all windows *****************
@@ -51,10 +49,11 @@ function OpenView() {
 function quoted(s) { return "\"" + s + "\""; }
 
 function BuildMessage(messageType, func) {
-    return "{ :game " + $("#game option:selected").text() + 
-            " :role " + $("#role option:selected").text() + 
-            " :password " + quoted( $("#password").val() ) + 
-            " :message-type :" + messageType + 
+    return "{ " +
+           " :game " + $("#game option:selected").text() +
+       //     " :role " + $("#role option:selected").text() +
+       //     " :password " + quoted( $("#password").val() ) +
+            " :message-type :" + messageType +
             " :func " + func + " }";
 }
 
@@ -72,13 +71,13 @@ function ScheduleViewRefresh( time ) {
 }
 
 function LoadViewIfChanged() {
-    viewRefreshCount = viewRefreshCount - 1;    
+    viewRefreshCount = viewRefreshCount - 1;
     var message = BuildMessage("info", "(game-state/game-counter)");
     $.post( url, message, ViewCounterReceived );
 }
 
 function ViewCounterReceived(serverResponse, status) {
-    var newCount = parseInt(serverResponse);    
+    var newCount = parseInt(serverResponse);
     if (newCount == viewCounter) {
         console.log('View up-to-date ' + Date());
         ScheduleViewRefresh( refreshPeriod );
@@ -97,17 +96,15 @@ function ReloadViewNow() {
 
 function LoadViewInner(view, targetWidgetId, scheduleNew) {
     var message = BuildMessage("view", "(view/" + view + ")");
-    console.log('posting: ' + message);
+    console.log('posting: ' + message + " to " + url);
     $.post( url, message, function (fromServer, status){
-        console.log('received view from server');
+        console.log('received view from server: ' + fromServer);
         $("#" + targetWidgetId).html( fromServer );
         if (scheduleNew) {
             ScheduleViewRefresh( refreshPeriod );
         }
     });
 }
-
-
 
 function GetURLParameter(paramName) {
     console.log('GetURLParameter: ' + paramName);

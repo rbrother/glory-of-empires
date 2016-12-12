@@ -3,7 +3,7 @@
 
 (defn- game-select [ game-names ]
   (html/select
-    { :id "game" :onchange "GameSelected();" }
+    { :id "game" :name "gameName" :onchange "GameSelected();" }
     (concat [ "--choose--" ] game-names)))
 
 (def login-script "
@@ -15,11 +15,15 @@
 (defn login-page [ game-names ]
   (html/page "Glory of Empires login" login-script
     [ [ :h1 "Glory of Empires" ]
+      [ :hr ]
       [ :h3 "Select Existing game" ]
-      (html/table
-        [ "Game Name" (game-select game-names) ]
-        [ "Role" [ :span { :id "role-selector" } ] ]
-        [ "Password" [ :input { :id "password" } ] ] )
+      [ :form { :method "GET" :action "game" }
+        (html/table
+          [ "Game Name" (game-select game-names) ]
+          [ "Role" [ :span { :id "role-selector" } ] ]
+          [ "Password" [ :input { :id "password" :name "password" } ] ] )
+        [:input { :type "submit" :value "Open Game" } ] ]
+      [ :hr ]
       [ :p "Or " [ :a { :href "create-game.html" } "create new game" ] ] ]))
 
 (defn create-game-page []
