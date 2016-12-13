@@ -17,7 +17,7 @@
 
 (defn game-names [] (map str (keys @games)) )
 
-(defn game-counter [ game ] (get game :counter 0))
+(defn game-counter [] (fn [game] (get game :counter 0)))
 
 (defn load-games []
   (if (.exists (as-file game-file-path))

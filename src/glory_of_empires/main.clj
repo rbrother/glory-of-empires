@@ -23,11 +23,10 @@
   (binding [*ns* (find-ns 'glory-of-empires.main)]
     (let [ message (read-string message-str)
            { game-id :game role :role password :password message-type :message-type func :func } message
-           game (game-state/game game-id)
-           func-with-game (apply list (conj (vec func) game)) ]
+           game (game-state/game game-id) ]
       (case message-type
-        :info (eval func-with-game)
-        :view (xml-to-text (eval func-with-game))
+        :info ((eval func) game)
+        :view (xml-to-text ((eval func) game))
         :command (do (game-state/swap-game (eval func) game-id) "ok") ))))
 
 ; example post request
