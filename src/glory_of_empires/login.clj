@@ -8,7 +8,7 @@
 
 (def login-script "
     function GameSelected() {
-      LoadViewInner('role-selector', 'role-selector', false);
+      LoadViewInner($('#game option:selected').text(), '', '', 'role-selector', 'role-selector', false);
     }
   ")
 

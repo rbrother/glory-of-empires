@@ -41,15 +41,24 @@
 
 ; Call from repl.
 ; Allow modifications to source files to take effect without restart (only for development, disable for production)
+; Avoid using :reload-all since that also reloads game-state which resets the atom of the game-state
+; (alternatively we could reload-all and then load also the game state from the file again, but this is more clean.
 (defn reload []
-  (use 'glory-of-empires.main :reload-all))
+  (use 'glory-of-empires.main :reload)
+  (use 'glory-of-empires.view :reload)
+  (use 'glory-of-empires.command :reload)
+  (use 'glory-of-empires.login :reload)
+  (use 'glory-of-empires.html :reload))
 
 (defn static-page [ path ] (slurp path :encoding "UTF-8"))
 
+(def ignore-urls #{ "/favicon.ico" "/html/jquery.min.map" } )
+
 (defn- handle-get [ uri query ]
   (cond
-    (= uri "/favicon.ico") ""
+    (contains? ignore-urls uri) ""
     (re-matches #"\/html\/.+" uri) (static-page (subs uri 1))
+    (= "/game" uri) (static-page "html/game.html")
     :else (login/login-page (game-state/game-names))))
 
 (defn handler [request]

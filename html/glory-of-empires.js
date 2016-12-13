@@ -15,13 +15,18 @@ $.ajaxSetup({
 
 // *************** Functions serving the main glory-of-empires.html ***************
 
+function GameName() { return GetURLParameter("gameName"); }
+function Role() { return GetURLParameter("role"); }
+function Password() { return quoted(GetURLParameter("password")); }
+
 function ExecuteCommand() {
   var command = "(command/" + $("#command").val() + ")";
   $("#currentCommand").html(command);
   $("#commandResult").html( "" )
-  var message = BuildMessage("command", command);
+  var message = BuildMessage(GameName(), Role(), Password(), "command", command);
+  console.log('posting command request: ' + message + " to " + url);
   $.post( url, message, function (fromServer, status){
-      $("#commandResult").html( " ➔ " + fromServer );
+      $("#commandResult").html( " -> " + fromServer );
       ReloadViewNow();
   });
 }
@@ -48,13 +53,15 @@ function OpenView() {
 
 function quoted(s) { return "\"" + s + "\""; }
 
-function BuildMessage(messageType, func) {
-    return "{ " +
-           " :game " + $("#game option:selected").text() +
-       //     " :role " + $("#role option:selected").text() +
-       //     " :password " + quoted( $("#password").val() ) +
-            " :message-type :" + messageType +
-            " :func " + func + " }";
+function BuildMessage(gameName, role, password, messageType, func) {
+    var message = "{";
+    if (gameName != "") message = message + " :game " + gameName;
+    if (role != "") message = message + " :role " + role;
+    if (password != "") message = message + " :password " + password;
+    message = message +
+      " :message-type :" + messageType +
+      " :func " + func + " }";
+    return message;
 }
 
 function clicked(id) {
@@ -72,7 +79,7 @@ function ScheduleViewRefresh( time ) {
 
 function LoadViewIfChanged() {
     viewRefreshCount = viewRefreshCount - 1;
-    var message = BuildMessage("info", "(game-state/game-counter)");
+    var message = BuildMessage(GameName(), Role(), Password(), "info", "(game-state/game-counter)");
     $.post( url, message, ViewCounterReceived );
 }
 
@@ -88,17 +95,14 @@ function ViewCounterReceived(serverResponse, status) {
 }
 
 function ReloadViewNow() {
-    LoadViewInner(currentView, "view", true);
-    if ($("#RoleSelector").length > 0) {
-        LoadViewInner("role-selector", "RoleSelector", false);
-    }
+    LoadViewInner(GameName(), Role(), Password(), currentView, "view", true);
 }
 
-function LoadViewInner(view, targetWidgetId, scheduleNew) {
-    var message = BuildMessage("view", "(view/" + view + ")");
-    console.log('posting: ' + message + " to " + url);
+function LoadViewInner(gameName, role, password, view, targetWidgetId, scheduleNew) {
+    var message = BuildMessage(gameName, role, password, "view", "(view/" + view + ")");
+    console.log('posting view request: ' + message + " to " + url);
     $.post( url, message, function (fromServer, status){
-        console.log('received view from server: ' + fromServer);
+        console.log('received view from server');
         $("#" + targetWidgetId).html( fromServer );
         if (scheduleNew) {
             ScheduleViewRefresh( refreshPeriod );
@@ -107,7 +111,6 @@ function LoadViewInner(view, targetWidgetId, scheduleNew) {
 }
 
 function GetURLParameter(paramName) {
-    console.log('GetURLParameter: ' + paramName);
     var sPageURL = decodeURIComponent(window.location.search.substring(1));
     var sURLVariables = sPageURL.split('&');
     var result = '';

@@ -4,37 +4,16 @@
     <meta charset="UTF-8"></meta>
     <title>Glory of Empires</title>
     <!--  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> -->
-    <script type="text/javascript" src="jquery.min.js"></script>
-    <script type="text/javascript" src="glory-of-empires.js"></script>
+    <script type="text/javascript" src="/html/jquery.min.js"></script>
+    <script type="text/javascript" src="/html/glory-of-empires.js"></script>
     <script type="text/javascript">
         window.onload = function() {
             LoadViewIfChanged();
-        }    
+        }
     </script>
   </head>
   <body style="background: #202020; color: white;">
     <table>
-      <tr>
-        <td>Game</td>
-        <td id="GameSelector">
-            <select style="width: 300px;" id="game">
-                <option>:sandbox</option>
-            </select>
-        </td>
-      </tr>
-      <tr>
-        <td>Role</td>
-        <td id="RoleSelector">
-            <select style="width: 300px;" id="role">
-                <option>:gm</option>
-            </select>
-        </td>
-        <td></td>
-        <td>Password</td>
-        <td>
-            <input type="password" id="password"/> 
-        </td>
-      </tr>
       <tr>
         <td>Command</td>
         <td><input style="width: 300px;" id="command"  autofocus="true"/></td>
@@ -55,7 +34,7 @@
             <option>move-unit :ca1 :a2</option>
             <option>move-unit [ :ca1 :ca2 ] :b1</option>
             <option>move-unit [ :gf7 :pds3 ] :ca1 (not working yet)</option>
-            <option>move :ca1 [ :gf7 :pds3 ] :meer (not working yet)</option>            
+            <option>move :ca1 [ :gf7 :pds3 ] :meer (not working yet)</option>
           </select>
         </td>
       </tr>
@@ -76,7 +55,7 @@
             <option>players</option>
             <option>vertical (view/board 0.3) (view/players)</option>
             <option>horizontal (view/board 0.3) (view/players)</option>
-          </select>      
+          </select>
         </td>
         <td>
           <span id="viewResult" style="color: white;"></span>
