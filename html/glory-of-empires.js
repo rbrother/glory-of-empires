@@ -23,12 +23,10 @@ function ExecuteCommand() {
   var command = "(command/" + $("#command").val() + ")";
   $("#currentCommand").html(command);
   $("#commandResult").html( "" )
-  var message = BuildMessage(GameName(), Role(), Password(), "command", command);
-  console.log('posting command request: ' + message + " to " + url);
-  $.post( url, message, function (fromServer, status){
-      $("#commandResult").html( " -> " + fromServer );
-      ReloadViewNow();
-  });
+  ExecuteCommandInner( GameName(), Role(), Password(), command, function(fromServer) {
+    $("#commandResult").html( " -> " + fromServer );
+    ReloadViewNow();
+  } )
 }
 
 function ExampleChanged() {
@@ -51,6 +49,11 @@ function OpenView() {
 
 // ***************** Shared functions for all windows *****************
 
+function PostMessage( message, afterFunc ) {
+  console.log('posting: ' + message + " to " + url);
+  $.post( url, message, function (fromServer, status) { afterFunc(fromServer); });
+}
+
 function quoted(s) { return "\"" + s + "\""; }
 
 function BuildMessage(gameName, role, password, messageType, func) {
@@ -68,6 +71,11 @@ function clicked(id) {
     console.log('-- Clicked on: ' + id);
 }
 
+function ExecuteCommandInner(gameName, role, password, command, postFunction ) {
+  var message = BuildMessage(gameName, role, password, "command", command);
+  PostMessage( message, postFunction );
+}
+
 function ScheduleViewRefresh( time ) {
     // Condition to prevent multiple refresh-loops being started if we
     // already have a view refresh pending
@@ -80,10 +88,10 @@ function ScheduleViewRefresh( time ) {
 function LoadViewIfChanged() {
     viewRefreshCount = viewRefreshCount - 1;
     var message = BuildMessage(GameName(), Role(), Password(), "info", "(game-state/game-counter)");
-    $.post( url, message, ViewCounterReceived );
+    PostMessage( message, ViewCounterReceived );
 }
 
-function ViewCounterReceived(serverResponse, status) {
+function ViewCounterReceived(serverResponse) {
     var newCount = parseInt(serverResponse);
     if (newCount == viewCounter) {
         console.log('View up-to-date ' + Date());
@@ -100,8 +108,7 @@ function ReloadViewNow() {
 
 function LoadViewInner(gameName, role, password, view, targetWidgetId, scheduleNew) {
     var message = BuildMessage(gameName, role, password, "view", "(view/" + view + ")");
-    console.log('posting view request: ' + message + " to " + url);
-    $.post( url, message, function (fromServer, status){
+    PostMessage( message, function (fromServer) {
         console.log('received view from server');
         $("#" + targetWidgetId).html( fromServer );
         if (scheduleNew) {
@@ -110,7 +117,7 @@ function LoadViewInner(gameName, role, password, view, targetWidgetId, scheduleN
     });
 }
 
-function GetURLParameter(paramName) {
+function GetURLParameter( paramName ) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1));
     var sURLVariables = sPageURL.split('&');
     var result = '';

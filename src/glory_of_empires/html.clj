@@ -13,7 +13,7 @@
         [ :title title ]
         [ :script { :src "/html/jquery.min.js" } ]
         [ :script { :src "/html/glory-of-empires.js" } ]
-        [ :script extra-script ] ]
+        [ :script (if extra-script { :src extra-script } {}) ] ]
       `[ :body { :style "background: #202020; color: white;" } ~@body-content ] ] )))
 
 (defn select [ attrs options ]

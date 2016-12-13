@@ -19,7 +19,7 @@
   (println (clojure.stacktrace/print-stack-trace ex))
   [ :span { :style "color: #ff3030;" } (.getMessage ex) ] )
 
-(defn eval-input [ message-str ]
+(defn handle-post [ message-str ]
   (binding [*ns* (find-ns 'glory-of-empires.main)]
     (let [ message (read-string message-str)
            { game-id :game role :role password :password message-type :message-type func :func } message
@@ -27,7 +27,8 @@
       (case message-type
         :info ((eval func) game)
         :view (xml-to-text ((eval func) game))
-        :command (do (game-state/swap-game (eval func) game-id) "ok") ))))
+        :command (do (game-state/swap-game (eval func) game-id) "ok") ; game-modifying commands
+        :admin-command (do (game-state/swap-games (eval func)) "ok")   )))) ; commands modifying the whole app state
 
 ; example post request
 ;{ :headers {origin http://www.brotherus.net, ...}, :server-port 80,
@@ -58,6 +59,7 @@
     (contains? ignore-urls uri) ""
     (re-matches #"\/html\/.+" uri) (static-page (subs uri 1))
     (= "/game" uri) (static-page "html/game.html")
+    (= "/create-game" uri) (login/create-game-page)
     :else (login/login-page (game-state/game-names))))
 
 (defn handler [request]
@@ -68,7 +70,7 @@
       :post
         (let [ message (slurp (:body request)) ]
           (println (str (new java.util.Date) ": " message))
-          (try (eval-input message) (catch Throwable e (xml-to-text (handle-exception e)))))
+          (try (handle-post message) (catch Throwable e (xml-to-text (handle-exception e)))))
       :get
         (let [ { uri :uri query :query } request ]
           (println uri query)
