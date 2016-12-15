@@ -5,8 +5,7 @@
   (:require [glory-of-empires.view :as view])
   (:require [glory-of-empires.game-state :as game-state])
   (:require [glory-of-empires.login :as login])
-  (:require [glory-of-empires.html :as html])
-  (:gen-class))
+  (:require [glory-of-empires.html :as html]))
 
 ;----------------- web server ----------------------
 
@@ -44,11 +43,12 @@
 ; Avoid using :reload-all since that also reloads game-state which resets the atom of the game-state
 ; (alternatively we could reload-all and then load also the game state from the file again, but this is more clean.
 (defn reload []
-  (use 'glory-of-empires.main :reload)
-  (use 'glory-of-empires.view :reload)
-  (use 'glory-of-empires.command :reload)
-  (use 'glory-of-empires.login :reload)
-  (use 'glory-of-empires.html :reload))
+  (require 'glory-of-empires.main :reload)
+  (require 'glory-of-empires.view :reload)
+  (require 'glory-of-empires.command :reload)
+  (require 'glory-of-empires.players :reload)
+  (require 'glory-of-empires.login :reload)
+  (require 'glory-of-empires.html :reload))
 
 (defn static-page [ path ] (slurp path :encoding "UTF-8"))
 

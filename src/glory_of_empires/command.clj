@@ -34,8 +34,8 @@
 
 ;------------- players -----------------
 
-(defn set-players [ & player-ids ]
-  #(players/set-players player-ids %))
+(defn set-players [ & player-ids-and-passwords ]
+  (fn [ game ] (players/set-players player-ids-and-passwords game)))
 
 ;------------ unit commands ------------------
 
