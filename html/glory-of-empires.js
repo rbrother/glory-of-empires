@@ -24,7 +24,7 @@ function ExecuteCommand() {
   $("#currentCommand").html(command);
   $("#commandResult").html( "" )
   ExecuteCommandInner( GameName(), Role(), Password(), command, function(fromServer) {
-    $("#commandResult").html( " -> " + fromServer );
+    $("#commandResult").html( fromServer );
     ReloadViewNow();
   } )
 }

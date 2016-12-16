@@ -8,12 +8,17 @@
     <script type="text/javascript" src="/html/glory-of-empires.js"></script>
     <script type="text/javascript">
         window.onload = function() {
+            $("#gameName").html( GameName() + " (" + Role() + ")" );
             LoadViewIfChanged();
         }
     </script>
   </head>
   <body style="background: #202020; color: white;">
     <table>
+      <tr>
+        <td>Game</td>
+        <td id="gameName"></td>
+      </tr>
       <tr>
         <td>Command</td>
         <td><input style="width: 300px;" id="command"  autofocus="true"/></td>
@@ -39,10 +44,10 @@
         </td>
       </tr>
       <tr>
-        <td id="currentCommand" colspan="5" style="color: green;"></td>
-      </tr>
-      <tr>
-        <td id="commandResult" colspan="5" style="color: white;"></td>
+        <td colspan="5">
+          <span id="currentCommand" style="color: green;"></span> --
+          <span id="commandResult"></span>
+        </td>
       </tr>
       <tr>
         <td>View</td>

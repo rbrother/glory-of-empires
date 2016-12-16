@@ -3,6 +3,7 @@
   (:use clojure-common.xml)
   (:require [glory-of-empires.command :as command])
   (:require [glory-of-empires.view :as view])
+  (:require [glory-of-empires.players :as players])
   (:require [glory-of-empires.game-state :as game-state])
   (:require [glory-of-empires.login :as login])
   (:require [glory-of-empires.html :as html]))
@@ -18,16 +19,23 @@
   (println (clojure.stacktrace/print-stack-trace ex))
   [ :span { :style "color: #ff3030;" } (.getMessage ex) ] )
 
+(defn execute-post [ message-type game-id game game-func ]
+  (case message-type
+    :info (game-func game)
+    :view (xml-to-text (game-func game))
+    :command (do (game-state/swap-game game-func game-id) "ok") ; game-modifying commands
+    :admin-command (do (game-state/swap-games game-func) "ok")  )) ; commands modifying the whole app state
+
 (defn handle-post [ message-str ]
   (binding [*ns* (find-ns 'glory-of-empires.main)]
     (let [ message (read-string message-str)
            { game-id :game role :role password :password message-type :message-type func :func } message
-           game (game-state/game game-id) ]
-      (case message-type
-        :info ((eval func) game)
-        :view (xml-to-text ((eval func) game))
-        :command (do (game-state/swap-game (eval func) game-id) "ok") ; game-modifying commands
-        :admin-command (do (game-state/swap-games (eval func)) "ok")   )))) ; commands modifying the whole app state
+           game (game-state/game game-id)
+           game-func (eval func)
+           require-role (get (meta game-func) :require-role) ]
+      (if (or (not require-role) (players/password-valid? require-role game message))
+        (execute-post message-type game-id game game-func)
+        (throw (Exception. (str "Password " password " for " role " not valid for role " require-role)))   ))))
 
 ; example post request
 ;{ :headers {origin http://www.brotherus.net, ...}, :server-port 80,
@@ -69,7 +77,7 @@
     (case (:request-method request)
       :post
         (let [ message (slurp (:body request)) ]
-          (println (str (new java.util.Date) ": " message))
+          (println message)
           (try (handle-post message) (catch Throwable e (xml-to-text (handle-exception e)))))
       :get
         (let [ { uri :uri query :query } request ]

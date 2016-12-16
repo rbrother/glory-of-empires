@@ -3,7 +3,15 @@
   (:require [glory-of-empires.races :as races])
   (:require [glory-of-empires.ships :as ships]))
 
-(defn set-players [ player-ids-and-passwords game ]
+(defn password-valid? [ required-role game { role :role password :password } ]
+  (or (and
+        (= role :game-master)
+        (= password (game :gm-password)))
+      (and
+        (= required-role :player)
+        (= password (get-in game [ :players role :password])))))
+
+(defn set-players [ game player-ids-and-passwords ]
   (assoc game :players
     (->> player-ids-and-passwords
          (partition 2)
@@ -21,6 +29,7 @@
 
 (defn ids [ game-state ] (keys (game-state :players)))
 
-(defn players-html [ game-state ]
+(defn players-html [ game ]
   `[ :div {}
-     ~@(map player-html (vals (game-state :players))) ] )
+     ~@(map player-html (vals (game :players))) ] )
+

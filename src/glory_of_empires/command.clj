@@ -7,9 +7,10 @@
 
 ;------------ command helpers ---------------
 
-(defn- board-command [ command ] (fn [ game ] (update game :map command)))
+(defn- board-command [ board-func ] (fn [ game ] (update game :map board-func)))
 
 (defn- make-board-command [ new-board ]
+  ^{ :require-role :game-master }
   (fn [ game ] (merge game { :map new-board :ship-counters {} } )))
 
 ;----------- map commands --------------------
@@ -35,7 +36,8 @@
 ;------------- players -----------------
 
 (defn set-players [ & player-ids-and-passwords ]
-  (fn [ game ] (players/set-players player-ids-and-passwords game)))
+  ^{ :require-role :game-master }
+  (fn [ game ] (players/set-players game player-ids-and-passwords)))
 
 ;------------ unit commands ------------------
 
