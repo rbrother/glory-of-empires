@@ -24,8 +24,14 @@
 
 (defn reply [ text-content ]
   { :status 200
-    :headers {"Content-Type" "text/html" "Access-Control-Allow-Origin" "*"}
+    :headers {"Content-Type" "text/html"
+              "Access-Control-Allow-Origin" "*"}
     :body (str text-content) }  )
+
+(defn redirect [ url ]
+  { :status 301 ; Permanent redirect
+    :headers { "Location" url
+               "Access-Control-Allow-Origin" "*"} } )
 
 (defn handle-exception [ ex ]
   (println (clojure.stacktrace/print-stack-trace ex))
@@ -55,10 +61,11 @@
 (defn- handle-get [ uri query ] ; returns ready response-map or string for normal HTTP 200 response
   (cond
     (contains? ignore-urls uri) ""
-    (re-matches #"\/html\/.+" uri) (static-page (subs uri 1))
-    (= "/game" uri) (static-page "html/game.html")
+    (= "/login" uri) (login/login-page (game-state/game-names))
     (= "/create-game" uri) (login/create-game-page)
-    :else (login/login-page (game-state/game-names))))
+    (= "/game" uri) (static-page "html/game.html")
+    (re-matches #"\/html\/.+" uri) (static-page (subs uri 1))
+    :else (redirect "/login") ))
 
 (defn- handler-inner [request]
   (case (:request-method request)
