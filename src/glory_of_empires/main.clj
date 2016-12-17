@@ -22,11 +22,13 @@
 
 ;----------------- web server ----------------------
 
-(defn reply [ text-content ]
-  { :status 200
-    :headers {"Content-Type" "text/html"
-              "Access-Control-Allow-Origin" "*"}
-    :body (str text-content) }  )
+(defn reply
+  ( [ text-content ] (reply text-content "text/html") )
+  ( [ text-content type ]
+    { :status 200
+      :headers {"Content-Type" type
+                "Access-Control-Allow-Origin" "*"}
+      :body (str text-content) }  ))
 
 (defn redirect [ url ]
   { :status 301 ; Permanent redirect
@@ -60,7 +62,11 @@
       (execute-post message-type game-id game game-func)
       (password-not-valid password role require-role)   )))
 
-(defn static-page [ path ] (slurp path :encoding "UTF-8"))
+(defn static-page [ path ]
+  (let [ content (slurp path :encoding "UTF-8") ]
+    (if (re-matches #".+css" path)
+      (reply content "text/css")
+      content )))
 
 (def ignore-urls #{ "/favicon.ico" "/html/jquery.min.map" } )
 

@@ -11,10 +11,11 @@
       [ :head
         [ :meta { :charset "UTF-8" } ]
         [ :title title ]
+        [ :link { :rel "stylesheet" :type "text/css" :href "/html/game.css" } ]
         [ :script { :src "/html/jquery.min.js" } ]
         [ :script { :src "/html/glory-of-empires.js" } ]
         [ :script (if extra-script { :src extra-script } {}) ] ]
-      `[ :body { :style "background: #202020; color: white;" } ~@body-content ] ] )))
+      `[ :body ~@body-content ] ] )))
 
 (defn select [ attrs options ]
   `[ :select ~attrs ~@(map (fn [opt] [ :option {} opt ]) options) ] )
