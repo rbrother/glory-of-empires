@@ -44,6 +44,12 @@
     :command (do (game-state/swap-game game-func game-id) "ok") ; game-modifying commands
     :admin-command (do (game-state/swap-games game-func) "ok")  )) ; commands modifying the whole app state
 
+(defn password-not-valid [ password role require-role ]
+  (xml-to-text
+    [ :span { :style "color: red;" }
+      (str "Password " password " for " role " not valid for role " require-role ". ")
+      "Return to" [ :a { :href "/login" } "Login" ] ] ))
+
 (defn handle-post [ message-str ]
   (let [ message (read-string message-str)
          { game-id :game role :role password :password message-type :message-type func :func } message
@@ -52,20 +58,20 @@
          require-role (get (meta game-func) :require-role) ]
     (if (or (not require-role) (players/password-valid? require-role game message))
       (execute-post message-type game-id game game-func)
-      (throw (Exception. (str "Password " password " for " role " not valid for role " require-role)))   )))
+      (password-not-valid password role require-role)   )))
 
 (defn static-page [ path ] (slurp path :encoding "UTF-8"))
 
 (def ignore-urls #{ "/favicon.ico" "/html/jquery.min.map" } )
 
 (defn- handle-get [ uri query ] ; returns ready response-map or string for normal HTTP 200 response
-  (cond
-    (contains? ignore-urls uri) ""
-    (= "/login" uri) (login/login-page (game-state/game-names))
-    (= "/create-game" uri) (login/create-game-page)
-    (= "/game" uri) (static-page "html/game.html")
-    (re-matches #"\/html\/.+" uri) (static-page (subs uri 1))
-    :else (redirect "/login") ))
+  (case uri
+    "/login" (login/login-page (game-state/game-names))
+    "/create-game" (login/create-game-page)
+    "/game" (static-page "html/game.html")
+    (cond
+      (re-matches #"\/html\/.+" uri) (static-page (subs uri 1))
+      :else (redirect "/login") )))
 
 (defn- handler-inner [request]
   (case (:request-method request)
