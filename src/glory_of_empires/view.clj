@@ -9,19 +9,24 @@
 (defn board
   ( [ ] (board {}) )
   ( [ opts ]
+    ^{ :require-role :player }
     (fn [ game ]
       (if (number? opts) (board { :scale opts })
         (let [ m (game :map) ]
           (if (or (nil? m) (empty? m)) "No map" (map-svg/render m opts)))))))
 
-(defn players [ ] (fn [game] (players/players-html game)))
+(defn players [ ]
+  ^{ :require-role :player }
+  (fn [game] (players/players-html game)))
 
 (defn vertical [ & views ]
+  ^{ :require-role :player }
   (fn [ game ]
     `[ :div {}
        ~@(map (fn [view] [ :div view] ) views) ] ))
 
 (defn horizontal [ & views ]
+  ^{ :require-role :player }
   (fn [ game ]
     `[ :table {} [ :tr {}
                    ~@(map (fn [view] [ :td { :style "vertical-align: top;" } view] ) views) ]] ))
