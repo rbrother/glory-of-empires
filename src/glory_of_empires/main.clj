@@ -8,6 +8,18 @@
   (:require [glory-of-empires.login :as login])
   (:require [glory-of-empires.html :as html]))
 
+; Call (reload) from repl as needed.
+; Allow modifications to source files to take effect without restart (only for development, disable for production)
+; Avoid using :reload-all since that also reloads game-state which resets the atom of the game-state
+; (alternatively we could reload-all and then load also the game state from the file again, but this is more clean.
+(defn reload []
+  (require 'glory-of-empires.main :reload)
+  (require 'glory-of-empires.view :reload)
+  (require 'glory-of-empires.command :reload)
+  (require 'glory-of-empires.players :reload)
+  (require 'glory-of-empires.login :reload)
+  (require 'glory-of-empires.html :reload))
+
 ;----------------- web server ----------------------
 
 (defn reply [ text-content ]
@@ -27,42 +39,20 @@
     :admin-command (do (game-state/swap-games game-func) "ok")  )) ; commands modifying the whole app state
 
 (defn handle-post [ message-str ]
-  (binding [*ns* (find-ns 'glory-of-empires.main)]
-    (let [ message (read-string message-str)
-           { game-id :game role :role password :password message-type :message-type func :func } message
-           game (game-state/game game-id)
-           game-func (eval func)
-           require-role (get (meta game-func) :require-role) ]
-      (if (or (not require-role) (players/password-valid? require-role game message))
-        (execute-post message-type game-id game game-func)
-        (throw (Exception. (str "Password " password " for " role " not valid for role " require-role)))   ))))
-
-; example post request
-;{ :headers {origin http://www.brotherus.net, ...}, :server-port 80,
-; :content-type application/x-www-form-urlencoded; charset=UTF-8, :character-encoding UTF-8, :uri /, :server-name empires.brotherus.net,
-; :query-string nil, :body #object[org.eclipse.jetty.server.HttpInputOverHTTP 0x1d2abf3 HttpInputOverHTTP@1d2abf3],
-; :scheme :http, :request-method :post}
-
-; example get request from http://empires.brotherus.net/empires/page.html?a=66
-; { :uri /page.html, :server-name empires.brotherus.net, :query-string a=66,  :request-method :get}
-
-; Call from repl.
-; Allow modifications to source files to take effect without restart (only for development, disable for production)
-; Avoid using :reload-all since that also reloads game-state which resets the atom of the game-state
-; (alternatively we could reload-all and then load also the game state from the file again, but this is more clean.
-(defn reload []
-  (require 'glory-of-empires.main :reload)
-  (require 'glory-of-empires.view :reload)
-  (require 'glory-of-empires.command :reload)
-  (require 'glory-of-empires.players :reload)
-  (require 'glory-of-empires.login :reload)
-  (require 'glory-of-empires.html :reload))
+  (let [ message (read-string message-str)
+         { game-id :game role :role password :password message-type :message-type func :func } message
+         game (game-state/game game-id)
+         game-func (binding [*ns* (find-ns 'glory-of-empires.main)] (eval func))
+         require-role (get (meta game-func) :require-role) ]
+    (if (or (not require-role) (players/password-valid? require-role game message))
+      (execute-post message-type game-id game game-func)
+      (throw (Exception. (str "Password " password " for " role " not valid for role " require-role)))   )))
 
 (defn static-page [ path ] (slurp path :encoding "UTF-8"))
 
 (def ignore-urls #{ "/favicon.ico" "/html/jquery.min.map" } )
 
-(defn- handle-get [ uri query ]
+(defn- handle-get [ uri query ] ; returns ready response-map or string for normal HTTP 200 response
   (cond
     (contains? ignore-urls uri) ""
     (re-matches #"\/html\/.+" uri) (static-page (subs uri 1))
@@ -70,19 +60,22 @@
     (= "/create-game" uri) (login/create-game-page)
     :else (login/login-page (game-state/game-names))))
 
+(defn- handler-inner [request]
+  (case (:request-method request)
+    :post (let [ message (slurp (:body request)) ]
+            (println message)
+            (try (handle-post message) (catch Throwable e (xml-to-text (handle-exception e)))))
+    :get (let [ { uri :uri query :query } request ]
+           (println uri query)
+           (handle-get uri query))))
+
 (defn handler [request]
   (reload)
   (println "------------")
-  (reply
-    (case (:request-method request)
-      :post
-        (let [ message (slurp (:body request)) ]
-          (println message)
-          (try (handle-post message) (catch Throwable e (xml-to-text (handle-exception e)))))
-      :get
-        (let [ { uri :uri query :query } request ]
-          (println uri query)
-          (handle-get uri query)))))
+  (let [ raw-reply (handler-inner request) ]
+    (if (string? raw-reply)
+      (reply raw-reply) ; format as HTTP 200 OK response
+      raw-reply ))) ; already formatted as some HTTP response
 
 (defn -main [& args]
   (game-state/load-games)
