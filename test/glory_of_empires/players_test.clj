@@ -8,10 +8,10 @@
   (testing "players-html"
     (let [ p { :players { :hacan { :id :hacan }
                           :naalu { :id :naalu } } } ]
-      (is (= (players/set-players [ :hacan :naalu ] {})
+      (is (= (players/set-players {} [ :hacan "hacanpassword" :naalu "pwd2" ] )
              { :players
-               { :hacan { :id :hacan }
-                 :naalu { :id :naalu } } } ))
+               { :hacan { :id :hacan :password "hacanpassword" }
+                 :naalu { :id :naalu :password "pwd2" } } } ))
       (is (compare-structure (players/players-html p)
         [   :div
             { }

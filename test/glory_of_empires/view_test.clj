@@ -5,4 +5,4 @@
 
 (deftest view-test
   (testing "view-test"
-    (is (= "No map" (view/board game-state/new-game-state)))))
+    (is (= "No map" ((view/board) (game-state/new-game-state ""))))))

@@ -76,6 +76,7 @@
     "/create-game" (login/create-game-page)
     "/game" (static-page "html/game.html")
     (cond
+      (contains? ignore-urls uri) ""
       (re-matches #"\/html\/.+" uri) (static-page (subs uri 1))
       :else (redirect "/login") )))
 
