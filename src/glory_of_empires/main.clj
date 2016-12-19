@@ -41,7 +41,7 @@
 
 (defn execute-post [ message-type game-id game game-func ]
   (case message-type
-    :info (game-func game)
+    :info (str (game-func game))
     :view (xml-to-text (game-func game))
     :command (do (game-state/swap-game game-func game-id) "ok") ; game-modifying commands
     :admin-command (do (game-state/swap-games game-func) "ok")  )) ; commands modifying the whole app state
