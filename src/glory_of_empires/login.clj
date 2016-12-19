@@ -14,7 +14,7 @@
       [ :hr ]
       [ :h3 "Select Existing game" ]
       [ :form { :method "GET" :action "game" }
-        (html/table
+        (html/table {}
           [ "Game Name" (game-select game-names) ]
           [ "Role" [ :span { :id "role-selector" } ] ]
           [ "Password" [ :input { :id "password" :name "password" } ] ] )
@@ -27,7 +27,7 @@
     [ [ :h1 "Glory of Empires" ]
       [ :hr ]
       [ :h3 "Create new game" ]
-      (html/table
+      (html/table {}
         [ "Game Name" [ :input { :id "game" :name "gameName" }] "Use lower case letters and minus (-) only" ]
         [ "GM Password" [ :input { :id "password" :name "password" } ] ] )
       [ :button { :onclick "CreateGame();" } "Create Game" ]

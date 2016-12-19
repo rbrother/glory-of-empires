@@ -24,4 +24,4 @@
 
 (defn- make-row [ row ] `[ :tr ~@(map make-col row) ] )
 
-(defn table [ & rows ] `[ :table ~@(map make-row rows) ] )
+(defn table [ attrs & rows ] `[ :table ~attrs ~@(map make-row rows) ] )
