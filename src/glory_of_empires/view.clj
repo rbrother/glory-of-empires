@@ -22,14 +22,14 @@
 (defn vertical [ & views ]
   ^{ :require-role :player }
   (fn [ game ]
-    `[ :div {}
-       ~@(map (fn [view] [ :div view] ) views) ] ))
+    `[ :div
+       ~@(map (fn [view] [ :div (view game)] ) views) ] ))
 
 (defn horizontal [ & views ]
   ^{ :require-role :player }
   (fn [ game ]
-    `[ :table {} [ :tr {}
-                   ~@(map (fn [view] [ :td { :style "vertical-align: top;" } view] ) views) ]] ))
+    `[ :table [ :tr {}
+                   ~@(map (fn [view-fn] [ :td { :style "vertical-align: top;" } (view-fn game)] ) views) ]] ))
 
 (defn role-selector [ ]
   (fn [ game ]
