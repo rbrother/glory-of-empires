@@ -9,11 +9,11 @@
 (defn board
   ( [ ] (board {}) )
   ( [ opts ]
-    ^{ :require-role :player }
-    (fn [ game ]
-      (if (number? opts) (board { :scale opts })
+    (if (number? opts) (board { :scale opts })
+      ^{ :require-role :player }
+      (fn [ game ]
         (let [ m (game :map) ]
-          (if (or (nil? m) (empty? m)) "No map" (map-svg/render m opts)))))))
+          (if (or (nil? m) (empty? m)) "No map" (map-svg/render m opts))   )))))
 
 (defn players [ ]
   ^{ :require-role :player }
