@@ -20,8 +20,16 @@
 (defn select [ attrs options ]
   `[ :select ~attrs ~@(map (fn [opt] [ :option {} opt ]) options) ] )
 
-(defn- make-col [ col ] [ :td col ] )
+(defn- make-col [ col ]
+  (if (and (coll? col) (map? (first col)))
+     `[ :td ~(first col) ~@(rest col) ]
+     [ :td col ] ))
 
-(defn- make-row [ row ] `[ :tr ~@(map make-col row) ] )
+(defn- make-row-inner [ attrs cells ] `[ :tr ~attrs ~@(map make-col cells) ] )
+
+(defn- make-row [ row ]
+  (if (map? (first row))
+    (make-row-inner (first row) (rest row))
+    (make-row-inner {} row)))
 
 (defn table [ attrs & rows ] `[ :table ~attrs ~@(map make-row rows) ] )

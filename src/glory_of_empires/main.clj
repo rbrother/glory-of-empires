@@ -6,6 +6,7 @@
   (:require [glory-of-empires.players :as players])
   (:require [glory-of-empires.game-state :as game-state])
   (:require [glory-of-empires.login :as login])
+  (:require [glory-of-empires.command-page :as command-page])
   (:require [glory-of-empires.html :as html]))
 
 ; Call (reload) from repl as needed.
@@ -18,6 +19,7 @@
   (require 'glory-of-empires.command :reload)
   (require 'glory-of-empires.players :reload)
   (require 'glory-of-empires.login :reload)
+  (require 'glory-of-empires.command-page :reload)
   (require 'glory-of-empires.html :reload))
 
 ;----------------- web server ----------------------
@@ -74,7 +76,7 @@
   (case uri
     "/login" (login/login-page (game-state/game-names))
     "/create-game" (login/create-game-page)
-    "/game" (static-page "html/game.html")
+    "/game" (command-page/html)
     (cond
       (contains? ignore-urls uri) ""
       (re-matches #"\/html\/.+" uri) (static-page (subs uri 1))
