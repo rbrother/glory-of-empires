@@ -4,7 +4,6 @@ var refreshPeriod = 2000; // ms
 var viewRefreshCount = 0;
 
 window.onload = function() {
-  $("#gameName").html( GameName() + " (" + Role() + ")" );
   LoadViewIfChanged();
 }
 

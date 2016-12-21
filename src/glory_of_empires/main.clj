@@ -79,7 +79,7 @@
   (case uri
     "/login" (login/login-page (game-state/game-names))
     "/create-game" (login/create-game-page)
-    "/game" (command-page/html)
+    "/game" (command-page/html query)
     "/view" (view-page/html query)
     (cond
       (contains? ignore-urls uri) ""
@@ -104,15 +104,13 @@
 (defn- handler-inner [request]
   (case (:request-method request)
     :post (let [ message (slurp (:body request)) ]
-            (println message)
             (try (handle-post message) (catch Throwable e (xml-to-text (handle-exception e)))))
     :get (let [ { uri :uri query :query-string } request ]
            (println uri query)
            (handle-get uri (parse-query query)))))
 
 (defn handler [request]
-  (reload)
-  (println "------------")
+  (reload) ; REMOVE IN PRODUCION
   (let [ raw-reply (handler-inner request) ]
     (if (string? raw-reply)
       (reply raw-reply) ; format as HTTP 200 OK response

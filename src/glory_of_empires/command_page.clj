@@ -24,10 +24,10 @@
                    "vertical (view/board 0.3) (view/players)"
                    "horizontal (view/board 0.3) (view/players)" ] ))
 
-(defn html [ ]
+(defn html [ { game-name :gameName role :role } ]
   (html/page "Glory of Empires" "/html/command-page.js" [
       (html/table {}
-        [ "Game" [ :span { :id "gameName" } ] [ :a { :href "/login" } "Logout" ] ]
+        [ "Game" (str (name game-name) " / " (name role) ) ]
         [ "Command" [ :input { :style "width: 300px;" :id "command" :autofocus "true" } ]
                     [ :button { :type "button" :onclick "ExecuteCommand();" } "Execute" ]
                     "Examples" command-examples-select ]
