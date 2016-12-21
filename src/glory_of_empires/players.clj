@@ -5,7 +5,7 @@
   (:require [glory-of-empires.html :as html]))
 
 (defn create-player [ race password ]
-  { :id race :password password :tg 0 :ac [] :pc [] } )
+  { :id race :password password :tg 0 :ac [] :pc [] :tech [] } )
 
 (defn password-valid? [ required-role game { role :role password :password } ]
   (or (and
@@ -42,6 +42,7 @@
     "Planets"
     "Res"
     "Inf"
+    "Tech"
     (or tg 0)
     (count ac)
     (count pc) ] )
@@ -49,7 +50,7 @@
 (defn ids [ game-state ] (keys (game-state :players)))
 
 (defn players-table [ game ]
-  (let [ header [ "Race" "Color" "Symbol" "VP" "Systems" "Planets" "Res" "Inf" "TG" "AC" "PC" ]
+  (let [ header [ "Race" "Color" "Symbol" "VP" "Systems" "Planets" "Res" "Inf" "TG" "Tech" "AC" "PC" ]
          rows (map player-row-data (players game))
          pars `[ { :class "data" } ~header ~@rows ] ]
     (apply html/table pars) ))

@@ -10,13 +10,13 @@ window.onload = function() {
 
 function GameName() { return GetURLParameter("gameName"); }
 function Role() { return GetURLParameter("role"); }
-function Password() { return quoted(GetURLParameter("password")); }
+function Password() { return GetURLParameter("password"); }
 
 function ExecuteCommand() {
   var command = "(command/" + $("#command").val() + ")";
   $("#currentCommand").html(command);
   $("#commandResult").html( "" )
-  ExecuteCommandInner( GameName(), Role(), Password(), command, function(fromServer) {
+  ExecuteCommandInner( GameName(), Role(), quoted(Password()), command, function(fromServer) {
     $("#commandResult").html( fromServer );
     ReloadViewNow();
   } )
@@ -37,7 +37,7 @@ function ViewDefinitionChanged() {
 }
 
 function OpenView() {
-    window.open( "view?view=" + $("#viewDefinition").val() );
+    window.open( "view" + window.location.search + "&view=" + $("#viewDefinition").val() );
 }
 
 function ScheduleViewRefresh( time ) {
@@ -68,15 +68,4 @@ function ViewCounterReceived(serverResponse) {
 
 function ReloadViewNow() {
     LoadViewInner(GameName(), Role(), Password(), currentView, "view", true);
-}
-
-function LoadViewInner(gameName, role, password, view, targetWidgetId, scheduleNew) {
-    var message = BuildMessage(gameName, role, password, "view", "(view/" + view + ")");
-    PostMessage( message, function (fromServer) {
-        console.log('received view from server');
-        $("#" + targetWidgetId).html( fromServer );
-        if (scheduleNew) {
-            ScheduleViewRefresh( refreshPeriod );
-        }
-    });
 }

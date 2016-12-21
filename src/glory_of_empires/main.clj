@@ -7,6 +7,7 @@
   (:require [glory-of-empires.game-state :as game-state])
   (:require [glory-of-empires.login :as login])
   (:require [glory-of-empires.command-page :as command-page])
+  (:require [glory-of-empires.view-page :as view-page])
   (:require [glory-of-empires.html :as html]))
 
 ; Call (reload) from repl as needed.
@@ -20,6 +21,7 @@
   (require 'glory-of-empires.players :reload)
   (require 'glory-of-empires.login :reload)
   (require 'glory-of-empires.command-page :reload)
+  (require 'glory-of-empires.view-page :reload)
   (require 'glory-of-empires.html :reload))
 
 ;----------------- web server ----------------------
@@ -73,23 +75,40 @@
 (def ignore-urls #{ "/favicon.ico" "/html/jquery.min.map" } )
 
 (defn- handle-get [ uri query ] ; returns ready response-map or string for normal HTTP 200 response
+  (println query)
   (case uri
     "/login" (login/login-page (game-state/game-names))
     "/create-game" (login/create-game-page)
     "/game" (command-page/html)
+    "/view" (view-page/html query)
     (cond
       (contains? ignore-urls uri) ""
       (re-matches #"\/html\/.+" uri) (static-page (subs uri 1))
       :else (redirect "/login") )))
+
+(defn- to-map [ query-assignment ]
+  (let [ [ a b ] (clojure.string/split query-assignment #"=") ]
+         { (keyword a)
+           (cond
+             (not b) ""
+             (re-matches #"^%3A.+" b) (keyword (clojure.string/replace b #"^%3A" ""))
+             :else b) } ))
+
+(defn parse-query [ query ]
+  (if query
+    (let [ parts (clojure.string/split query #"&")
+           mapped (map to-map parts) ]
+      (apply merge mapped))
+    {} ))
 
 (defn- handler-inner [request]
   (case (:request-method request)
     :post (let [ message (slurp (:body request)) ]
             (println message)
             (try (handle-post message) (catch Throwable e (xml-to-text (handle-exception e)))))
-    :get (let [ { uri :uri query :query } request ]
+    :get (let [ { uri :uri query :query-string } request ]
            (println uri query)
-           (handle-get uri query))))
+           (handle-get uri (parse-query query)))))
 
 (defn handler [request]
   (reload)

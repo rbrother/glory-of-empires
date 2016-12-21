@@ -37,6 +37,17 @@ function ExecuteCommandInner(gameName, role, password, command, postFunction ) {
   PostMessage( message, postFunction );
 }
 
+function LoadViewInner(gameName, role, password, view, targetWidgetId, scheduleNew) {
+    var message = BuildMessage(gameName, role, password, "view", "(view/" + view + ")");
+    PostMessage( message, function (fromServer) {
+        console.log('received view from server');
+        $("#" + targetWidgetId).html( fromServer );
+        if (scheduleNew) {
+            ScheduleViewRefresh( refreshPeriod );
+        }
+    });
+}
+
 function GetURLParameter( paramName ) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1));
     var sURLVariables = sPageURL.split('&');
