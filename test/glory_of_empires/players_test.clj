@@ -14,17 +14,56 @@
                  :naalu { :id :naalu :password "pwd2" } } } ))
       (is (compare-structure (players/players-html p)
         [   :div
-            { }
-            [   :div
-                { }
-                [   :h3
-                    { }
-                    [ :span { } ":hacan - The Emirates of Hacan" ]
-                    [ :img { :src "http://www.brotherus.net/ti3/Ships/Yellow/Unit-Yellow-Fighter.png" } ] ] ]
-            [   :div
-                { }
-                [   :h3
-                    { }
-                    [ :span { } ":naalu - The Naalu Collective" ]
-                    [ :img { :src "http://www.brotherus.net/ti3/Ships/Tan/Unit-Tan-Fighter.png" } ] ] ] ] )) )))
+          [   :table
+              { :class "data" }
+              [   :tr
+                  { }
+                  [ :td "Race" ]
+                  [ :td "Color" ]
+                  [ :td "Symbol" ]
+                  [ :td "VP" ]
+                  [ :td "Systems" ]
+                  [ :td "Planets" ]
+                  [ :td "Res" ]
+                  [ :td "Inf" ]
+                  [ :td "TG" ]
+                  [ :td "Tech" ]
+                  [ :td "AC" ]
+                  [ :td "PC" ] ]
+              [   :tr
+                  { }
+                  [ :td :hacan ]
+                  [ :td "Color" ]
+                  [ :td "Symbol" ]
+                  [ :td "VP" ]
+                  [ :td "Systems" ]
+                  [ :td "Planets" ]
+                  [ :td "Res" ]
+                  [ :td "Inf" ]
+                  [ :td "Tech" ]
+                  [ :td 0 ]
+                  [ :td 0 ]
+                  [ :td 0 ] ]
+              [   :tr
+                  { }
+                  [ :td :naalu ]
+                  [ :td "Color" ]
+                  [ :td "Symbol" ]
+                  [ :td "VP" ]
+                  [ :td "Systems" ]
+                  [ :td "Planets" ]
+                  [ :td "Res" ]
+                  [ :td "Inf" ]
+                  [ :td "Tech" ]
+                  [ :td 0 ]
+                  [ :td 0 ]
+                  [ :td 0 ] ] ]
+          [   :div
+              [   :h3
+                  [ :span { } ":hacan - The Emirates of Hacan" ]
+                  [ :img { :src "http://www.brotherus.net/ti3/Ships/Yellow/Unit-Yellow-Fighter.png" } ] ] ]
+          [   :div
+              [   :h3
+                  [ :span { } ":naalu - The Naalu Collective" ]
+                  [ :img { :src "http://www.brotherus.net/ti3/Ships/Tan/Unit-Tan-Fighter.png" } ] ] ] ] )) )))
 

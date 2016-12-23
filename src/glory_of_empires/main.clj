@@ -8,7 +8,8 @@
   (:require [glory-of-empires.login :as login])
   (:require [glory-of-empires.command-page :as command-page])
   (:require [glory-of-empires.view-page :as view-page])
-  (:require [glory-of-empires.html :as html]))
+  (:require [glory-of-empires.html :as html])
+  (:require [glory-of-empires.query :as query]) )
 
 ; Call (reload) from repl as needed.
 ; Allow modifications to source files to take effect without restart (only for development, disable for production)
@@ -86,28 +87,13 @@
       (re-matches #"\/html\/.+" uri) (static-page (subs uri 1))
       :else (redirect "/login") )))
 
-(defn- to-map [ query-assignment ]
-  (let [ [ a b ] (clojure.string/split query-assignment #"=") ]
-         { (keyword a)
-           (cond
-             (not b) ""
-             (re-matches #"^%3A.+" b) (keyword (clojure.string/replace b #"^%3A" ""))
-             :else b) } ))
-
-(defn parse-query [ query ]
-  (if query
-    (let [ parts (clojure.string/split query #"&")
-           mapped (map to-map parts) ]
-      (apply merge mapped))
-    {} ))
-
 (defn- handler-inner [request]
   (case (:request-method request)
     :post (let [ message (slurp (:body request)) ]
             (try (handle-post message) (catch Throwable e (xml-to-text (handle-exception e)))))
-    :get (let [ { uri :uri query :query-string } request ]
-           (println uri query)
-           (handle-get uri (parse-query query)))))
+    :get (let [ { uri :uri query-string :query-string } request ]
+           (println uri query-string)
+           (handle-get uri (query/parse query-string)))))
 
 (defn handler [request]
   (reload) ; REMOVE IN PRODUCION
