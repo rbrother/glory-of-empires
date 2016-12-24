@@ -6,6 +6,8 @@
   { :counter 0
     :gm-password gm-password
     :map {}
+    :planets {}
+    :units {}
     :players {}
     :ship-counters {} } )
 

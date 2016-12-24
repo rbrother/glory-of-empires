@@ -2,7 +2,7 @@
   (:use clojure-common.utils)
   (:use clojure-common.xml)
   (:require [clojure.test :refer :all]
-            [glory-of-empires.map-svg :refer :all])
+            [glory-of-empires.map-svg :as map-svg])
   (:use glory-of-empires.map-test-data))
 
 (def mini-map (mini-game-state :map))
@@ -10,13 +10,13 @@
 (deftest render-map
   (testing "svg rendering"
     (are [ calculated expected ] (compare-structure calculated expected)
-      (bounding-rect (vals mini-map))         [ [0.0 0.0] [756.0 564.0] ]
-      (collapse-fighters many-ships)
+      (map-svg/bounding-rect (vals mini-map))         [ [0.0 0.0] [756.0 564.0] ]
+      (map-svg/collapse-fighters many-ships)
          [ { :id :cr1 :owner :norr :type :cr }
            { :id :cr2 :owner :norr :type :cr }
            { :id :dr1 :owner :norr :type :dr }
            { :count 3 :owner :norr :type :fi } ]
-      (render (mini-game-state :map))
+      (map-svg/render mini-game-state)
         [   :svg
             { :height 282.0 :width 378.0 :xmlns:xlink "http://www.w3.org/1999/xlink" }
             [   :g

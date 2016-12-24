@@ -1,6 +1,7 @@
 (ns glory-of-empires.map-test
   (:use clojure-common.utils)
   (:use clojure-common.xml)
+  (:use glory-of-empires.map-test-data)
   (:require [clojure.test :refer :all]
             [glory-of-empires.map :refer :all])
   (:require [glory-of-empires.ships :as ships]))
@@ -36,11 +37,90 @@
 
 (deftest unit-operations-test
   (testing "unit-operations-test"
-    (are [ calculated expected ] (compare-structure calculated expected)
-         1 1
-         ;;;;;;;;;;;;;; CONTINUE TEST FROM MINI-TEST-STATE
+    (let [ added-ships (new-units :a1 :hacan [ :fi :fi :cr ] mini-game-state) ]
+      (are [ calculated expected ] (compare-structure calculated expected)
+           (added-ships :units) {
+              :gf3 { :id :gf3 :location :a1 :planet :abyz :owner :hacan :type :gf }
+              :pds1 { :id :pds1 :location :a1 :planet :abyz :owner :hacan :type :pds }
+              :pds2 { :id :pds2 :location :a1 :planet :abyz :owner :hacan :type :pds }
+              :gf1 { :id :gf1 :location :a1 :planet :fria :owner :hacan :type :gf }
+              :gf2 { :id :gf2 :location :a1 :planet :fria :owner :hacan :type :gf }
+              :sd1 { :id :sd1 :location :a1 :planet :fria :owner :hacan :type :sd }
+              :ca3 { :id :ca3 :location :a1 :owner :hacan :type :ca }
+              :dr7 { :id :dr7 :location :a1 :owner :hacan :type :dr }
 
-    )))
+              :fi9 { :id :fi9 :location :a1 :owner :hacan :type :fi }
+              :fi10 { :id :fi10 :location :a1 :owner :hacan :type :fi }
+              :cr1 { :id :cr1 :location :a1 :owner :hacan :type :cr }
+
+              :de2 { :id :de2 :location :b1 :owner :norr :type :de }
+              :fi1 { :id :fi1 :location :b1 :owner :norr :type :fi }
+              :fi2 { :id :fi2 :location :b1 :owner :norr :type :fi }
+              :fi3 { :id :fi3 :location :b1 :owner :norr :type :fi }
+              :fi4 { :id :fi4 :location :b1 :owner :norr :type :fi }
+              :fi5 { :id :fi5 :location :b1 :owner :norr :type :fi }
+              :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi }
+              :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } }
+           (added-ships :ship-counters) { :ca 3 :de 2 :fi 10 :ws 1 :cr 1 :gf 3 :pds 2 }   ))
+    (let [ added-units (new-units :aah :norr [ :gf :gf :pds ] mini-game-state) ]
+      (are [ calculated expected ] (compare-structure calculated expected)
+           (added-units :units) {
+              :ca3 { :id :ca3 :location :a1 :owner :hacan :type :ca }
+              :de2 { :id :de2 :location :b1 :owner :norr :type :de }
+              :dr7 { :id :dr7 :location :a1 :owner :hacan :type :dr }
+              :fi1 { :id :fi1 :location :b1 :owner :norr :type :fi }
+              :fi2 { :id :fi2 :location :b1 :owner :norr :type :fi }
+              :fi3 { :id :fi3 :location :b1 :owner :norr :type :fi }
+              :fi4 { :id :fi4 :location :b1 :owner :norr :type :fi }
+              :fi5 { :id :fi5 :location :b1 :owner :norr :type :fi }
+              :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi }
+              :gf1 { :id :gf1 :location :a1 :owner :hacan :planet :fria :type :gf }
+              :gf2 { :id :gf2 :location :a1 :owner :hacan :planet :fria :type :gf }
+              :gf3 { :id :gf3 :location :a1 :owner :hacan :planet :abyz :type :gf }
+              :gf4 { :id :gf4 :location :b1 :planet :aah :owner :norr :type :gf }
+              :gf5 { :id :gf5 :location :b1 :planet :aah :owner :norr :type :gf }
+              :pds1 { :id :pds1 :location :a1 :owner :hacan :planet :abyz :type :pds }
+              :pds2 { :id :pds2 :location :a1 :owner :hacan :planet :abyz :type :pds }
+              :pds3 { :id :pds3 :location :b1 :planet :aah :owner :norr :type :pds }
+              :sd1 { :id :sd1 :location :a1 :owner :hacan :planet :fria :type :sd }
+              :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } } ))
+    (let [ moved-units (move-units [ :gf1 :gf3 :pds1 :ca3 ] :aah mini-game-state) ]
+      (are [ calculated expected ] (compare-structure calculated expected)
+           (moved-units :units) {
+              :gf3 { :id :gf3 :location :b1 :planet :aah :owner :hacan :type :gf }
+              :pds1 { :id :pds1 :location :b1 :planet :aah :owner :hacan :type :pds }
+              :pds2 { :id :pds2 :location :a1 :planet :abyz :owner :hacan :type :pds }
+              :gf1 { :id :gf1 :location :b1 :planet :aah :owner :hacan :type :gf }
+              :gf2 { :id :gf2 :location :a1 :planet :fria :owner :hacan :type :gf }
+              :sd1 { :id :sd1 :location :a1 :planet :fria :owner :hacan :type :sd }
+              :ca3 { :id :ca3 :location :b1 :owner :hacan :type :ca }
+              :dr7 { :id :dr7 :location :a1 :owner :hacan :type :dr }
+              :de2 { :id :de2 :location :b1 :owner :norr :type :de }
+              :fi1 { :id :fi1 :location :b1 :owner :norr :type :fi }
+              :fi2 { :id :fi2 :location :b1 :owner :norr :type :fi }
+              :fi3 { :id :fi3 :location :b1 :owner :norr :type :fi }
+              :fi4 { :id :fi4 :location :b1 :owner :norr :type :fi }
+              :fi5 { :id :fi5 :location :b1 :owner :norr :type :fi }
+              :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi }
+              :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } } ))
+    (let [ deleted-units (del-unit :ca3 mini-game-state) ]
+      (are [ calculated expected ] (compare-structure calculated expected)
+           (deleted-units :units) {
+              :gf3 { :id :gf3 :location :a1 :planet :abyz :owner :hacan :type :gf }
+              :pds1 { :id :pds1 :location :a1 :planet :abyz :owner :hacan :type :pds }
+              :pds2 { :id :pds2 :location :a1 :planet :abyz :owner :hacan :type :pds }
+              :gf1 { :id :gf1 :location :a1 :planet :fria :owner :hacan :type :gf }
+              :gf2 { :id :gf2 :location :a1 :planet :fria :owner :hacan :type :gf }
+              :sd1 { :id :sd1 :location :a1 :planet :fria :owner :hacan :type :sd }
+              :dr7 { :id :dr7 :location :a1 :owner :hacan :type :dr }
+              :de2 { :id :de2 :location :b1 :owner :norr :type :de }
+              :fi1 { :id :fi1 :location :b1 :owner :norr :type :fi }
+              :fi2 { :id :fi2 :location :b1 :owner :norr :type :fi }
+              :fi3 { :id :fi3 :location :b1 :owner :norr :type :fi }
+              :fi4 { :id :fi4 :location :b1 :owner :norr :type :fi }
+              :fi5 { :id :fi5 :location :b1 :owner :norr :type :fi }
+              :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi }
+              :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } } ))    ))
 
 (deftest find-planet-test
   (testing "find planet"

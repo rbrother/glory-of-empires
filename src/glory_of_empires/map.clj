@@ -61,6 +61,8 @@
   { :post [ (not (nil? %)) ] }
   (get-loc-of board (fn [ { planets :planets } ] (and planets (contains? planets planet)))))
 
+(defn all-systems [ game ] (map :system (vals (game :map))))
+
 ;------------------- map piece operations -------------------------
 
 (defn swap-piece-system [ piece system-id ]
@@ -68,8 +70,8 @@
   (let [ planets ((systems/get-system system-id) :planets)
          ; Keep only planets names in the map, don't drag along static planet-info
          ; that we gan get from all-systems map when needed. This keeps the test-data manageable.
-         empty-planets-map (if planets (map-map-values (fn [_] {}) planets) {}) ]
-    (merge piece { :system system-id :planets empty-planets-map } )))
+         planet-ids (if planets (keys planets) [] ) ]
+    (merge piece { :system system-id :planets (set planet-ids) } )))
 
 (defn swap-system [ board [ loc-id system-id ] ]
   { :pre [ (contains? board loc-id) (keyword? system-id) ] }
@@ -83,53 +85,64 @@
 
 ;-------------------- ships --------------------------
 
-(defn new-unit-to-piece [ { system-id :id :as piece } loc-id owner type id ]
-  (let [ unit { :type type :id id :owner owner } ]
-    (if (= loc-id system-id)
-      (-> piece
-          (assoc :controller owner)
-          (assoc-in [ :ships id ] unit ))
-      (-> piece
-          (assoc-in [ :planets loc-id :units id ] unit )))))
-
-(defn new-unit-to-map [ board loc-id owner type id ]
-  { :pre [ (ships/valid-unit-type? type) ] }
-  (let [ system-id (if (contains? board loc-id) loc-id (find-planet-loc board loc-id)) ]
-    (update-in board [ system-id ] new-unit-to-piece loc-id owner type id)))
-
-(defn new-unit-index [ game-state type ]
+(defn- new-unit-index [ game-state type ]
   (inc (get-in game-state [ :ship-counters type ] 0)))
 
-(defn new-unit [ loc-id owner type game-state ]
+; Resolves into { :location :a1 :planet :aah } (planet can be also nil)
+(defn- resolve-location [ loc unit-type { board :map planets :planets :as game } ]
+  (let [ ship? (= :ship ((ships/all-unit-types unit-type) :type))
+         is-system? (contains? (set (all-systems game)) loc) ]
+    (cond
+      ; :a1 (system-loc) for ships
+      (and ship? (board loc)) { :location loc }
+      ; :aah, :arinam-meer (system-id) for ships
+      (and ship? is-system?) { :location (get-system-loc board loc) }
+      ; :aah (planet-id) for ground-units
+      (and (not ship?) (planets loc)) { :location (find-planet-loc board loc) :planet loc }
+      ; :a1 (system-loc) for ground-units when only 1 planet in the system
+      (and (not ship?) (board loc)) { :location loc :planet (first ((board loc) :planets)) }
+      :else (throw (Exception. (str "Cannot resolve location " loc " for unit type " unit-type)))  )))
+
+(defn- new-unit [ unit-id loc-id owner type game-state ]
+  (merge { :id unit-id :owner owner :type type }
+        (resolve-location loc-id type game-state) ))
+
+(defn- add-new-unit [ loc-id owner type game-state ]
   { :pre [ (ships/valid-unit-type? type) ] }
-    (let [ idx (new-unit-index game-state type)
-           unit-id (keyword (str (name type) idx)) ]
-      (-> game-state
+  (let [ idx (new-unit-index game-state type)
+         unit-id (keyword (str (name type) idx)) ]
+    (-> game-state
         (assoc-in [ :ship-counters type ] idx )
-        (update-in [ :map ] new-unit-to-map loc-id owner type unit-id))))
+        (update :units assoc unit-id (new-unit unit-id loc-id owner type game-state))  )))
 
 (defn new-units [ loc-id owner types game-state ]
-  (let [ new-unit-of (fn [ new-game-state type] (new-unit loc-id owner type new-game-state )) ]
+  (let [ new-unit-of (fn [ new-game-state type] (add-new-unit loc-id owner type new-game-state )) ]
     (reduce new-unit-of game-state types)))
 
-(defn del-unit-from-piece [ piece id ]
-  (update-in piece [ :ships ] #(dissoc % id)))
+(defn del-unit [ id game ] (update game :units dissoc id))
 
-(defn del-unit [ board id ]
-  (map-map-values #(del-unit-from-piece % id) board))
+(defn move-unit [ units-map unit-id loc-id game ]
+  (update units-map unit-id (fn [unit] (merge unit (resolve-location loc-id (:type unit) game))))  )
 
-(defn all-units [ board ] (apply merge (map :ships (vals board))))
-
-(defn find-unit [ board id ] ((all-units board) id))
-
-(defn move-unit [ board unit-id loc-id ]
-   (let [ { owner :owner :as unit } (find-unit board unit-id) ]
-     (-> board
-         (del-unit unit-id)
-         (assoc-in [ loc-id :ships unit-id ] unit)
-         (assoc-in [ loc-id :controller ] owner))))
-
-(defn move-units [ board unit-ids loc-id ]
+(defn move-units [ unit-ids loc-id game ]
   { :pre [ (sequential? unit-ids) ] }
-  (let [ move-unit-to (fn [ new-board unit-id ] (move-unit new-board unit-id loc-id)) ]
-    (reduce move-unit-to board unit-ids)))
+  (let [ move-unit-to (fn [ new-board unit-id ] (move-unit new-board unit-id loc-id game)) ]
+    (update game :units (fn [units] (reduce move-unit-to units unit-ids)))))
+
+;------------------- merging of units and map (for rendering) ------------------
+
+(defn- combine-planets-units [ planets units ]
+  (let [ gather-planet-units (fn [planet-id]
+                               (filter #(= (% :planet) planet-id) units)) ]
+    (map (fn [planet] { :id planet :units (gather-planet-units planet) } ) planets)))
+
+(defn- combine-piece-units [ { piece-id :id :as piece } units ]
+  (let [ ship-in-system?
+         (fn [ { ship-loc :location planet :planet } ]
+           (and (= ship-loc piece-id) (not planet))) ]
+    (-> piece
+        (assoc :ships (filter ship-in-system? units))
+        (update :planets combine-planets-units units)   )))
+
+(defn combine-map-units [ map-pieces units ]
+  (map (fn [piece] (combine-piece-units piece units)) map-pieces))

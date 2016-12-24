@@ -1,17 +1,28 @@
 (ns glory-of-empires.command
+  (:require [clojure-common.utils :as utils])
   (:require [glory-of-empires.map :as board])
-  (:require [glory-of-empires.players :as players]))
+  (:require [glory-of-empires.players :as players]) )
 
 ; There commands do not actually do anything, but they
 ; return game-updating func for the specified command
 
 ;------------ command helpers ---------------
 
-(defn- board-command [ board-func ] (fn [ game ] (update game :map board-func)))
+; The whole planet-list is re-created when board is modified, so board modification
+; should not be done after game starts and there is some info on planets
+(defn- update-planets [ { board :map :as game } ]
+  (let [ all-planets
+         (->>  board (vals) (map :planets)
+               (map seq) (flatten) (remove nil?)
+               (map (fn [id] { :id id :controller nil }))  ) ]
+    (assoc game :planets (utils/index-by-id all-planets))  ))
+
+(defn- board-command [ board-func ]
+  (fn [ game ] (update-planets (update game :map board-func))))
 
 (defn- make-board-command [ new-board ]
   ^{ :require-role :game-master }
-  (fn [ game ] (merge game { :map new-board :ship-counters {} } )))
+  (fn [ game ] (update-planets (merge game { :map new-board :ship-counters {} } ))))
 
 ;----------- map commands --------------------
 
@@ -46,9 +57,9 @@
     #(board/new-units loc-id owner types % )))
 
 (defn del-unit [ unit-id ]
-  (board-command #(board/del-unit % unit-id)))
+  (fn [game] (board/del-unit unit-id game)))
 
 (defn move-unit [ unit-id dest ]
   (let [ unit-ids (if (sequential? unit-id) unit-id [ unit-id ] ) ]
-    (board-command #(board/move-units % unit-ids dest))))
+    (fn [game] (board/move-units unit-ids dest game))) )
 

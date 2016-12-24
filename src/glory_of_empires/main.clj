@@ -18,6 +18,8 @@
 (defn reload []
   (require 'glory-of-empires.main :reload)
   (require 'glory-of-empires.view :reload)
+  (require 'glory-of-empires.map :reload)
+  (require 'glory-of-empires.map-svg :reload)
   (require 'glory-of-empires.command :reload)
   (require 'glory-of-empires.players :reload)
   (require 'glory-of-empires.login :reload)
