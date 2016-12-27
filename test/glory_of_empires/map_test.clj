@@ -4,7 +4,8 @@
   (:use glory-of-empires.map-test-data)
   (:require [clojure.test :refer :all]
             [glory-of-empires.map :refer :all])
-  (:require [glory-of-empires.ships :as ships]))
+  (:require [glory-of-empires.ships :as ships])
+  (:require [glory-of-empires.command :as command]))
 
 ; Most of our tests are inline-tests in the respective functions, but for longer tests we can put here
 
@@ -84,6 +85,24 @@
               :pds3 { :id :pds3 :location :b1 :planet :aah :owner :norr :type :pds }
               :sd1 { :id :sd1 :location :a1 :owner :hacan :planet :fria :type :sd }
               :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } } ))
+    (let [ deleted-units (del-unit :ca3 mini-game-state) ]
+      (are [ calculated expected ] (compare-structure calculated expected)
+           (deleted-units :units) {
+              :gf3 { :id :gf3 :location :a1 :planet :abyz :owner :hacan :type :gf }
+              :pds1 { :id :pds1 :location :a1 :planet :abyz :owner :hacan :type :pds }
+              :pds2 { :id :pds2 :location :a1 :planet :abyz :owner :hacan :type :pds }
+              :gf1 { :id :gf1 :location :a1 :planet :fria :owner :hacan :type :gf }
+              :gf2 { :id :gf2 :location :a1 :planet :fria :owner :hacan :type :gf }
+              :sd1 { :id :sd1 :location :a1 :planet :fria :owner :hacan :type :sd }
+              :dr7 { :id :dr7 :location :a1 :owner :hacan :type :dr }
+              :de2 { :id :de2 :location :b1 :owner :norr :type :de }
+              :fi1 { :id :fi1 :location :b1 :owner :norr :type :fi }
+              :fi2 { :id :fi2 :location :b1 :owner :norr :type :fi }
+              :fi3 { :id :fi3 :location :b1 :owner :norr :type :fi }
+              :fi4 { :id :fi4 :location :b1 :owner :norr :type :fi }
+              :fi5 { :id :fi5 :location :b1 :owner :norr :type :fi }
+              :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi }
+              :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } } ))
     (let [ moved-units (move-units [ :gf1 :gf3 :pds1 :ca3 ] :aah mini-game-state) ]
       (are [ calculated expected ] (compare-structure calculated expected)
            (moved-units :units) {
@@ -103,16 +122,19 @@
               :fi5 { :id :fi5 :location :b1 :owner :norr :type :fi }
               :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi }
               :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } } ))
-    (let [ deleted-units (del-unit :ca3 mini-game-state) ]
+    (let [ moved-units ((command/move :from :a1 [ :pds 2 :gf :ca3 ] :b1) mini-game-state) ]
       (are [ calculated expected ] (compare-structure calculated expected)
-           (deleted-units :units) {
-              :gf3 { :id :gf3 :location :a1 :planet :abyz :owner :hacan :type :gf }
-              :pds1 { :id :pds1 :location :a1 :planet :abyz :owner :hacan :type :pds }
+           (moved-units :units) {
               :pds2 { :id :pds2 :location :a1 :planet :abyz :owner :hacan :type :pds }
               :gf1 { :id :gf1 :location :a1 :planet :fria :owner :hacan :type :gf }
-              :gf2 { :id :gf2 :location :a1 :planet :fria :owner :hacan :type :gf }
               :sd1 { :id :sd1 :location :a1 :planet :fria :owner :hacan :type :sd }
               :dr7 { :id :dr7 :location :a1 :owner :hacan :type :dr }
+
+              :ca3 { :id :ca3 :location :b1 :owner :hacan :type :ca }
+              :pds1 { :id :pds1 :location :b1 :planet :aah :owner :hacan :type :pds }
+              :gf2 { :id :gf2 :location :b1 :planet :aah :owner :hacan :type :gf }
+              :gf3 { :id :gf3 :location :b1 :planet :aah :owner :hacan :type :gf }
+
               :de2 { :id :de2 :location :b1 :owner :norr :type :de }
               :fi1 { :id :fi1 :location :b1 :owner :norr :type :fi }
               :fi2 { :id :fi2 :location :b1 :owner :norr :type :fi }
@@ -120,7 +142,8 @@
               :fi4 { :id :fi4 :location :b1 :owner :norr :type :fi }
               :fi5 { :id :fi5 :location :b1 :owner :norr :type :fi }
               :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi }
-              :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } } ))    ))
+              :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } } ))
+    ))
 
 (deftest find-planet-test
   (testing "find planet"
