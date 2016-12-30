@@ -12,10 +12,12 @@
                    "new-unit :b2 :hacan :ca"
                    "new-unit :a2 :norr [ :ca :cr :fi :fi ]"
                    "new-unit :meer :hacan [ :gf :gf ]"
-                   "del-unit :ca3"
+                   "del :ca3"
+                   "del :from :c1 [ 2 :gf :ca ]"
                    "move :ca1 :a2"
                    "move [ :ca1 :ca2 ] :b1"
-                   "move :from :d1 [ :ws2 :ca 3 :gf ] :b1" ] ))
+                   "move :from :d1 [ :ws2 :ca 3 :gf ] :b1"
+                   "move :from :d1 [ :ws2 :ca 3 :gf ] :b1"] ))
 
 (def view-examples-select
   (html/select { :id "viewExamples" :onchange "ViewExampleChanged();" }
