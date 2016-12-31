@@ -4,7 +4,7 @@
   (:use glory-of-empires.map-test-data)
   (:require [clojure.test :refer :all]
             [glory-of-empires.map :refer :all])
-  (:require [glory-of-empires.ships :as ships])
+  (:require [glory-of-empires.ships :refer :all])
   (:require [glory-of-empires.command :as command]))
 
 ; Most of our tests are inline-tests in the respective functions, but for longer tests we can put here
@@ -85,7 +85,7 @@
               :pds3 { :id :pds3 :location :b1 :planet :aah :owner :norr :type :pds }
               :sd1 { :id :sd1 :location :a1 :owner :hacan :planet :fria :type :sd }
               :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } } ))
-    (let [ deleted-units (del-unit :ca3 mini-game-state) ]
+    (let [ deleted-units (del-units [:ca3] mini-game-state) ]
       (are [ calculated expected ] (compare-structure calculated expected)
            (deleted-units :units) {
               :gf3 { :id :gf3 :location :a1 :planet :abyz :owner :hacan :type :gf }

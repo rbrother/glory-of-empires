@@ -55,7 +55,7 @@
 
 (defn new-unit [ loc-id owner type ]
   (let [ types (if (sequential? type) type [ type ]) ]
-    #(board/new-units loc-id owner types % )))
+    #(ships/new-units loc-id owner types % )))
 
 ; units-defs can be combination of (1) unit-ids eg. :ws3 , (2) unit types eg. :gf, (3) count + type eg. 3 :gf.
 ; returns list of unit-id:s
@@ -81,11 +81,11 @@
 (defn del [ & unit-pars ]
   (fn [ { all-units :units :as game } ]
     (let [ unit-ids (resolve-unit-ids unit-pars (vals all-units)) ]
-      (board/del-units unit-ids game))))
+      (ships/del-units unit-ids game))))
 
 (defn move [ & pars ]
   (let [ dest (last pars), unit-pars (drop-last pars) ]
     (fn [ { all-units :units :as game } ]
         (let [ unit-ids (resolve-unit-ids unit-pars (vals all-units)) ]
-          (board/move-units unit-ids dest game)    ))))
+          (ships/move-units unit-ids dest game)    ))))
 

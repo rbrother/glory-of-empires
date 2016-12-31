@@ -1,6 +1,7 @@
 (ns glory-of-empires.ships
   (:require [clojure.string :as string])
   (:use clojure-common.utils)
+  (:require [glory-of-empires.map :as board])
   (:require [glory-of-empires.races :as races])
   (:require [glory-of-empires.svg :as svg]))
 
@@ -23,6 +24,8 @@
 (def all-unit-types (index-by-id all-unit-types-arr))
 
 (defn valid-unit-type? [ type ] (contains? all-unit-types type))
+
+;----------------------- units rendeting ----------------------
 
 (defn ship-image-url [ type race ]
   { :pre [ (valid-unit-type? type) ] }
@@ -59,3 +62,56 @@
            next-loc [ (+ x (width ship) 1) y ] ]
       (conj (group-svg [ (rest group) next-loc ] )
             (svg ship loc)))))
+
+;-------------------- units commands (private) --------------------------
+
+(defn- new-unit-index [ game-state type ]
+  (inc (get-in game-state [ :ship-counters type ] 0)))
+
+; Resolves into { :location :a1 :planet :aah } (planet can be also nil)
+(defn- resolve-location [ loc unit-type { board :map planets :planets :as game } ]
+  (let [ ship? (= :ship ((all-unit-types unit-type) :type))
+         is-system? (contains? (set (board/all-systems game)) loc) ]
+    (cond
+      ; :a1 (system-loc) for ships
+      (and ship? (board loc)) { :location loc }
+      ; :aah, :arinam-meer (system-id) for ships
+      (and ship? is-system?) { :location (board/get-system-loc board loc) }
+      ; :aah (planet-id) for ground-units
+      (and (not ship?) (planets loc)) { :location (board/find-planet-loc board loc) :planet loc }
+      ; :a1 (system-loc) for ground-units when only 1 planet in the system
+      (and (not ship?) (board loc)) { :location loc :planet (first ((board loc) :planets)) }
+      :else (throw (Exception. (str "Cannot resolve location " loc " for unit type " unit-type)))  )))
+
+(defn- new-unit [ unit-id loc-id owner type game-state ]
+  (merge { :id unit-id :owner owner :type type }
+        (resolve-location loc-id type game-state) ))
+
+(defn- add-new-unit [ loc-id owner type game-state ]
+  { :pre [ (valid-unit-type? type) ] }
+  (let [ idx (new-unit-index game-state type)
+         unit-id (keyword (str (name type) idx)) ]
+    (-> game-state
+        (assoc-in [ :ship-counters type ] idx )
+        (update :units assoc unit-id (new-unit unit-id loc-id owner type game-state))  )))
+
+(defn- operate-on-units [ game units-fn unit-ids ]
+  (assert (not (empty? unit-ids)) "No units found")
+  (update game :units (fn [units] (reduce units-fn units unit-ids))))
+
+(defn- del-unit [ units id ] (dissoc units id))
+
+(defn- move-unit [ units-map unit-id loc-id game ]
+  (update units-map unit-id (fn [unit] (merge unit (resolve-location loc-id (:type unit) game))))  )
+
+;-------- units commands (public) -----------
+
+(defn new-units [ loc-id owner types game-state ]
+  (let [ new-unit-of (fn [ new-game-state type] (add-new-unit loc-id owner type new-game-state )) ]
+    (reduce new-unit-of game-state types)))
+
+(defn del-units [ ids game ] (operate-on-units game del-unit ids))
+
+(defn move-units [ unit-ids loc-id game ]
+  (let [ move-unit-to (fn [ units-map unit-id ] (move-unit units-map unit-id loc-id game)) ]
+    (operate-on-units game move-unit-to unit-ids)))
