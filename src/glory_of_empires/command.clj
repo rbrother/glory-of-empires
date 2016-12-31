@@ -59,8 +59,9 @@
 
 ; units-defs can be combination of (1) unit-ids eg. :ws3 , (2) unit types eg. :gf, (3) count + type eg. 3 :gf.
 ; returns list of unit-id:s
-(defn units-from [ [ a b :as unit-defs ] units-in-loc ]
+(defn- units-from [ [ a b :as unit-defs ] units-in-loc ]
   (cond (empty? unit-defs) '()
+        (= a :all) (keys units-in-loc)
         (contains? units-in-loc a) ; unit-id eg. :ws3
             (cons a (units-from (next unit-defs) (dissoc units-in-loc a)))
         (ships/valid-unit-type? a) ; unit-type eg. :ca
@@ -86,6 +87,5 @@
   (let [ dest (last pars), unit-pars (drop-last pars) ]
     (fn [ { all-units :units :as game } ]
         (let [ unit-ids (resolve-unit-ids unit-pars (vals all-units)) ]
-          (println unit-ids)
           (board/move-units unit-ids dest game)    ))))
 

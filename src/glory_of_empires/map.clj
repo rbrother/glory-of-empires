@@ -120,6 +120,7 @@
     (reduce new-unit-of game-state types)))
 
 (defn- operate-on-units [ game units-fn unit-ids ]
+  (assert (not (empty? unit-ids)) "No units found")
   (update game :units (fn [units] (reduce units-fn units unit-ids))))
 
 (defn del-unit [ units id ] (dissoc units id))
@@ -130,9 +131,8 @@
   (update units-map unit-id (fn [unit] (merge unit (resolve-location loc-id (:type unit) game))))  )
 
 (defn move-units [ unit-ids loc-id game ]
-  { :pre [ (sequential? unit-ids) ] }
   (let [ move-unit-to (fn [ units-map unit-id ] (move-unit units-map unit-id loc-id game)) ]
-    (operate-on-units move-unit-to unit-ids)))
+    (operate-on-units game move-unit-to unit-ids)))
 
 ;------------------- merging of units and map (for rendering) ------------------
 
