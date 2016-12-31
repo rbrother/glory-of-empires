@@ -15,10 +15,10 @@
                    "del :ca3"
                    "del :from :c1 [ 2 :gf :ca ]"
                    "move :ca1 :a2"
-                   "move [ :ca1 :ca2 ] :b1"
-                   "move :from :d1 [ :ws2 :ca 3 :gf ] :b1"
-                   "move :from :d1 [ :ws2 :ca 3 :gf ] :b1"
-                   "move :from :d1 [ :all ] :b1"] ))
+                   "move :ca1 :ca2 :b1"
+                   "move :from :d1 :ws2 :ca 3 :gf :b1"
+                   "move :from :d1 :ws2 :ca 3 :gf :b1"
+                   "move :from :d1 :all :b1"] ))
 
 (def view-examples-select
   (html/select { :id "viewExamples" :onchange "ViewExampleChanged();" }

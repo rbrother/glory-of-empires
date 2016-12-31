@@ -110,7 +110,8 @@
   (let [ new-unit-of (fn [ new-game-state type] (add-new-unit loc-id owner type new-game-state )) ]
     (reduce new-unit-of game-state types)))
 
-(defn del-units [ ids game ] (operate-on-units game del-unit ids))
+(defn del-units [ ids game ]
+  (operate-on-units game del-unit ids))
 
 (defn move-units [ unit-ids loc-id game ]
   (let [ move-unit-to (fn [ units-map unit-id ] (move-unit units-map unit-id loc-id game)) ]

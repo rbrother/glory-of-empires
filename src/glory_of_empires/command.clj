@@ -59,33 +59,31 @@
 
 ; units-defs can be combination of (1) unit-ids eg. :ws3 , (2) unit types eg. :gf, (3) count + type eg. 3 :gf.
 ; returns list of unit-id:s
-(defn- units-from [ [ a b :as unit-defs ] units-in-loc ]
-  (cond (empty? unit-defs) '()
-        (= a :all) (keys units-in-loc)
-        (contains? units-in-loc a) ; unit-id eg. :ws3
-            (cons a (units-from (next unit-defs) (dissoc units-in-loc a)))
+(defn- resolve-unit-ids [ [ a b & others :as unit-defs ] available-units ]
+  (cond (not a) '()
+        (= a :from)
+          (let [ units-at-loc (filter #(= (% :location) b) (vals available-units)) ]
+            (resolve-unit-ids others (utils/index-by-id units-at-loc))   )
+        (= a :all) (keys available-units)
+        (contains? available-units a) ; unit-id eg. :ws3
+            (cons a (resolve-unit-ids (next unit-defs) (dissoc available-units a)))
         (ships/valid-unit-type? a) ; unit-type eg. :ca
-          (let [ unit-id (->> units-in-loc (vals) (filter #(= (% :type) a)) (map :id) (first) ) ]
+          (let [ unit-id (->> available-units (vals) (filter #(= (% :type) a)) (map :id) (sort) (first) ) ]
             (if unit-id
-              (cons unit-id (units-from (next unit-defs) (dissoc units-in-loc unit-id)))
+              (cons unit-id (resolve-unit-ids (next unit-defs) (dissoc available-units unit-id)))
               (throw (Exception. (str "Unit of type " a " not found from the location")))   ))
         (number? a) ; count and type eg. 3 :gf. Expand to :gf :gf :gf
-          (units-from (concat (nnext unit-defs) (take a (repeat b))) units-in-loc)
+          (resolve-unit-ids (concat others (take a (repeat b))) available-units)
         :else (throw (Exception. (str "Unit definition unknown " a)))   ))
-
-(defn- resolve-unit-ids [ [ a b c ] all-units ]
-  (cond  (= a :from) (units-from c (utils/index-by-id (filter #(= (% :location) b) all-units)))
-         (sequential? a) a
-         :else [ a ] ))
 
 (defn del [ & unit-pars ]
   (fn [ { all-units :units :as game } ]
-    (let [ unit-ids (resolve-unit-ids unit-pars (vals all-units)) ]
+    (let [ unit-ids (resolve-unit-ids unit-pars all-units) ]
       (ships/del-units unit-ids game))))
 
 (defn move [ & pars ]
   (let [ dest (last pars), unit-pars (drop-last pars) ]
     (fn [ { all-units :units :as game } ]
-        (let [ unit-ids (resolve-unit-ids unit-pars (vals all-units)) ]
+        (let [ unit-ids (resolve-unit-ids unit-pars all-units) ]
           (ships/move-units unit-ids dest game)    ))))
 
