@@ -59,9 +59,15 @@
       (str "Password " password " for " role " not valid for role " require-role ". ")
       "Return to" [ :a { :href "/login" } "Login" ] ] ))
 
+(defn symbol-to-keyword [ s ] (if (symbol? s) (keyword s) s))
+
+(defn- symbols-to-keywords [ [ cmd & pars ] ]
+  (cons cmd (map symbol-to-keyword pars)))
+
 (defn handle-post [ message-str ]
   (let [ message (read-string message-str)
-         { game-id :game role :role password :password message-type :message-type func :func } message
+         { game-id :game role :role password :password message-type :message-type raw-func :func } message
+         func (symbols-to-keywords raw-func) ; (cmd a b c) -> (cmd :a :b :c)
          game (game-state/game game-id)
          game-func (binding [*ns* (find-ns 'glory-of-empires.main)] (eval func))
          require-role (get (meta game-func) :require-role) ]
