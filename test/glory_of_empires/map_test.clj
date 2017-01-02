@@ -38,7 +38,7 @@
 
 (deftest unit-operations-test
   (testing "unit-operations-test"
-    (let [ added-ships (new-units :a1 :hacan [ :fi :fi :cr ] mini-game-state) ]
+    (let [ added-ships ((command/new :hacan 2 :fi :cr :a1) mini-game-state) ]
       (are [ calculated expected ] (compare-structure calculated expected)
            (added-ships :units) {
               :gf3 { :id :gf3 :location :a1 :planet :abyz :owner :hacan :type :gf }
@@ -63,7 +63,7 @@
               :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi }
               :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } }
            (added-ships :ship-counters) { :ca 3 :de 2 :fi 10 :ws 1 :cr 1 :gf 3 :pds 2 }   ))
-    (let [ added-units (new-units :aah :norr [ :gf :gf :pds ] mini-game-state) ]
+    (let [ added-units ((command/new :norr :gf :gf :pds :aah) mini-game-state ) ]
       (are [ calculated expected ] (compare-structure calculated expected)
            (added-units :units) {
               :ca3 { :id :ca3 :location :a1 :owner :hacan :type :ca }

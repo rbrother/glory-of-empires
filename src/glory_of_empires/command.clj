@@ -53,9 +53,16 @@
 
 ;------------ unit commands ------------------
 
-(defn new-unit [ loc-id owner type ]
-  (let [ types (if (sequential? type) type [ type ]) ]
-    #(ships/new-units loc-id owner types % )))
+(defn- resolve-unit-types [ [ a b & others :as types ] ]
+  (cond (not a) '()
+        (ships/valid-unit-type? a) (cons a (resolve-unit-types (next types)))
+        (number? a) (concat (take a (repeat b)) (resolve-unit-types others))
+        :else (throw (Exception. (str "Unit type unknown " a)))   ))
+
+(defn new [ owner & pars ]
+  (let [ loc-id (last pars) types (drop-last pars) ]
+    ^{ :require-role :player }
+    (fn [game] (ships/new-units loc-id owner (resolve-unit-types types) game))  ))
 
 ; units-defs can be combination of (1) unit-ids eg. :ws3 , (2) unit types eg. :gf, (3) count + type eg. 3 :gf.
 ; returns list of unit-id:s
@@ -77,12 +84,14 @@
         :else (throw (Exception. (str "Unit definition unknown " a)))   ))
 
 (defn del [ & unit-pars ]
+  ^{ :require-role :player }
   (fn [ { all-units :units :as game } ]
     (let [ unit-ids (resolve-unit-ids unit-pars all-units) ]
       (ships/del-units unit-ids game))))
 
 (defn move [ & pars ]
   (let [ dest (last pars), unit-pars (drop-last pars) ]
+    ^{ :require-role :player }
     (fn [ { all-units :units :as game } ]
         (let [ unit-ids (resolve-unit-ids unit-pars all-units) ]
           (ships/move-units unit-ids dest game)    ))))
