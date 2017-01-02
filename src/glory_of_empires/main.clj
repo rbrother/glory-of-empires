@@ -46,11 +46,11 @@
   (println (clojure.stacktrace/print-stack-trace ex))
   [ :span { :style "color: #ff3030;" } (.getMessage ex) ] )
 
-(defn execute-post [ message-type game-id game game-func ]
+(defn execute-post [ message-type game-id game game-func history-item ]
   (case message-type
     :info (str (game-func game))
     :view (xml-to-text (game-func game))
-    :command (do (game-state/swap-game game-func game-id) "ok") ; game-modifying commands
+    :command (do (game-state/swap-game game-func history-item game-id) "ok") ; game-modifying commands
     :admin-command (do (game-state/swap-games game-func) "ok")  )) ; commands modifying the whole app state
 
 (defn password-not-valid [ password role require-role ]
@@ -70,9 +70,10 @@
          func (symbols-to-keywords raw-func) ; (cmd a b c) -> (cmd :a :b :c)
          game (game-state/game game-id)
          game-func (binding [*ns* (find-ns 'glory-of-empires.main)] (eval func))
-         require-role (get (meta game-func) :require-role) ]
+         require-role (get (meta game-func) :require-role)
+         history-item { :time (str (java.util.Date.)) :command func :role role } ]
     (if (or (not require-role) (players/password-valid? require-role game message))
-      (execute-post message-type game-id game game-func)
+      (execute-post message-type game-id game game-func history-item)
       (password-not-valid password role require-role)   )))
 
 (defn static-page [ path ]

@@ -9,7 +9,8 @@
     :planets {}
     :units {}
     :players {}
-    :ship-counters {} } )
+    :ship-counters {}
+    :history [] } )
 
 (def games (atom { :sandbox (new-game-state "") }))
 
@@ -38,11 +39,18 @@
 (defn- increment-counter [ game ]
   (assoc game :counter (inc (get game :counter 0))))
 
-(defn- game-update-func [ game-id inner-func ]
-  (fn [ games ]
-    (update games game-id (comp increment-counter inner-func))))
+(defn- rec-history [ history-item ]
+  (fn [game]
+    (let [ new-counter (inc (get game :counter 0)) ]
+      (-> game
+          (assoc :counter new-counter)
+          (update :history conj (assoc history-item :counter new-counter))   ))))
 
-(defn swap-game [ func game-id ] (swap-games (game-update-func game-id func)))
+(defn- game-update-func [ inner-func history-item game-id ]
+  (fn [ games ]
+    (update games game-id (comp (rec-history history-item) inner-func))))
+
+(defn swap-game [ func history-item game-id ] (swap-games (game-update-func func history-item game-id)))
 
 (defn create-game [ game-name gm-password ]
   (fn [ games ] (assoc games game-name (new-game-state gm-password))))
