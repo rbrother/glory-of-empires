@@ -28,10 +28,6 @@ function BuildMessage(gameName, role, password, messageType, func) {
     return message;
 }
 
-function clicked(id) {
-    console.log('-- Clicked on: ' + id);
-}
-
 function ExecuteCommandInner(gameName, role, password, command, postFunction ) {
   var message = BuildMessage(gameName, role, password, "command", command);
   PostMessage( message, postFunction );

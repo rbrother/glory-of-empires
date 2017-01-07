@@ -11,6 +11,12 @@ function GameName() { return GetURLParameter("gameName"); }
 function Role() { return GetURLParameter("role"); }
 function Password() { return GetURLParameter("password"); }
 
+function clicked(id) {
+    console.log('-- Clicked on: ' + id);
+    var name = id.substring( id.lastIndexOf("-") + 1 );
+    $("#command").val( $("#command").val() + " " + name );
+}
+
 function ExecuteCommand() {
   var command = "(command/" + $("#command").val() + ")";
   $("#currentCommand").html(command);
