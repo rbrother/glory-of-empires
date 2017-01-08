@@ -2,10 +2,9 @@
   (:require [clojure.string :as string])
   (:use clojure-common.utils)
   (:require [glory-of-empires.map :as board])
+  (:require [glory-of-empires.html :as html])
   (:require [glory-of-empires.races :as races])
   (:require [glory-of-empires.svg :as svg]))
-
-(def resources-url "http://www.brotherus.net/ti3/")
 
 (def all-unit-types-arr
   [ { :id :fi :type :ship :name "Fighter"     :individual-ids false :image-name "Fighter"   :image-size [ 50 36 ] }
@@ -31,7 +30,7 @@
   { :pre [ (valid-unit-type? type) ] }
   (let [ { image-name :image-name } (all-unit-types type)
          { color :unit-color} (races/all-races race) ]
-    (str resources-url "Ships/" color "/Unit-" color "-" image-name ".png")))
+    (str html/resources-url "Ships/" color "/Unit-" color "-" image-name ".png")))
 
 (defn svg [ { id :id type :type race :owner count :count } loc ]
   { :pre [ (valid-unit-type? type)

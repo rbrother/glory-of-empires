@@ -1,5 +1,6 @@
 (ns glory-of-empires.systems
-  (:use clojure-common.utils))
+  (:use clojure-common.utils)
+  (:require [glory-of-empires.html :as html]) )
 
 (def tile-width 432 )
 (def tile-height 376 )
@@ -396,10 +397,27 @@
     { :id :empty          :image "Special/Tile-Empty.gif" }
     { :id :wormhole-a     :image "Special/Tile-Wormhole_A.gif" }
     { :id :wormhole-b     :image "Special/Tile-Wormhole_B.gif" }
-    { :id :asteroid-field  :image "Special/Tile-Asteroid_Field.gif" }
-    { :id :ion-storm      :image "Special/Tile-Ion_Storm.gif" }
-    { :id :nebula         :type :nebula :image "Special/Tile-Nebula.gif" }
-    { :id :supernova      :image "Special/Tile-Supernova.gif" }
+    { :id :asteroid-field  :image "Special/Tile-Asteroid_Field.gif"
+      :description (html/ul [
+        "Need Anti-mass deflector tech to move through"
+        "Ship may not end movement in Asteroid Field"
+        "Cannot be activated" ] ) }
+    { :id :ion-storm      :image "Special/Tile-Ion_Storm.gif"
+      :description (html/ul [
+        "Ships may not move through Ion Storm"
+        "Ships may move to Ion Storm"
+        "PDS cannot fire to ships in Ion Storm"
+        "Fighters do not shoot in Ion Storm but may be taken as casualties" ] ) }
+    { :id :nebula         :type :nebula :image "Special/Tile-Nebula.gif"
+      :description (html/ul [
+        "Ships may not move through Nebula"
+        "Ships may move to Nebula"
+        "Defender gets +1 combat in space battle"
+        "Ship leaving Nebula always has its movement reduced to 1" ] ) }
+    { :id :supernova      :image "Special/Tile-Supernova.gif"
+      :description (html/ul [
+        "Supernova is impassible"
+        "Supernova may never be activated." ] ) }
     { :id :gravity-rift    :image "Special/Tile-Gravity_rift.gif" }
     { :id :ancient-minefield  :image "Special/Tile-Ancient_Minefield.gif" }
     { :id :galactic-storm  :image "Special/Tile-Galactic_Storm.gif" }
@@ -417,7 +435,7 @@
     { :id :old-mecatol-rex :image "Special/Tile-OldMecatolRex.gif" :planets { :mecatol-rex { :res 4 :inf 10 :loc [ 0 0 ] } } }
     { :id :orion2 :image "Special/Tile-Orion2.gif" :planets { :orion { :res 4 :inf 6 :loc [ 0 0 ] } } }
     { :id :dune      :image "1planet/Tile-Dune.gif" :planets { :dune { :res 0 :inf 4 :tech { :green 1 } :loc [ 0 0 ] } } }
-    { :id :medusa-v  :image "1planet/Tile-Medusa_V.gif" :planets { :medusa-v { :res 1 :inf 6 } :loc [ 0 0 ] } } ] )
+    { :id :medusa-v  :image "1planet/Tile-Medusa_V.gif" :planets { :medusa-v { :res 1 :inf 6 :loc [ 0 0 ] } } } ] )
 
 (def setup-systems-arr [
     { :id :setup-dark-blue, :type :setup, :image "Setup/Tile-Setup-DarkBlue.gif" }
@@ -427,7 +445,10 @@
     { :id :setup-yellow, :type :setup, :image "Setup/Tile-Setup-Yellow.gif" }
     { :id :hs-back, :type :setup,   :image "HomeSystem/Tile-HS-Back.gif" } ] )
 
-(def all-systems (index-by-id (concat planet-systems-arr home-systems-arr special-systems-arr king-systems-arr setup-systems-arr)))
+(def all-systems-list (concat planet-systems-arr home-systems-arr
+                              special-systems-arr king-systems-arr setup-systems-arr))
+
+(def all-systems (index-by-id all-systems-list))
 
 (defn get-system [ id ]
   { :pre [ (if (not (all-systems id)) (do (println id "not found") false) true) ] }
@@ -457,3 +478,45 @@
   (let [ planets-count (int (* planet-system-ratio count))
          specials-count (- count planets-count) ]
     (shuffle (concat (pick-random-planets planets-count) (pick-special-systems specials-count)))))
+
+;------------------- HTML ------------------------
+
+(defn image-url [ { image :image } ] (str html/resources-url "Tiles/" image) )
+
+(defn- planet-info-html [ { id :id res :res inf :inf } ]
+  [ :div [ :div (name id) ]
+         [ :div
+           " res: " (html/color-span "#20FF20" res)
+           " inf: " (html/color-span "#FF2020" inf ) ] ] )
+
+(defn planets-info-html [ planets-map ]
+  (let [ ids (keys planets-map)
+         planet-infos (map (fn [id] (assoc (planets-map id) :id id)) ids)
+         planet-htmls (map planet-info-html planet-infos) ]
+      (html/ul planet-htmls)  ))
+
+(defn system-info-html [ image-size-ratio { id :id type :type descr :description planets :planets :as system } ]
+  [ [ :img { :src (image-url system)
+             :width (int (* tile-width image-size-ratio))
+             :height (int (* tile-height image-size-ratio))  } ]
+    [ { :style "vertical-align: top;" }
+        [ :div (name id) ]
+        (if descr [ :div descr ] "")
+        (if planets (planets-info-html planets)) ] ] )
+
+(defn system-info-row [ image-size-ratio systems ]
+  (mapcat (partial system-info-html image-size-ratio) systems)  )
+
+(defn systems-table [ image-size-ratio title systems ]
+  (let [ rows (map (partial system-info-row image-size-ratio) (partition 3 3 nil systems)) ]
+    [ :div [ :h1 title ]
+      (apply html/table (concat [ { :class "data" } ] rows))   ] ))
+
+(defn all-systems-table [ image-size-ratio ]
+  (let [ table (partial systems-table image-size-ratio) ]
+    [ :div
+      (table "Setup" setup-systems-arr)
+      (table "Special Systems" special-systems-arr)
+      (table "Planet Systems" planet-systems-arr)
+      (table "King Systems" king-systems-arr)
+      (table "Home Systems" home-systems-arr) ] ))

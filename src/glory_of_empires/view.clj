@@ -1,6 +1,7 @@
 (ns glory-of-empires.view
   (:require [glory-of-empires.map-svg :as map-svg])
-  (:require [glory-of-empires.players :as players]))
+  (:require [glory-of-empires.players :as players])
+  (:require [glory-of-empires.systems :as systems]))
 
 ; There functions return functions that construct the view for given game.
 ; By avoiding giving game as direct parameter here we can execute the
@@ -17,6 +18,20 @@
   ^{ :require-role :player }
   (fn [game] (players/players-html game)))
 
+(defn systems
+  ( [] (systems 1.0) )
+  ( [ size-ratio ] (fn [game] (systems/all-systems-table size-ratio)))  )
+
+;------------- widgets ------------------
+
+(defn role-selector [ ]
+  (fn [ game ]
+    (let [ ids (cons :game-master (players/ids game)) ]
+      `[ :select { :id "role" :name "role" }
+         ~@(map (fn [player] [ :option {} (str player) ]) ids) ] )))
+
+;------------ composite views ----------------
+
 (defn vertical [ & views ]
   ^{ :require-role :player }
   (fn [ game ]
@@ -29,8 +44,3 @@
     `[ :table [ :tr {}
                    ~@(map (fn [view-fn] [ :td { :style "vertical-align: top;" } (view-fn game)] ) views) ]] ))
 
-(defn role-selector [ ]
-  (fn [ game ]
-    (let [ ids (cons :game-master (players/ids game)) ]
-      `[ :select { :id "role" :name "role" }
-         ~@(map (fn [player] [ :option {} (str player) ]) ids) ] )))

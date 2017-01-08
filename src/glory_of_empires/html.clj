@@ -2,6 +2,8 @@
   (:use clojure-common.utils)
   (:require [clojure-common.xml :as xml]))
 
+(def resources-url "http://www.brotherus.net/ti3/")
+
 (def xhtml-dtd "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"
    \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">" )
 
@@ -33,3 +35,9 @@
     (make-row-inner {} row)))
 
 (defn table [ attrs & rows ] `[ :table ~attrs ~@(map make-row rows) ] )
+
+(defn ul [ items ] `[ :ul ~@(map (fn [item] [ :li item ]) items) ] )
+
+(defn div [ items ] `[ :div ~@items ] )
+
+(defn color-span [ color content ] [ :span { :style (str "color: " color "; font-weight: bold;") } content ] )

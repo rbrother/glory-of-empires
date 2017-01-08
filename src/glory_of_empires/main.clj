@@ -22,6 +22,7 @@
   (require 'glory-of-empires.map-svg :reload)
   (require 'glory-of-empires.command :reload)
   (require 'glory-of-empires.players :reload)
+  (require 'glory-of-empires.systems :reload)
   (require 'glory-of-empires.login :reload)
   (require 'glory-of-empires.command-page :reload)
   (require 'glory-of-empires.view-page :reload)
@@ -115,4 +116,4 @@
   (game-state/load-games)
   (run-jetty handler {:port 3000} ))
 
-(defn runbg [] (.start (Thread. -main))) ; Call from repl
+(defn run [] (.start (Thread. -main))) ; Call from repl

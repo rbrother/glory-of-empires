@@ -3,12 +3,14 @@
 
 (def command-examples-select
   (html/select { :id "examples" :onchange "ExampleChanged();" }
-                 [ "round-board 3"
+                 [ "---- game setup ----"
+                   "round-board 3"
                    "rect-board 10 5"
                    "set-systems-random"
                    "set-system c4 mecatol-rex"
                    "del-system c4"
                    "set-players hacan \"hacanpassword\" norr \"pdw2\" naalu \"xyz\""
+                   "---- unit operations ----"
                    "new hacan ca b2"
                    "new norr ca cr 2 fi a2"
                    "new hacan 2 gf meer"
@@ -23,7 +25,8 @@
 
 (def view-examples-select
   (html/select { :id "viewExamples" :onchange "ViewExampleChanged();" }
-                 [ "board 0.4"
+                 [ "systems 0.5"
+                   "board 0.4"
                    "players"
                    "vertical (view/board 0.3) (view/players)"
                    "horizontal (view/board 0.3) (view/players)" ] ))

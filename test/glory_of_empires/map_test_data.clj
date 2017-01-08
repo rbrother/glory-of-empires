@@ -36,8 +36,18 @@
       :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi }
       :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } }
     :players {
-      :hacan { :id :hacan }
-      :norr { :id :norr } }
+      :hacan { :id :hacan :tg 0
+               :ac #{}
+               :pc #{}
+               :techs #{} }
+      :norr { :id :norr :tg 0
+              :ac #{}
+              :pc #{}
+              :techs #{} } }
+    :ac-deck [ ]
+    :pc-deck #{ }
+    :ac-discard [ ]
+    :pc-discard #{ }
     :ship-counters { :ca 3 :de 2 :fi 8 :ws 1 :gf 3 :pds 2 } } )
 
 (def many-ships [

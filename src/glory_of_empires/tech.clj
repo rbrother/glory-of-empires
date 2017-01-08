@@ -1,6 +1,7 @@
 (ns glory-of-empires.tech
   (:use clojure-common.utils))
 
+; https://www.boardgamegeek.com/filepage/71870/tech-tree
 
 (def all-tech-arr
   [ { :id :l4-disruptors :name "L4 Disruptors"
