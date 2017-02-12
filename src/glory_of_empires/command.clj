@@ -2,7 +2,8 @@
   (:require [clojure-common.utils :as utils])
   (:require [glory-of-empires.map :as board])
   (:require [glory-of-empires.ships :as ships])
-  (:require [glory-of-empires.players :as players]) )
+  (:require [glory-of-empires.players :as players])
+  (:require [glory-of-empires.ac :as ac]) )
 
 ; There commands do not actually do anything, but they
 ; return game-updating func for the specified command
@@ -95,4 +96,14 @@
     (fn [ { all-units :units :as game } ]
         (let [ unit-ids (resolve-unit-ids unit-pars all-units) ]
           (ships/move-units unit-ids dest game)    ))))
+
+;----------- high-level commands ------------------
+
+(defn start-game
+  "Adds players starting units to their home-systems, shuffles new pack of AC and PC and marks round 1 started"
+  []
+  ^{ :require-role :game-master }
+  (fn [ game ]
+    (-> game
+        (assoc :ac-deck (ac/create-ac-pack))   )))
 

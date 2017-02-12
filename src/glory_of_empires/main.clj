@@ -26,7 +26,8 @@
   (require 'glory-of-empires.login :reload)
   (require 'glory-of-empires.command-page :reload)
   (require 'glory-of-empires.view-page :reload)
-  (require 'glory-of-empires.html :reload))
+  (require 'glory-of-empires.html :reload)
+  (require 'glory-of-empires.ac :reload))
 
 ;----------------- web server ----------------------
 
