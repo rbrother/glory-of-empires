@@ -9,6 +9,8 @@
 
 ; Most of our tests are inline-tests in the respective functions, but for longer tests we can put here
 
+
+
 (deftest map-creation-test
   (testing "make-random-map"
     (let [ a-map (round-board 2)
@@ -38,7 +40,7 @@
 
 (deftest unit-operations-test
   (testing "unit-operations-test"
-    (let [ added-ships ((command/new :hacan 2 :fi :cr :a1) mini-game-state) ]
+    (let [ added-ships ((command/new :hacan 2 :fi :cr :a1) mini-game-state :hacan) ]
       (are [ calculated expected ] (compare-structure calculated expected)
            (added-ships :units) {
               :gf3 { :id :gf3 :location :a1 :planet :abyz :owner :hacan :type :gf }
@@ -63,7 +65,7 @@
               :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi }
               :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } }
            (added-ships :ship-counters) { :ca 3 :de 2 :fi 10 :ws 1 :cr 1 :gf 3 :pds 2 }   ))
-    (let [ added-units ((command/new :norr :gf :gf :pds :aah) mini-game-state ) ]
+    (let [ added-units ((command/new :norr :gf :gf :pds :aah) mini-game-state :norr ) ]
       (are [ calculated expected ] (compare-structure calculated expected)
            (added-units :units) {
               :ca3 { :id :ca3 :location :a1 :owner :hacan :type :ca }
@@ -85,7 +87,7 @@
               :pds3 { :id :pds3 :location :b1 :planet :aah :owner :norr :type :pds }
               :sd1 { :id :sd1 :location :a1 :owner :hacan :planet :fria :type :sd }
               :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } } ))
-    (let [ deleted-units ((command/del :ca3 :from :b1 2 :fi) mini-game-state) ]
+    (let [ deleted-units ((command/del :ca3 :from :b1 2 :fi) mini-game-state :game-master) ]
       (are [ calculated expected ] (compare-structure calculated expected)
            (deleted-units :units) {
               :gf3 { :id :gf3 :location :a1 :planet :abyz :owner :hacan :type :gf }
@@ -120,7 +122,7 @@
               :fi5 { :id :fi5 :location :b1 :owner :norr :type :fi }
               :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi }
               :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } } ))
-    (let [ moved-units ((command/move :from :a1 :pds 2 :gf :ca3 :b1) mini-game-state) ]
+    (let [ moved-units ((command/move :from :a1 :pds 2 :gf :ca3 :b1) mini-game-state :game-master) ]
       (are [ calculated expected ] (compare-structure calculated expected)
            (moved-units :units) {
               :pds2 { :id :pds2 :location :a1 :planet :abyz :owner :hacan :type :pds }
@@ -141,7 +143,7 @@
               :fi5 { :id :fi5 :location :b1 :owner :norr :type :fi }
               :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi }
               :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } } ))
-    (let [ moved-units ((command/move :from :a1 :all :b1) mini-game-state) ]
+    (let [ moved-units ((command/move :from :a1 :all :b1) mini-game-state :hacan) ]
       (are [ calculated expected ] (compare-structure calculated expected)
            (moved-units :units) {
               :pds2 { :id :pds2 :location :b1 :planet :aah :owner :hacan :type :pds }
