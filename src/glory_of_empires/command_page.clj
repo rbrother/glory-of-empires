@@ -21,7 +21,11 @@
                    "move ca1 ca2 b1"
                    "move from d1 ws2 ca 3 gf b1"
                    "move from d1 ws2 ca 3 gf b1"
-                   "move from d1 all b1"] ))
+                   "move from d1 all b1"
+                   "---- cards ----"
+                   "ac-get"
+                   "ac-get :hacan"
+                   "ac-play :local-unrest \"details...\"" ] ))
 
 (def view-examples-select
   (html/select { :id "viewExamples" :onchange "ViewExampleChanged();" }

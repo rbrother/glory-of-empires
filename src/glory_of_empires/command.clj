@@ -20,11 +20,11 @@
     (assoc game :planets (utils/index-by-id all-planets))  ))
 
 (defn- board-command [ board-func ]
-  (fn [ game ] (update-planets (update game :map board-func))))
+  (fn [ game & pars ] (update-planets (update game :map board-func))))
 
 (defn- make-board-command [ new-board ]
   ^{ :require-role :game-master }
-  (fn [ game ] (update-planets (merge game { :map new-board :ship-counters {} } ))))
+  (fn [ game & pars ] (update-planets (merge game { :map new-board :ship-counters {} } ))))
 
 ;----------- map commands --------------------
 
@@ -50,7 +50,7 @@
 
 (defn set-players [ & player-ids-and-passwords ]
   ^{ :require-role :game-master }
-  (fn [ game ] (players/set-players game player-ids-and-passwords)))
+  (fn [ game & pars ] (players/set-players game player-ids-and-passwords)))
 
 ;------------ unit commands ------------------
 
@@ -63,7 +63,7 @@
 (defn new [ owner & pars ]
   (let [ loc-id (last pars) types (drop-last pars) ]
     ^{ :require-role :player }
-    (fn [game] (ships/new-units loc-id owner (resolve-unit-types types) game))  ))
+    (fn [ game role ] (ships/new-units loc-id owner (resolve-unit-types types) game))  ))
 
 ; units-defs can be combination of (1) unit-ids eg. :ws3 , (2) unit types eg. :gf, (3) count + type eg. 3 :gf.
 ; returns list of unit-id:s
@@ -86,14 +86,14 @@
 
 (defn del [ & unit-pars ]
   ^{ :require-role :player }
-  (fn [ { all-units :units :as game } ]
+  (fn [ { all-units :units :as game } role ]
     (let [ unit-ids (resolve-unit-ids unit-pars all-units) ]
       (ships/del-units unit-ids game))))
 
 (defn move [ & pars ]
   (let [ dest (last pars), unit-pars (drop-last pars) ]
     ^{ :require-role :player }
-    (fn [ { all-units :units :as game } ]
+    (fn [ { all-units :units :as game } role ]
         (let [ unit-ids (resolve-unit-ids unit-pars all-units) ]
           (ships/move-units unit-ids dest game)    ))))
 

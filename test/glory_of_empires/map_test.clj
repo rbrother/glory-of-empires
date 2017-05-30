@@ -159,9 +159,7 @@
               :fi4 { :id :fi4 :location :b1 :owner :norr :type :fi }
               :fi5 { :id :fi5 :location :b1 :owner :norr :type :fi }
               :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi }
-              :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } } ))
-
-    ))
+              :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } } )) ))
 
 (deftest find-planet-test
   (testing "find planet"
@@ -177,7 +175,7 @@
       (is (= (find-planet-loc board1 :abyz) :b2))
       )))
 
-; Move to cards-tes
+; Move to cards-tes?
 
 (deftest ac-test
   (testing "action cards"

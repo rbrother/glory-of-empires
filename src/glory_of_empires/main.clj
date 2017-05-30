@@ -48,10 +48,10 @@
   (println (clojure.stacktrace/print-stack-trace ex))
   [ :span { :style "color: #ff3030;" } (.getMessage ex) ] )
 
-(defn execute-post [ message-type game-id game game-func history-item ]
+(defn execute-post [ message-type game-id role game game-func history-item ]
   (case message-type
-    :info (str (game-func game))
-    :view (xml-to-text (game-func game))
+    :info (str (game-func game role))
+    :view (xml-to-text (game-func game role))
     :command (do (game-state/swap-game game-func history-item game-id) "ok") ; game-modifying commands
     :admin-command (do (game-state/swap-games game-func) "ok")  )) ; commands modifying the whole app state
 
@@ -75,7 +75,7 @@
          require-role (get (meta game-func) :require-role)
          history-item { :time (str (java.util.Date.)) :command func :role role } ]
     (if (or (not require-role) (players/password-valid? require-role game message))
-      (execute-post message-type game-id game game-func history-item)
+      (execute-post message-type role game-id game game-func history-item)
       (password-not-valid password role require-role)   )))
 
 (defn static-page [ path ]
