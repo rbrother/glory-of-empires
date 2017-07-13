@@ -20,7 +20,7 @@
 
 (defn game-names [] (map str (keys @games)) )
 
-(defn game-counter [] (fn [game] (get game :counter 0)))
+(defn game-counter [] (fn [game role] (get game :counter 0)))
 
 (defn load-games []
   (if (.exists (as-file game-file-path))
@@ -50,7 +50,8 @@
   (fn [ games ]
     (update games game-id (comp (rec-history history-item) inner-func))))
 
-(defn swap-game [ func history-item game-id ] (swap-games (game-update-func func history-item game-id)))
+(defn swap-game [ func history-item game-id ]
+  (swap-games (game-update-func func history-item game-id)))
 
 (defn create-game [ game-name gm-password ]
   (fn [ games ] (assoc games game-name (new-game-state gm-password))))

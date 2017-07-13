@@ -12,7 +12,7 @@
   ( [ opts ]
     (if (number? opts) (board { :scale opts })
       ^{ :require-role :player }
-      (fn [ game ] (map-svg/render game opts))   )))
+      (fn [ game role ] (map-svg/render game opts))   )))
 
 (defn players [ ]
   ^{ :require-role :player }
@@ -25,10 +25,10 @@
 ;------------- widgets ------------------
 
 (defn role-selector [ ]
-  (fn [ game ]
+  (fn [ game role ]
     (let [ ids (cons :game-master (players/ids game)) ]
       `[ :select { :id "role" :name "role" }
-         ~@(map (fn [player] [ :option {} (str player) ]) ids) ] )))
+         ~@(map (fn [ player ] [ :option {} (str player) ]) ids) ] )))
 
 ;------------ composite views ----------------
 
