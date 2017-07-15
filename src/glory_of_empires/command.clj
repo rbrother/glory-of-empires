@@ -105,5 +105,5 @@
   ^{ :require-role :game-master }
   (fn [ game ]
     (-> game
-        (assoc :ac-deck (ac/create-ac-pack))   )))
+        (assoc :ac-deck (ac/create-ac-deck))   )))
 

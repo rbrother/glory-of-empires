@@ -251,7 +251,7 @@
 
 (defn multiply-card [ { count :count :as ac } ] (take count (repeat (dissoc ac :count))) )
 
-(defn create-ac-pack [] (shuffle (map :id (mapcat multiply-card all-ac-array))))
+(defn create-ac-deck [] (shuffle (map :id (mapcat multiply-card all-ac-array))))
 
 
 ; PC cards
