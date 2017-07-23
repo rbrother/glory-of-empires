@@ -12,7 +12,7 @@
              { :players
                { :hacan { :id :hacan :password "hacanpassword" }
                  :naalu { :id :naalu :password "pwd2" } } } ))
-      (is (compare-structure (players/players-html p)
+      (is (compare-structure (players/players-html p :hacan)
         [   :div
           [   :table
               { :class "data" }

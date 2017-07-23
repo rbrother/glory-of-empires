@@ -176,10 +176,3 @@
       (is (= (get-system-loc board1 :abyz-fria) :b2))
       (is (= (find-planet-loc board1 :abyz) :b2))
       )))
-
-; Move to cards-tes?
-
-(deftest ac-test
-  (testing "action cards"
-    (let [ { acs :ac-deck } ((command/start-game) mini-game-state) ]
-      (is (= 136 (count acs)))   )))

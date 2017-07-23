@@ -16,11 +16,11 @@
 
 (defn players [ ]
   ^{ :require-role :player }
-  (fn [game] (players/players-html game)))
+  (fn [ game role ] (players/players-html game role)))
 
 (defn systems
   ( [] (systems 1.0) )
-  ( [ size-ratio ] (fn [game] (systems/all-systems-table size-ratio)))  )
+  ( [ size-ratio ] (fn [ game role ] (systems/all-systems-table size-ratio)))  )
 
 ;------------- widgets ------------------
 
@@ -32,15 +32,15 @@
 
 ;------------ composite views ----------------
 
-(defn vertical [ & views ]
+(defn vertical [ & view-funcs ]
   ^{ :require-role :player }
-  (fn [ game ]
-    `[ :div
-       ~@(map (fn [view] [ :div (view game)] ) views) ] ))
+  (fn [ game role ]
+    (let [ view-to-html  (fn [view-func] [:div (view-func game role)]) ]
+      `[:div ~@(map view-to-html view-funcs)])))
 
 (defn horizontal [ & views ]
   ^{ :require-role :player }
-  (fn [ game ]
-    `[ :table [ :tr {}
-                   ~@(map (fn [view-fn] [ :td { :style "vertical-align: top;" } (view-fn game)] ) views) ]] ))
+  (fn [ game role ]
+    (let [ view-to-html (fn [view-fn] [:td {:style "vertical-align: top;"} (view-fn game role)]) ]
+      `[:table [:tr {} ~@(map view-to-html views)]])))
 

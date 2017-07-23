@@ -55,7 +55,7 @@
          pars `[ { :class "data" } ~header ~@rows ] ]
     (apply html/table pars) ))
 
-(defn players-html [ game ]
+(defn players-html [ game role ]
   `[ :div
      ~(players-table game)
      ~@(map player-html (players game)) ] )
