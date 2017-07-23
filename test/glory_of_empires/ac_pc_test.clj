@@ -14,5 +14,8 @@
 
 (deftest ac-command-test
   (testing "ac commands"
-    (let [ acs-added ((command/ac-deck-create) map-test-data/mini-game-state :game-master)]
-      (is (= 136 (count (acs-added :ac-deck))))       )))
+    (let [acs-added ((command/ac-deck-create) map-test-data/mini-game-state :game-master)]
+      (is (= 136 (count (acs-added :ac-deck)))))
+    (let [ac-picked ((command/ac-get) map-test-data/mini-game-state :hacan)]
+      (is (=  #{:diplomatic-immunity :minelayers :morale-boost}
+              (-> ac-picked :players :hacan :ac))))))

@@ -37,14 +37,14 @@
       :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws } }
     :players {
       :hacan { :id :hacan :tg 0
-               :ac #{}
+               :ac #{ :minelayers :morale-boost }
                :pc #{}
                :techs #{} }
       :norr { :id :norr :tg 0
-              :ac #{}
+              :ac #{ :privateers }
               :pc #{}
               :techs #{} } }
-    :ac-deck [ ]
+    :ac-deck [ :diplomatic-immunity :flank-speed :flank-speed :into-breach ]
     :pc-deck #{ }
     :ac-discard [ ]
     :pc-discard #{ }

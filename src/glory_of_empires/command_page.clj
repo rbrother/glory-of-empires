@@ -9,7 +9,7 @@
                    "set-systems-random"
                    "set-system c4 mecatol-rex"
                    "del-system c4"
-                   "set-players hacan \"hacanpassword\" norr \"pdw2\" naalu \"xyz\""
+                   "set-players hacan \"abc\" norr \"xyz\" naalu \"123\""
                    "---- unit operations ----"
                    "new hacan ca b2"
                    "new norr ca cr 2 fi a2"
@@ -23,6 +23,7 @@
                    "move from d1 ws2 ca 3 gf b1"
                    "move from d1 all b1"
                    "---- cards ----"
+                   "ac-deck-create"
                    "ac-get"
                    "ac-get :hacan"
                    "ac-play :local-unrest \"details...\"" ] ))

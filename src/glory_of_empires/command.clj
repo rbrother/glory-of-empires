@@ -97,13 +97,32 @@
         (let [ unit-ids (resolve-unit-ids unit-pars all-units) ]
           (ships/move-units unit-ids dest game)    ))))
 
+;----------- card-commands commands ------------------
+
+(defn ac-deck-create    "Adds a fresh shuffled pack of AC: sto "
+  []
+  ^{:require-role :game-master}
+  (fn [ game role ]
+    (-> game
+        (assoc :ac-deck (ac/create-ac-deck)))))
+
+(defn ac-get    "get AC from deck to a player"
+  ( [] ^{:require-role :player} (ac-get nil))
+  ( [ player-in ] ^{:require-role :player}
+    (fn [ game role ]
+      (let [player (or player-in role)
+            card (first (:ac-deck game))]
+        (-> game
+            (update-in [:ac-deck] rest)
+            (update-in [:players player :ac] #(set (conj % card)))    )))))
+
 ;----------- high-level commands ------------------
 
 (defn start-game
   "Adds players starting units to their home-systems, shuffles new pack of AC and PC and marks round 1 started"
   []
   ^{ :require-role :game-master }
-  (fn [ game ]
+  (fn [ game role ]
     (-> game
         (assoc :ac-deck (ac/create-ac-deck))   )))
 

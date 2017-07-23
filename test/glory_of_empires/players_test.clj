@@ -10,8 +10,8 @@
                           :naalu { :id :naalu } } } ]
       (is (= (players/set-players {} [ :hacan "hacanpassword" :naalu "pwd2" ] )
              { :players
-               { :hacan { :id :hacan :password "hacanpassword" }
-                 :naalu { :id :naalu :password "pwd2" } } } ))
+               { :hacan { :id :hacan :password "hacanpassword" :ac #{} :pc #{} }
+                 :naalu { :id :naalu :password "pwd2" :ac #{} :pc #{} } } } ))
       (is (compare-structure (players/players-html p :hacan)
         [   :div
           [   :table
