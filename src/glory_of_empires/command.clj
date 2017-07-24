@@ -2,6 +2,7 @@
   (:require [clojure-common.utils :as utils])
   (:require [glory-of-empires.map :as board])
   (:require [glory-of-empires.ships :as ships])
+  (:require [glory-of-empires.races :as races])
   (:require [glory-of-empires.players :as players])
   (:require [glory-of-empires.ac :as ac]) )
 
@@ -60,10 +61,18 @@
         (number? a) (concat (take a (repeat b)) (resolve-unit-types others))
         :else (throw (Exception. (str "Unit type unknown " a)))   ))
 
-(defn new [ owner & pars ]
-  (let [ loc-id (last pars) types (drop-last pars) ]
+(defn new [ & pars ]
+  (let [ loc-id (last pars) pre (drop-last pars)
+        has-player  (contains? races/all-races (first pre))
+        types (if has-player (rest pre) pre)
+        player (if has-player (first pre) nil) ]
     ^{ :require-role :player }
-    (fn [ game role ] (ships/new-units loc-id owner (resolve-unit-types types) game))  ))
+    (fn [ game role ]
+      (let [ final-role (or player role)
+            gm-for-player (and (= role :game-master) player)
+            player-for-himself (or (not player) (= player role)) ]
+        (assert (or gm-for-player player-for-himself))
+        (ships/new-units loc-id final-role (resolve-unit-types types) game)))  ))
 
 ; units-defs can be combination of (1) unit-ids eg. :ws3 , (2) unit types eg. :gf, (3) count + type eg. 3 :gf.
 ; returns list of unit-id:s
