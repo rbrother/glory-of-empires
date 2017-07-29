@@ -25,8 +25,8 @@
                    "---- cards ----"
                    "ac-deck-create"
                    "ac-get"
-                   "ac-get :hacan"
-                   "ac-play :local-unrest \"details...\"" ] ))
+                   "ac-get hacan"
+                   "ac-play local-unrest \"details...\"" ] ))
 
 (def view-examples-select
   (html/select { :id "viewExamples" :onchange "ViewExampleChanged();" }
@@ -47,6 +47,6 @@
                 [ :span { :id "currentCommand" :style "color: green;" } ] " - "
                 [ :span { :id "commandResult" } ] ] ]
         [ "View" [ :input { :style "width: 300px;" :id "viewDefinition" :value "board" :onchange "ViewDefinitionChanged();" } ]
-          [ :button { :type "button" :onclick "OpenView();" } "Open" ]
-          "Examples" view-examples-select [ :span { :id "viewResult" } ] ] )
+          " " "Examples" view-examples-select [ :span { :id "viewResult" } ] ]
+        [ " " [ { :colspan 4 } [ :span { :id "viewStatus" :style "color: green;" } ] ] ] )
       [ :div { :id "view" :style "margin: 8px;" } ] ] ))

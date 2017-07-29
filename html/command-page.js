@@ -41,10 +41,6 @@ function ViewDefinitionChanged() {
     viewCounter = -1; // Force reload on next refresh
 }
 
-function OpenView() {
-    window.open( "view" + window.location.search + "&view=" + $("#viewDefinition").val() );
-}
-
 function ScheduleViewRefresh( time ) {
     // Condition to prevent multiple refresh-loops being started if we
     // already have a view refresh pending
@@ -63,10 +59,11 @@ function LoadViewIfChanged() {
 function ViewCounterReceived(serverResponse) {
     var newCount = parseInt(serverResponse);
     if (newCount == viewCounter) {
-        console.log('View up-to-date ' + Date());
+        $("#viewStatus").html( 'View up-to-date ' + new Date() );
         ScheduleViewRefresh( refreshPeriod );
     } else {
         viewCounter = newCount;
+        $("#viewStatus").html( 'Updating view...' );
         ReloadViewNow();
     }
 }
