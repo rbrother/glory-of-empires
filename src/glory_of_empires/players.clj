@@ -17,6 +17,8 @@
 
 (defn players [ game ] (vals (game :players)))
 
+(defn player? [ game player ] (contains? (game :players) player))
+
 (defn set-players [ game player-ids-and-passwords ]
   (assoc game :players
     (->> player-ids-and-passwords

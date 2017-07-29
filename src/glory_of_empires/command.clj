@@ -108,22 +108,36 @@
 
 ;----------- card-commands commands ------------------
 
-(defn ac-deck-create    "Adds a fresh shuffled pack of AC: sto "
-  []
+(defn ac-deck-create "Adds a fresh shuffled pack of AC:s to the game" [ ]
   ^{:require-role :game-master}
-  (fn [ game role ]
-    (-> game
-        (assoc :ac-deck (ac/create-ac-deck)))))
+  (fn [ game role ] (-> game (assoc :ac-deck (ac/create-ac-deck)))))
 
-(defn ac-get    "get AC from deck to a player"
-  ( [] ^{:require-role :player} (ac-get nil))
-  ( [ player-in ] ^{:require-role :player}
-    (fn [ game role ]
-      (let [player (or player-in role)
-            card (first (:ac-deck game))]
-        (-> game
-            (update-in [:ac-deck] rest)
-            (update-in [:players player :ac] #(set (conj % card)))    )))))
+(defn- player-optional-command "Command for which player role can be given as first parameter (otherwise use role)"
+  [ pars inner-fn ]
+  (fn [ game role ]
+    (println (first pars))
+    (if (players/player? game (first pars))
+      (inner-fn game role (first pars) (rest pars))
+      (do (assert (not= role :game-master) "GM Must specify player for the command")
+        (inner-fn game role role pars)))))
+
+(defn ac-get "get AC from deck to a player" [& pars]
+  ^{:require-role :player}
+  (player-optional-command pars
+     (fn [ game role player pars ]
+       (let [ card (first (:ac-deck game)) ]
+         (-> game
+             (update-in [:ac-deck] rest)
+             (update-in [:players player :ac] conj card))))))
+
+(defn ac-play [ & pars ] nil   "Move AC from player to discard"
+  ^{:require-role :player}
+  (player-optional-command pars
+     (fn [ game role player [ ac ] ]
+       (assert (-> game :players player :ac (contains? ac)) (str "AC " ac " not found from player " player))
+       (-> game
+           (update-in [:players player :ac ] disj ac)
+           (update-in [ :ac-discard ] conj ac)   ))))
 
 ;----------- high-level commands ------------------
 
