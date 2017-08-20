@@ -27,6 +27,14 @@
   ^{ :require-role :game-master }
   (fn [ game & pars ] (update-planets (merge game { :map new-board :ship-counters {} } ))))
 
+(defn- player-optional-command "Command for which player role can be given as first parameter (otherwise use role)"
+  [ pars inner-fn ]
+  (fn [ game role ]
+    (if (players/player? game (first pars))
+      (inner-fn game role (first pars) (rest pars))
+      (do (assert (not= role :game-master) "GM Must specify player for the command")
+          (inner-fn game role role pars)))))
+
 ;----------- map commands --------------------
 
 (defn round-board
@@ -61,44 +69,40 @@
         (number? a) (concat (take a (repeat b)) (resolve-unit-types others))
         :else (throw (Exception. (str "Unit type unknown " a)))   ))
 
-(defn new [ & pars ]
-  (let [ loc-id (last pars) pre (drop-last pars)
-        has-player  (contains? races/all-races (first pre))
-        types (if has-player (rest pre) pre)
-        player (if has-player (first pre) nil) ]
-    ^{ :require-role :player }
-    (fn [ game role ]
-      (let [ final-role (or player role)
-            gm-for-player (and (= role :game-master) player)
-            player-for-himself (or (not player) (= player role)) ]
-        (assert (or gm-for-player player-for-himself))
-        (ships/new-units loc-id final-role (resolve-unit-types types) game)))  ))
-
 ; units-defs can be combination of (1) unit-ids eg. :ws3 , (2) unit types eg. :gf, (3) count + type eg. 3 :gf.
 ; returns list of unit-id:s
 (defn- resolve-unit-ids [ [ a b & others :as unit-defs ] available-units ]
   (cond (not a) '()
         (= a :from)
-          (let [ units-at-loc (filter #(= (% :location) b) (vals available-units)) ]
-            (resolve-unit-ids others (utils/index-by-id units-at-loc))   )
+        (let [ units-at-loc (filter #(= (% :location) b) (vals available-units)) ]
+          (resolve-unit-ids others (utils/index-by-id units-at-loc))   )
         (= a :all) (keys available-units)
         (contains? available-units a) ; unit-id eg. :ws3
-            (cons a (resolve-unit-ids (next unit-defs) (dissoc available-units a)))
+        (cons a (resolve-unit-ids (next unit-defs) (dissoc available-units a)))
         (ships/valid-unit-type? a) ; unit-type eg. :ca
-          (let [ unit-id (->> available-units (vals) (filter #(= (% :type) a)) (map :id) (sort) (first) ) ]
-            (if unit-id
-              (cons unit-id (resolve-unit-ids (next unit-defs) (dissoc available-units unit-id)))
-              (throw (Exception. (str "Unit of type " a " not found from the location")))   ))
+        (let [ unit-id (->> available-units (vals) (filter #(= (% :type) a)) (map :id) (sort) (first) ) ]
+          (if unit-id
+            (cons unit-id (resolve-unit-ids (next unit-defs) (dissoc available-units unit-id)))
+            (throw (Exception. (str "Unit of type " a " not found from the location")))   ))
         (number? a) ; count and type eg. 3 :gf. Expand to :gf :gf :gf
-          (resolve-unit-ids (concat others (take a (repeat b))) available-units)
+        (resolve-unit-ids (concat others (take a (repeat b))) available-units)
         :else (throw (Exception. (str "Unit definition unknown " a)))   ))
 
+(defn new [ & pars ]
+  ^{ :require-role :player }
+  (player-optional-command pars
+     (fn [ game role player pars ]
+       (let [loc-id (last pars) types (drop-last pars) ]
+         (ships/new-units loc-id player (resolve-unit-types types) game)))))
+
+; CHeck that can move only own units, include role
 (defn del [ & unit-pars ]
   ^{ :require-role :player }
   (fn [ { all-units :units :as game } role ]
     (let [ unit-ids (resolve-unit-ids unit-pars all-units) ]
       (ships/del-units unit-ids game))))
 
+; CHeck that can move only own units, include role
 (defn move [ & pars ]
   (let [ dest (last pars), unit-pars (drop-last pars) ]
     ^{ :require-role :player }
@@ -111,15 +115,6 @@
 (defn ac-deck-create "Adds a fresh shuffled pack of AC:s to the game" [ ]
   ^{:require-role :game-master}
   (fn [ game role ] (-> game (assoc :ac-deck (ac/create-ac-deck)))))
-
-(defn- player-optional-command "Command for which player role can be given as first parameter (otherwise use role)"
-  [ pars inner-fn ]
-  (fn [ game role ]
-    (println (first pars))
-    (if (players/player? game (first pars))
-      (inner-fn game role (first pars) (rest pars))
-      (do (assert (not= role :game-master) "GM Must specify player for the command")
-        (inner-fn game role role pars)))))
 
 (defn ac-get "get AC from deck to a player" [& pars]
   ^{:require-role :player}
