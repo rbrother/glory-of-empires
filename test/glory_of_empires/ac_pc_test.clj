@@ -18,7 +18,7 @@
       (is (= 136 (count (acs-added :ac-deck)))))
     (let [ac-picked ((command/ac-get) map-test-data/mini-game-state :hacan)]
       (is (=  #{:diplomatic-immunity :minelayers :morale-boost}
-              (-> ac-picked :players :hacan :ac))))
+              (set (-> ac-picked :players :hacan :ac)))))
     (let [ac-played ((command/ac-play :minelayers) map-test-data/mini-game-state :hacan)]
-      (is (= #{:morale-boost} (-> ac-played :players :hacan :ac)))
-      (is (= #{:minelayers} (-> ac-played :ac-discard))))))
+      (is (= [:morale-boost] (-> ac-played :players :hacan :ac)))
+      (is (= [:minelayers] (-> ac-played :ac-discard))))))

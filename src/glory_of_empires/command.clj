@@ -28,11 +28,11 @@
   (fn [ game & pars ] (update-planets (merge game { :map new-board :ship-counters {} } ))))
 
 (defn- player-optional-command "Command for which player role can be given as first parameter (otherwise use role)"
-  [ pars inner-fn ]
-  (fn [ game role ]
+  [ pars require-player inner-fn]
+  (fn [ game role]
     (if (players/player? game (first pars))
       (inner-fn game role (first pars) (rest pars))
-      (do (assert (not= role :game-master) "GM Must specify player for the command")
+      (do (assert (or (not= require-player :require-player) (not= role :game-master)) "GM Must specify player for the command")
           (inner-fn game role role pars)))))
 
 ;----------- map commands --------------------
@@ -67,72 +67,82 @@
   (cond (not a) '()
         (ships/valid-unit-type? a) (cons a (resolve-unit-types (next types)))
         (number? a) (concat (take a (repeat b)) (resolve-unit-types others))
-        :else (throw (Exception. (str "Unit type unknown " a)))   ))
+        :else (throw (Exception. (str "Unit type unknown " a)))))
+
+(defn- filter-units [ attr value units-map ]
+  (->> units-map (vals) (filter #(= (% attr) value)) (utils/index-by-id)) )
 
 ; units-defs can be combination of (1) unit-ids eg. :ws3 , (2) unit types eg. :gf, (3) count + type eg. 3 :gf.
 ; returns list of unit-id:s
-(defn- resolve-unit-ids [ [ a b & others :as unit-defs ] available-units ]
+(defn- resolve-unit-ids [ [ a b & others :as unit-defs ] available-units]
   (cond (not a) '()
         (= a :from)
-        (let [ units-at-loc (filter #(= (% :location) b) (vals available-units)) ]
-          (resolve-unit-ids others (utils/index-by-id units-at-loc))   )
+          (resolve-unit-ids others (filter-units :location b available-units))
         (= a :all) (keys available-units)
         (contains? available-units a) ; unit-id eg. :ws3
-        (cons a (resolve-unit-ids (next unit-defs) (dissoc available-units a)))
+          (cons a (resolve-unit-ids (next unit-defs) (dissoc available-units a)))
         (ships/valid-unit-type? a) ; unit-type eg. :ca
-        (let [ unit-id (->> available-units (vals) (filter #(= (% :type) a)) (map :id) (sort) (first) ) ]
-          (if unit-id
-            (cons unit-id (resolve-unit-ids (next unit-defs) (dissoc available-units unit-id)))
-            (throw (Exception. (str "Unit of type " a " not found from the location")))   ))
+          (let [ unit-id (->> available-units (filter-units :type a) (keys) (sort) (first))]
+            (assert unit-id (str "Unit of type " a " not found from the location"))
+            (cons unit-id (resolve-unit-ids (next unit-defs) (dissoc available-units unit-id))))
         (number? a) ; count and type eg. 3 :gf. Expand to :gf :gf :gf
-        (resolve-unit-ids (concat others (take a (repeat b))) available-units)
-        :else (throw (Exception. (str "Unit definition unknown " a)))   ))
+          (resolve-unit-ids (concat others (take a (repeat b))) available-units)
+        :else (throw (Exception. (str "Unit definition unknown " a)))))
 
-(defn new [ & pars ]
-  ^{ :require-role :player }
-  (player-optional-command pars
-     (fn [ game role player pars ]
-       (let [loc-id (last pars) types (drop-last pars) ]
+(defn- resolve-unit-ids-outer [ unit-defs available-units player]
+  (resolve-unit-ids unit-defs (filter-units :owner player available-units)))
+
+; ----------
+
+(defn new [ & pars]
+  ^{ :require-role :player}
+  (player-optional-command pars :require-player
+     (fn [ game role player pars]
+       (let [loc-id (last pars) types (drop-last pars)]
          (ships/new-units loc-id player (resolve-unit-types types) game)))))
 
 ; CHeck that can move only own units, include role
-(defn del [ & unit-pars ]
-  ^{ :require-role :player }
-  (fn [ { all-units :units :as game } role ]
-    (let [ unit-ids (resolve-unit-ids unit-pars all-units) ]
-      (ships/del-units unit-ids game))))
+(defn del [ & pars]
+  ^{ :require-role :player}
+  (player-optional-command pars :no-require-player
+    (fn [ { all-units :units :as game } role player units]
+      (let [ unit-ids (resolve-unit-ids-outer units all-units player)]
+        (ships/del-units unit-ids game)))))
 
 ; CHeck that can move only own units, include role
-(defn move [ & pars ]
-  (let [ dest (last pars), unit-pars (drop-last pars) ]
-    ^{ :require-role :player }
-    (fn [ { all-units :units :as game } role ]
-        (let [ unit-ids (resolve-unit-ids unit-pars all-units) ]
-          (ships/move-units unit-ids dest game)    ))))
+(defn move [ & pars]
+  (let [ dest (last pars), pre-pars (drop-last pars)]
+    ^{ :require-role :player}
+    (player-optional-command pre-pars :no-require-player
+       (fn [{all-units :units :as game} role player units]
+         (let [unit-ids (resolve-unit-ids-outer units all-units player)]
+           (ships/move-units unit-ids dest game))))))
 
 ;----------- card-commands commands ------------------
 
-(defn ac-deck-create "Adds a fresh shuffled pack of AC:s to the game" [ ]
+(defn ac-deck-create "Adds a fresh shuffled pack of AC:s to the game" []
   ^{:require-role :game-master}
   (fn [ game role ] (-> game (assoc :ac-deck (ac/create-ac-deck)))))
 
 (defn ac-get "get AC from deck to a player" [& pars]
   ^{:require-role :player}
-  (player-optional-command pars
-     (fn [ game role player pars ]
-       (let [ card (first (:ac-deck game)) ]
+  (player-optional-command pars :require-player
+     (fn [ game role player pars]
+       (let [ card (first (:ac-deck game))]
          (-> game
              (update-in [:ac-deck] rest)
              (update-in [:players player :ac] conj card))))))
 
 (defn ac-play [ & pars ] nil   "Move AC from player to discard"
   ^{:require-role :player}
-  (player-optional-command pars
-     (fn [ game role player [ ac ] ]
-       (assert (-> game :players player :ac (contains? ac)) (str "AC " ac " not found from player " player))
+  (player-optional-command pars :require-player
+     (fn [ game role player [ ac ]]
+       (assert (-> game :players player :ac (utils/list-contains? ac)) (str "AC " ac " not found from player " player))
+       (println (-> game :players player :ac))
+       (println (-> ac))
        (-> game
-           (update-in [:players player :ac ] disj ac)
-           (update-in [ :ac-discard ] conj ac)   ))))
+           (update-in [ :players player :ac ] utils/remove-single ac)
+           (update-in [ :ac-discard ] conj ac)))))
 
 ;----------- high-level commands ------------------
 
