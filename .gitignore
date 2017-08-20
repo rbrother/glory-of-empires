@@ -13,3 +13,5 @@ pom.xml.asc
 map.html
 game-state*.clj
 .idea/workspace.xml
+workspace.xml
+

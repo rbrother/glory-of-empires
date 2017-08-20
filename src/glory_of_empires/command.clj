@@ -27,6 +27,14 @@
   ^{ :require-role :game-master }
   (fn [ game & pars ] (update-planets (merge game { :map new-board :ship-counters {} } ))))
 
+(defn- player-optional-command "Command for which player role can be given as first parameter (otherwise use role)"
+  [ pars inner-fn ]
+  (fn [ game role ]
+    (if (players/player? game (first pars))
+      (inner-fn game role (first pars) (rest pars))
+      (do (assert (not= role :game-master) "GM Must specify player for the command")
+          (inner-fn game role role pars)))))
+
 ;----------- map commands --------------------
 
 (defn round-board
@@ -62,17 +70,11 @@
         :else (throw (Exception. (str "Unit type unknown " a)))   ))
 
 (defn new [ & pars ]
-  (let [ loc-id (last pars) pre (drop-last pars)
-        has-player  (contains? races/all-races (first pre))
-        types (if has-player (rest pre) pre)
-        player (if has-player (first pre) nil) ]
-    ^{ :require-role :player }
-    (fn [ game role ]
-      (let [ final-role (or player role)
-            gm-for-player (and (= role :game-master) player)
-            player-for-himself (or (not player) (= player role)) ]
-        (assert (or gm-for-player player-for-himself))
-        (ships/new-units loc-id final-role (resolve-unit-types types) game)))  ))
+  ^{ :require-role :player }
+  (player-optional-command pars
+     (fn [ game role player pars ]
+       (let [loc-id (last pars) types (drop-last pars) ]
+         (ships/new-units loc-id player (resolve-unit-types types) game)))))
 
 ; units-defs can be combination of (1) unit-ids eg. :ws3 , (2) unit types eg. :gf, (3) count + type eg. 3 :gf.
 ; returns list of unit-id:s
@@ -111,15 +113,6 @@
 (defn ac-deck-create "Adds a fresh shuffled pack of AC:s to the game" [ ]
   ^{:require-role :game-master}
   (fn [ game role ] (-> game (assoc :ac-deck (ac/create-ac-deck)))))
-
-(defn- player-optional-command "Command for which player role can be given as first parameter (otherwise use role)"
-  [ pars inner-fn ]
-  (fn [ game role ]
-    (println (first pars))
-    (if (players/player? game (first pars))
-      (inner-fn game role (first pars) (rest pars))
-      (do (assert (not= role :game-master) "GM Must specify player for the command")
-        (inner-fn game role role pars)))))
 
 (defn ac-get "get AC from deck to a player" [& pars]
   ^{:require-role :player}
