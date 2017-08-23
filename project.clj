@@ -3,7 +3,8 @@
   :url "http://brotherus.net/fixme"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [  [org.clojure/clojure "1.7.0"]
+  :dependencies [  [org.clojure/clojure "1.9.0-alpha17"]
+			;		[org.clojure/clojure "1.7.0"]
                    [ring "1.4.0"] ]
   :main ^:skip-aot glory-of-empires.main
   :target-path "target/%s"
