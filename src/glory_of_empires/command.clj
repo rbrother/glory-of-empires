@@ -138,8 +138,6 @@
   (player-optional-command pars :require-player
      (fn [ game role player [ ac ]]
        (assert (-> game :players player :ac (utils/list-contains? ac)) (str "AC " ac " not found from player " player))
-       (println (-> game :players player :ac))
-       (println (-> ac))
        (-> game
            (update-in [ :players player :ac ] utils/remove-single ac)
            (update-in [ :ac-discard ] conj ac)))))

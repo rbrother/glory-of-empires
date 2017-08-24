@@ -1,5 +1,7 @@
 (ns glory-of-empires.ships
   (:require [clojure.string :as string])
+  (:require [clojure.spec.alpha :as spec])
+  (:require [clojure.spec.test.alpha :as stest])
   (:use clojure-common.utils)
   (:require [glory-of-empires.map :as board])
   (:require [glory-of-empires.html :as html])
@@ -23,6 +25,11 @@
 (def all-unit-types (index-by-id all-unit-types-arr))
 
 (defn valid-unit-type? [ type ] (contains? all-unit-types type))
+
+(spec/fdef valid-unit-type?
+           :args (spec/cat :type (spec/or :type keyword? :count int?)))
+
+(stest/instrument `valid-unit-type?)
 
 ;----------------------- units rendeting ----------------------
 
