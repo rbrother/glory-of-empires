@@ -23,7 +23,7 @@
   (assoc game :players
     (->> player-ids-and-passwords
          (partition 2)
-         (map (fn [ [id pwd] ] { :id id :password pwd :ac #{} :pc #{} } ))
+         (map (fn [ [id pwd] ] { :id id :password pwd :ac [] :pc [] } ))
          (index-by-id))))
 
 (defn- player-html [ { race-id :id } ]

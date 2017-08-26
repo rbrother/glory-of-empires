@@ -26,12 +26,11 @@
 
 (defn valid-unit-type? [ type ] (contains? all-unit-types type))
 
-(spec/fdef valid-unit-type?
-           :args (spec/cat :type (spec/or :type keyword? :count int?)))
+(spec/fdef valid-unit-type? :args (spec/cat :type (spec/or :type keyword? :count int?)))
 
 (stest/instrument `valid-unit-type?)
 
-;----------------------- units rendeting ----------------------
+;----------------------- units rendering ----------------------
 
 (defn ship-image-url [ type race ]
   { :pre [ (valid-unit-type? type) ] }
