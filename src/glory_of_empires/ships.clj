@@ -88,21 +88,23 @@
       (and (not ship?) (board loc)) { :location loc :planet (first ((board loc) :planets)) }
       :else (throw (Exception. (str "Cannot resolve location " loc " for unit type " unit-type)))  )))
 
-(defn- new-unit [ unit-id loc-id owner type game-state ]
+(defn- new-unit [ unit-id loc-id owner type game ]
   (merge { :id unit-id :owner owner :type type }
-        (resolve-location loc-id type game-state) ))
+        (resolve-location loc-id type game) ))
 
-(defn- add-new-unit [ loc-id owner type game-state ]
+(defn- add-new-unit [ loc-id owner type game ]
   { :pre [ (valid-unit-type? type) ] }
-  (let [ idx (new-unit-index game-state type)
+  (let [ idx (new-unit-index game type)
          unit-id (keyword (str (name type) idx)) ]
-    (-> game-state
+    (-> game
         (assoc-in [ :ship-counters type ] idx )
-        (update :units assoc unit-id (new-unit unit-id loc-id owner type game-state))  )))
+        (assoc-in [ :map loc-id :controller ] owner )
+        (update :units assoc unit-id (new-unit unit-id loc-id owner type game))  )))
 
 (defn- operate-on-units [ game units-fn unit-ids ]
   (assert (not (empty? unit-ids)) "No units found")
-  (update game :units (fn [units] (reduce units-fn units unit-ids))))
+  (-> game
+      (update :units (fn [units] (reduce units-fn units unit-ids))))   )
 
 (defn- del-unit [ units id ] (dissoc units id))
 
@@ -111,13 +113,15 @@
 
 ;-------- units commands (public) -----------
 
-(defn new-units [ loc-id owner types game-state ]
+(defn new-units [ loc-id owner types game ]
   (let [ new-unit-of (fn [ new-game-state type] (add-new-unit loc-id owner type new-game-state )) ]
-    (reduce new-unit-of game-state types)))
+    (reduce new-unit-of game types)))
 
 (defn del-units [ ids game ]
-  (operate-on-units game del-unit ids))
+  (operate-on-units game del-unit ids ))
 
-(defn move-units [ unit-ids loc-id game ]
+(defn move-units [ unit-ids loc-id player game ]
   (let [ move-unit-to (fn [ units-map unit-id ] (move-unit units-map unit-id loc-id game)) ]
-    (operate-on-units game move-unit-to unit-ids)))
+    (-> game
+        (assoc-in [ :map loc-id :controller ] player )
+        (operate-on-units move-unit-to unit-ids))))

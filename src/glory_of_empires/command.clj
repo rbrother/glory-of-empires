@@ -28,11 +28,11 @@
   (fn [ game & pars ] (update-planets (merge game { :map new-board :ship-counters {} } ))))
 
 (defn- player-optional-command "Command for which player role can be given as first parameter (otherwise use role)"
-  [ pars require-player inner-fn]
+  [ pars inner-fn]
   (fn [ game role]
     (if (players/player? game (first pars))
       (inner-fn game role (first pars) (rest pars))
-      (do (assert (or (not= require-player :require-player) (not= role :game-master)) "GM Must specify player for the command")
+      (do (assert (not= role :game-master) "GM Must specify player for the command")
           (inner-fn game role role pars)))))
 
 ;----------- map commands --------------------
@@ -96,7 +96,7 @@
 
 (defn new [ & pars]
   ^{ :require-role :player}
-  (player-optional-command pars :require-player
+  (player-optional-command pars
      (fn [ game role player pars]
        (let [loc-id (last pars) types (drop-last pars)]
          (ships/new-units loc-id player (resolve-unit-types types) game)))))
@@ -104,7 +104,7 @@
 ; CHeck that can move only own units, include role
 (defn del [ & pars]
   ^{ :require-role :player}
-  (player-optional-command pars :no-require-player
+  (player-optional-command pars
     (fn [ { all-units :units :as game } role player units]
       (let [ unit-ids (resolve-unit-ids-outer units all-units player)]
         (ships/del-units unit-ids game)))))
@@ -113,10 +113,10 @@
 (defn move [ & pars]
   (let [ dest (last pars), pre-pars (drop-last pars)]
     ^{ :require-role :player}
-    (player-optional-command pre-pars :no-require-player
+    (player-optional-command pre-pars
        (fn [{all-units :units :as game} role player units]
          (let [unit-ids (resolve-unit-ids-outer units all-units player)]
-           (ships/move-units unit-ids dest game))))))
+           (ships/move-units unit-ids dest player game))))))
 
 ;----------- card-commands commands ------------------
 
@@ -126,7 +126,7 @@
 
 (defn ac-get "get AC from deck to a player" [& pars]
   ^{:require-role :player}
-  (player-optional-command pars :require-player
+  (player-optional-command pars
      (fn [ game role player pars]
        (let [ card (first (:ac-deck game))]
          (-> game
@@ -135,7 +135,7 @@
 
 (defn ac-play [ & pars ] nil   "Move AC from player to discard"
   ^{:require-role :player}
-  (player-optional-command pars :require-player
+  (player-optional-command pars
      (fn [ game role player [ ac ]]
        (assert (-> game :players player :ac (utils/list-contains? ac)) (str "AC " ac " not found from player " player))
        (-> game

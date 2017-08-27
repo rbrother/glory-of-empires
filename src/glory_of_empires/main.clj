@@ -23,6 +23,7 @@
   (require 'glory-of-empires.command :reload)
   (require 'glory-of-empires.players :reload)
   (require 'glory-of-empires.systems :reload)
+  (require 'glory-of-empires.ships :reload)
   (require 'glory-of-empires.login :reload)
   (require 'glory-of-empires.command-page :reload)
   (require 'glory-of-empires.view-page :reload)

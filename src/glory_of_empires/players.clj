@@ -26,34 +26,39 @@
          (map (fn [ [id pwd] ] { :id id :password pwd :ac [] :pc [] } ))
          (index-by-id))))
 
+(defn- fighter-image [ race-id ] [ :img { :src (ships/ship-image-url :fi race-id) } ] )
+
+(defn- player-flag [ race-id ] [ :img {:src (str html/resources-url "FlagWavy/Flag-Wavy-" (name race-id) ".png")} ] )
+
 (defn- player-html [ { race-id :id } ]
   { :pre [ (not (nil? race-id)) ] }
-  (let [ race (races/all-races race-id)
-         fighter-image (ships/ship-image-url :fi race-id) ]
+  (let [ race (races/all-races race-id) ]
     [ :div
       [ :h3
-        [ :span {} (str race-id " - " (race :name)) ]
-        [ :img { :src fighter-image } ] ] ] ))
+        [ :span {} (str (name race-id) " - " (race :name)) ]
+       (fighter-image race-id) ] ] ))
 
-(defn- player-row-data [ { race-id :id tg :tg ac :ac pc :pc } ]
-  [ race-id
-    "Color"
-    "Symbol"
-    "VP"
-    "Systems"
-    "Planets"
-    "Res"
-    "Inf"
-    "Tech"
-    (or tg 0)
-    (count ac)
-    (count pc) ] )
+(defn- player-row-data [ { map :map planets :planets units :units } { race-id :id tg :tg ac :ac pc :pc } ]
+  (let [ player-systems (->> map vals (filter #(= (% :controller) race-id))) ]
+    [ (name race-id)
+      (fighter-image race-id)
+      (player-flag race-id)
+      "VP"
+      (count player-systems)
+      "Planets"
+      "Res"
+      "Inf"
+      "Army Res"
+      "Tech"
+      (or tg 0)
+      (count ac)
+      (count pc)   ]))
 
 (defn ids [ game-state ] (keys (game-state :players)))
 
 (defn players-table [ game ]
-  (let [ header [ "Race" "Color" "Symbol" "VP" "Systems" "Planets" "Res" "Inf" "TG" "Tech" "AC" "PC" ]
-         rows (map player-row-data (players game))
+  (let [ header [ "Race" "Color" "Symbol" "VP" "Systems" "Planets" "Res" "Inf" "Army Res" "TG" "Tech" "AC" "PC" ]
+         rows (map #(player-row-data game %) (players game))
          pars `[ { :class "data" } ~header ~@rows ] ]
     (apply html/table pars) ))
 

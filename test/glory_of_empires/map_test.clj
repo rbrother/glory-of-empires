@@ -64,7 +64,8 @@
                                  :fi5 { :id :fi5 :location :b1 :owner :norr :type :fi}
                                  :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi}
                                  :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws}}
-           (added-ships :ship-counters) { :ca 3 :de 2 :fi 10 :ws 1 :cr 1 :gf 3 :pds 2}))
+           (added-ships :ship-counters) { :ca 3 :de 2 :fi 10 :ws 1 :cr 1 :gf 3 :pds 2}
+           (-> added-ships :map :a1 :controller)  :hacan      ))
     (let [ added-units ((command/new :norr :gf :gf :pds :aah) mini-game-state :norr)]
       (are [ calculated expected ] (compare-structure calculated expected)
            (added-units :units) {
@@ -103,7 +104,7 @@
                                    :fi5 { :id :fi5 :location :b1 :owner :norr :type :fi}
                                    :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi}
                                    :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws}}))
-    (let [ moved-units (move-units [ :gf1 :gf3 :pds1 :ca3 ] :aah mini-game-state)]
+    (let [ moved-units (move-units [ :gf1 :gf3 :pds1 :ca3 ] :aah :hacan mini-game-state)]
       (are [ calculated expected ] (compare-structure calculated expected)
            (moved-units :units) {
                                  :gf3 { :id :gf3 :location :b1 :planet :aah :owner :hacan :type :gf}
