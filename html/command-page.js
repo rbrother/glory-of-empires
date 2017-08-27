@@ -68,6 +68,10 @@ function ViewCounterReceived(serverResponse) {
     }
 }
 
+function AjaxError() {
+    $("#viewStatus").html( 'Connection failed, trying soon again. ' + new Date() );
+}
+
 function ReloadViewNow() {
     LoadViewInner(GameName(), Role(), Password(), currentView, "view", true);
 }

@@ -4,9 +4,14 @@ $.ajaxSetup({
     type: 'POST',
     timeout: 5000,
     error: function(xhr) {
-        console.log('Timeout from AJAX, trying again soon...');
+        AjaxError();
         ScheduleViewRefresh( 5000 );
     }});
+
+// Override this if needed
+function AjaxError() {
+    console.log('Timeout from AJAX, trying again soon...');
+}
 
 // ***************** Shared functions for all windows *****************
 
