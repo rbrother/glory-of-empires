@@ -38,6 +38,8 @@
 
 (defn ul [ items ] `[ :ul ~@(map (fn [item] [ :li item ]) items) ] )
 
+(defn ol [ items ] `[ :ol ~@(map (fn [item] [ :li item ]) items) ] )
+
 (defn div [ items ] `[ :div ~@items ] )
 
 (defn color-span [ color content ] [ :span { :style (str "color: " color "; font-weight: bold;") } content ] )
