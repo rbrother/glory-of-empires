@@ -20,7 +20,9 @@
     { :id :st :type :ground :name "Shocktroop" :individual-ids false :image-name "ST"       :image-size [ 48 57 ] }
     { :id :mu :type :ground :name "Mechanised Unit" :individual-ids false :image-name "MU"  :image-size [ 75 36 ] }
     { :id :pds :type :ground :name "Planetary Defence System" :individual-ids false  :image-name "PDS" :image-size [ 67 49 ] }
-    { :id :sd :type :ground :name "Spacedock" :individual-ids false  :image-name "Spacedock" :image-size [ 76 78 ] } ] )
+    { :id :sd :type :ground :name "Spacedock" :individual-ids false  :image-name "Spacedock" :image-size [ 76 78 ] }
+   ; Special tokens (move elsewhere..?)
+    { :id :flag :type :special :image-name "Flag" :image-size [ 76 43 ] } ] )
 
 (def all-unit-types (index-by-id all-unit-types-arr))
 
@@ -34,9 +36,12 @@
 
 (defn ship-image-url [ type race ]
   { :pre [ (valid-unit-type? type) ] }
-  (let [ { image-name :image-name } (all-unit-types type)
-         { color :unit-color} (races/all-races race) ]
-    (str html/resources-url "Ships/" color "/Unit-" color "-" image-name ".png")))
+  (if (= type :flag)
+    (str html/resources-url "FlagWavy/Flag-Wavy-" (name race) ".png")
+    ; Regular unit types
+    (let [{image-name :image-name} (all-unit-types type)
+          {color :unit-color} (races/all-races race)]
+      (str html/resources-url "Ships/" color "/Unit-" color "-" image-name ".png"))))
 
 (defn svg [ { id :id type :type race :owner count :count } loc ]
   { :pre [ (valid-unit-type? type)

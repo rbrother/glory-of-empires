@@ -97,6 +97,10 @@
              scale (or given-scale 0.5)
              [ min-corner max-corner :as bounds] (bounding-rect map-pieces)
              svg-size (mul-vec (rect-size bounds) scale)
-             map-with-units (glory-of-empires.map/combine-map-units map-pieces (vals units)) ]
+             piece-to-flag (fn [ { id :id controller :controller } ] { :id id :location id :owner controller :type :flag })
+             system-flags (->> board vals (filter :controller) (map piece-to-flag))
+             all-pieces (concat (vals units) system-flags)
+             map-with-units (glory-of-empires.map/combine-map-units map-pieces all-pieces) ]
+        (println all-pieces)
         (svg/svg svg-size (svg/g { :scale scale :translate (mul-vec min-corner -1.0) }
                                  (map piece-to-svg map-with-units) ))))))

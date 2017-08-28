@@ -39,13 +39,15 @@
        (fighter-image race-id) ] ] ))
 
 (defn- player-row-data [ { map :map planets :planets units :units } { race-id :id tg :tg ac :ac pc :pc } ]
-  (let [ player-systems (->> map vals (filter #(= (% :controller) race-id))) ]
+  (let [ player-controls (fn [object] (= (:controller object) race-id))
+        player-systems (->> map vals (filter player-controls))
+        player-planets (->> planets vals (filter player-controls)) ]
     [ (name race-id)
       (fighter-image race-id)
       (player-flag race-id)
       "VP"
       (count player-systems)
-      "Planets"
+      (count player-planets)
       "Res"
       "Inf"
       "Army Res"
