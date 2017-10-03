@@ -1,24 +1,10 @@
 # glory-of-empires
 
-FIXME: description
+Future warfare in Space. Multiplayer web-based boardgame with Clojure.
 
 ## Installation
 
-Download from http://example.com/FIXME.
-
 ## Usage
-
-FIXME: explanation
-
-    $ java -jar glory-of-empires-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
 
 ### Bugs
 
@@ -30,7 +16,7 @@ FIXME: listing of options this app accepts.
 
 ## License
 
-Copyright © 2015 FIXME
+Copyright © 2016 Robert Brotherus
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
