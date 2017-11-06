@@ -27,54 +27,53 @@
          (map (fn [ [id pwd] ] { :id id :password pwd :ac [] :pc [] } ))
          (index-by-id))))
 
+(defn ids [ game-state ] (keys (game-state :players)))
+
 (defn- fighter-image [ race-id ] [ :img { :src (ships/ship-image-url :fi race-id) } ] )
 
 (defn- player-flag [ race-id ] [ :img {:src (str html/resources-url "FlagWavy/Flag-Wavy-" (name race-id) ".png")} ] )
-
-(defn- ac-to-html [ id ]
-  (let [ { descr :description play :play set :set } (ac/all-ac-types id) ]
-    [:span (name id)
-          (html/color-span "#909090" (str ": " descr " Play: " play))]  ))
-
-(defn- player-html [ role { race-id :id acs :ac } ]
-  { :pre [ (not (nil? race-id)) ] }
-  (let [ show-all (or (= role :game-master) (= role race-id))
-        race (races/all-races race-id) ]
-    [ :div
-      [ :h3
-        [ :span {} (str (name race-id) " - " (race :name)) ]
-       (fighter-image race-id) ]
-     (if show-all
-       [:div
-        [:p " Action Cards"]
-        (html/ol (map ac-to-html acs))]
-       [ :p "(hidden)" ]   ) ] ))
 
 (defn- player-row-data [ { map :map planets :planets units :units } { race-id :id tg :tg ac :ac pc :pc } ]
   (let [ player-controls (fn [object] (= (:controller object) race-id))
         player-systems (->> map vals (filter player-controls))
         player-planets (->> planets vals (filter player-controls)) ]
     [ (name race-id)
-      (fighter-image race-id)
-      (player-flag race-id)
-      "VP"
-      (count player-systems)
-      (count player-planets)
-      "Res"
-      "Inf"
-      "Army Res"
-      (or tg 0)
-      "Techs"
-      (count ac)
-      (count pc)   ]))
-
-(defn ids [ game-state ] (keys (game-state :players)))
+     (fighter-image race-id)
+     (player-flag race-id)
+     "VP"
+     (count player-systems)
+     (count player-planets)
+     "Res"
+     "Inf"
+     (or tg 0)
+     "Army Res"
+     "Techs"
+     (count ac)
+     (count pc)   ]))
 
 (defn players-table [ game ]
-  (let [ header [ "Race" "Color" "Symbol" "VP" "Systems" "Planets" "Res" "Inf" "Army Res" "TG" "Tech" "AC" "PC" ]
-         rows (map #(player-row-data game %) (players game))
-         pars `[ { :class "data" } ~header ~@rows ] ]
+  (let [ header [ "Race" "Color" "Symbol" "VP" "Systems" "Planets" "Res (available-units" "Inf" "TG" "Army Res" "Tech" "AC" "PC" ]
+        rows (map #(player-row-data game %) (players game))
+        pars `[ { :class "data" } ~header ~@rows ] ]
     (apply html/table pars) ))
+
+(defn- ac-to-html [ id ]
+  (let [ { descr :description play :play set :set } (ac/all-ac-types id) ]
+    [:span (name id)
+     (html/color-span "#909090" (str ": " descr " Play: " play))]  ))
+
+(defn- player-html [ role { race-id :id acs :ac } ]
+  { :pre [ (not (nil? race-id)) ] }
+  (let [ show-all (or (= role :game-master) (= role race-id))
+        race (races/all-races race-id) ]
+    [ :div
+      [ :h3 [ :span (str (race :name) " - " (name race-id)) ]
+          (fighter-image race-id) (player-flag race-id) ]
+      (if show-all
+         [ :div { :style "margin-left: 1cm;" }
+            [:p " Action Cards"]
+            (html/ol (map ac-to-html acs))]
+         [ :p "(hidden)" ]   ) ] ))
 
 (defn players-html [ game role ]
   `[ :div
