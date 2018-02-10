@@ -68,11 +68,11 @@
 (defn- symbols-to-keywords [ [ cmd & pars ] ]
   (cons cmd (map symbol-to-keyword pars)))
 
-(defn handle-post [ message-str ]
+(defn handle-post [ message-str games]
   (let [ message (read-string message-str)
          { game-id :game role :role password :password message-type :message-type raw-func :func } message
          func (symbols-to-keywords raw-func) ; (cmd a b c) -> (cmd :a :b :c)
-         game (game-state/game game-id)
+         game (games game-id)
          game-func-with-role (binding [*ns* (find-ns 'glory-of-empires.main)] (eval func))
          game-func (fn [ game ] (game-func-with-role game role))
          require-role (get (meta game-func) :require-role)
@@ -89,10 +89,10 @@
 
 (def ignore-urls #{ "/favicon.ico" "/html/jquery.min.map" } )
 
-(defn- handle-get [ uri query ] ; returns ready response-map or string for normal HTTP 200 response
-  (println query)
+(defn- handle-get [ uri query games ] ; returns ready response-map or string for normal HTTP 200 response
+  (println "Query: " query)
   (case uri
-    "/login" (login/login-page (game-state/game-names))
+    "/login" (login/login-page (keys games))
     "/create-game" (login/create-game-page)
     "/game" (command-page/html query)
     "/view" (view-page/html query)
@@ -102,12 +102,12 @@
       :else (redirect "/login") )))
 
 (defn- handler-inner [request]
-  (case (:request-method request)
-    :post (let [ message (slurp (:body request)) ]
-            (try (handle-post message) (catch Throwable e (xml-to-text (handle-exception e)))))
-    :get (let [ { uri :uri query-string :query-string } request ]
-           (println uri query-string)
-           (handle-get uri (query/parse query-string)))))
+  (let [games (game-state/get-games)]
+    (case (:request-method request)
+      :post (let [message (slurp (:body request))]
+              (try (handle-post message games) (catch Throwable e (xml-to-text (handle-exception e)))))
+      :get (let [{uri :uri query-string :query-string} request]
+             (handle-get uri (query/parse query-string) games)))))
 
 (defn handler [request]
   (reload) ; REMOVE IN PRODUCION

@@ -18,14 +18,14 @@
 
 (defn game [ id ] (@games id))
 
-(defn game-names [] (map str (keys @games)) )
-
 (defn game-counter [] (fn [game role] (get game :counter 0)))
 
 (defn load-games []
   (if (.exists (as-file game-file-path))
       (reset! games (load-from-file game-file-path))
       nil))
+
+(defn get-games [] @games) ; avoid calling this directly, use only from 1 place
 
 (def save-agent (agent nil))
 

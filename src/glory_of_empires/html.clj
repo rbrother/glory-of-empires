@@ -2,7 +2,7 @@
   (:use clojure-common.utils)
   (:require [clojure-common.xml :as xml]))
 
-(def resources-url "http://www.brotherus.net/ti3/")
+(def resources-url "http://www.brotherus.net:81/ti3/")      ; Port 81 needed for to work locally too with Zyxel
 
 (def xhtml-dtd "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"
    \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">" )
