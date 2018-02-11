@@ -1,6 +1,5 @@
 (ns glory-of-empires.map-test
   (:use clojure-common.utils)
-  (:use clojure-common.xml)
   (:use glory-of-empires.map-test-data)
   (:require [clojure.test :refer :all]
             [glory-of-empires.map :refer :all])
@@ -8,8 +7,6 @@
   (:require [glory-of-empires.command :as command]))
 
 ; Most of our tests are inline-tests in the respective functions, but for longer tests we can put here
-
-
 
 (deftest map-creation-test
   (testing "make-random-map"

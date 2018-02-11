@@ -22,14 +22,17 @@
 
 (defn load-games []
   (if (.exists (as-file game-file-path))
-      (reset! games (load-from-file game-file-path))
-      nil))
+    (do (println "loading games from file")
+        (reset! games (load-from-file game-file-path)))
+    (println "!! Game file not found")))
 
 (defn get-games [] @games) ; avoid calling this directly, use only from 1 place
 
 (def save-agent (agent nil))
 
 (defn- save-game [ agent-state state ]
+  (println "writing games to file...")
+  (throw (Exception. "my exception message"))
   (write-to-file game-file-path state))
 
 (defn- save-games-async [ data ] (send-off save-agent save-game data))

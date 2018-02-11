@@ -1,6 +1,5 @@
 (ns glory-of-empires.players-test
   (:use clojure-common.utils)
-  (:use clojure-common.xml)
   (:use clojure.test)
   (:require [glory-of-empires.players :as players]))
 

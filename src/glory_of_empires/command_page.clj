@@ -38,16 +38,16 @@
                  "horizontal (view/board 0.3) (view/players)"]))
 
 (defn html [ { game-name :gameName role :role}]
-  (html/page "Glory of Empires" "/html/command-page.js" [
-                                                         (html/table {}
-                                                           [ "Game" (str (name game-name) " / " (name role))]
-                                                           [ "Command" [ :input { :style "width: 300px;" :id "command" :autofocus "true"}]
-                                                                       [ :button { :type "button" :onclick "ExecuteCommand();" } "Execute"]
-                                                                       "Examples" command-examples-select]
-                                                           [ " " [ { :colspan 4}
-                                                                   [ :span { :id "currentCommand" :style "color: green;" } ] " - "
-                                                                   [ :span { :id "commandResult"}]]]
-                                                           [ "View" [ :input { :style "width: 300px;" :id "viewDefinition" :value "board" :onchange "ViewDefinitionChanged();"}]
-                                                             " " "Examples" view-examples-select [ :span { :id "viewResult"}]]
-                                                           [ " " [ { :colspan 4 } [ :span { :id "viewStatus" :style "color: green;"}]]])
-                                                         [ :div { :id "view" :style "margin: 8px;"}]]))
+  (html/page "Glory of Empires" "/html/command-page.js"
+             (html/table {}
+                         ["Game" (str (name game-name) " / " (name role))]
+                         ["Command" [:input {:style "width: 300px;" :id "command" :autofocus "true"}]
+                          [:button {:type "button" :onclick "ExecuteCommand();"} "Execute"]
+                          "Examples" command-examples-select]
+                         [" " [{:colspan 4}
+                               [:span {:id "currentCommand" :style "color: green;"}] " - "
+                               [:span {:id "commandResult"}]]]
+                         ["View" [:input {:style "width: 300px;" :id "viewDefinition" :value "board" :onchange "ViewDefinitionChanged();"}]
+                          " " "Examples" view-examples-select [:span {:id "viewResult"}]]
+                         [" " [{:colspan 4} [:span {:id "viewStatus" :style "color: green;"}]]])
+             [:div {:id "view" :style "margin: 8px;"}]))

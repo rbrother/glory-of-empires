@@ -12,6 +12,5 @@
            (query/parse "gameName=%3Asandbox&role=%3Agame-master&password=")))
     ))
 
-(deftest game-state-test
-  (testing "game-state-test"
-    (game-state/swap-game identity {} :sandbox) ))
+; Do NOT test swap-game, since that will also write game-state over (side-effect)
+; It's enough to test the pure functions

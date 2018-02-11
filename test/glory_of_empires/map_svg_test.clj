@@ -1,6 +1,5 @@
 (ns glory-of-empires.map-svg-test
   (:use clojure-common.utils)
-  (:use clojure-common.xml)
   (:require [clojure.test :refer :all]
             [glory-of-empires.map-svg :as map-svg])
   (:use glory-of-empires.map-test-data))

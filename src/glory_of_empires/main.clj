@@ -1,6 +1,6 @@
 (ns glory-of-empires.main
   (:use ring.adapter.jetty)
-  (:use clojure-common.xml)
+  (:require [hiccup.core :as hiccup])
   (:require [glory-of-empires.command :as command])
   (:require [glory-of-empires.view :as view])
   (:require [glory-of-empires.players :as players])
@@ -53,12 +53,12 @@
   { :pre [ (game-state/game game-id) ] }
   (case message-type
     :info (str (game-func game))
-    :view (xml-to-text (game-func game))
+    :view (hiccup/html (game-func game))
     :command (do (game-state/swap-game game-func history-item game-id) "ok") ; game-modifying commands
     :admin-command (do (game-state/swap-games game-func) "ok")  )) ; commands modifying the whole app state
 
 (defn password-not-valid [ password role require-role ]
-  (xml-to-text
+  (hiccup/html
     [ :span { :style "color: red;" }
       (str "Password " password " for " role " not valid for role " require-role ". ")
       "Return to" [ :a { :href "/login" } "Login" ] ] ))
@@ -105,7 +105,7 @@
   (let [games (game-state/get-games)]
     (case (:request-method request)
       :post (let [message (slurp (:body request))]
-              (try (handle-post message games) (catch Throwable e (xml-to-text (handle-exception e)))))
+              (try (handle-post message games) (catch Throwable e (hiccup/html (handle-exception e)))))
       :get (let [{uri :uri query-string :query-string} request]
              (handle-get uri (query/parse query-string) games)))))
 
