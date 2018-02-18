@@ -9,6 +9,7 @@
                  :planets #{ :abyz :fria}
                  :system :abyz-fria}
            :b1 { :id :b1
+                 :activated { :hacan true }
                  :controller :norr
                  :logical-pos [ 1 0]
                  :planets #{ :aah}
@@ -36,13 +37,14 @@
             :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi}
             :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws}}
     :players {
-              :hacan { :id :hacan :tg 0
+              :hacan { :id :hacan :tg 0 :command-pool 3 :strategy-alloc 2 :fleet-supply 3
                        :ac [ :minelayers :morale-boost ]
                        :pc []
                        :techs #{} }
               :norr { :id :norr :tg 0
                       :ac [ :privateers ]
                       :pc []
+                      :command-pool 2 :strategy-alloc 2 :fleet-supply 4
                       :techs #{} }}
     :ac-deck [ :diplomatic-immunity :flank-speed :flank-speed :into-breach ]
     :pc-deck [ ]

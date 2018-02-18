@@ -32,7 +32,6 @@
 
 (defn- save-game [ agent-state state ]
   (println "writing games to file...")
-  (throw (Exception. "my exception message"))
   (write-to-file game-file-path state))
 
 (defn- save-games-async [ data ] (send-off save-agent save-game data))

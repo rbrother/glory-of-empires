@@ -77,6 +77,7 @@
          game-func (fn [ game ] (game-func-with-role game role))
          require-role (get (meta game-func) :require-role)
          history-item { :time (str (java.util.Date.)) :command func :role role } ]
+    (if (not= message-type :info) (println "message: " message-str))
     (if (or (not require-role) (players/password-valid? require-role game message))
       (execute-post message-type game-id game game-func history-item)
       (password-not-valid password role require-role)   )))

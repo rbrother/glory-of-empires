@@ -161,6 +161,24 @@
                                  :fi8 { :id :fi8 :location :b1 :owner :norr :type :fi}
                                  :ws1 { :id :ws1 :location :b1 :owner :norr :type :ws}}))))
 
+(deftest activation-test
+  (testing "system-activation"
+    (are [calculated expected]
+      (compare-structure calculated expected)
+      (:map ((command/activate :hacan :b1) mini-game-state :hacan))
+      {
+       :a1 { :id :a1
+            :controller :hacan
+            :logical-pos [ 0 0]
+            :planets #{ :abyz :fria}
+            :system :abyz-fria}
+       :b1 { :id :b1
+            :activated { :hacan true }
+            :controller :norr
+            :logical-pos [ 1 0]
+            :planets #{ :aah}
+            :system :aah}})))
+
 (deftest find-planet-test
   (testing "find planet"
     (let [board1

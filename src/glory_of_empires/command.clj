@@ -97,7 +97,7 @@
 (defn new [ & pars]
   ^{ :require-role :player}
   (player-optional-command pars
-     (fn [ game role player pars]
+     (fn [ game _ player pars]
        (let [loc-id (last pars) types (drop-last pars)]
          (ships/new-units loc-id player (resolve-unit-types types) game)))))
 
@@ -117,6 +117,18 @@
        (fn [{all-units :units :as game} role player units]
          (let [unit-ids (resolve-unit-ids-outer units all-units player)]
            (ships/move-units unit-ids dest player game))))))
+
+;----------- activation of systems ------------------
+
+(defn activate [ & pars ]
+  ^{:require-role :player}
+  (player-optional-command pars
+    (fn [ game _ player [ location ] ]
+      { :pre [ (-> game :map location) ] }
+      (assert (> (-> game :players player :command-pool) 0))
+      (-> game
+          (update-in [ :map location :activated ] assoc player true )
+          (update-in [ :players player :command-pool ] dec)     ))))
 
 ;----------- card-commands commands ------------------
 

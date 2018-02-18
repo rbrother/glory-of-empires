@@ -24,8 +24,8 @@ function quoted(s) { return "\"" + s + "\""; }
 
 function BuildMessage(gameName, role, password, messageType, func) {
     var message = "{";
-    if (gameName != "") message = message + " :game " + gameName;
-    if (role != "") message = message + " :role " + role;
+    if (gameName != "") message = message + " :game :" + gameName;
+    if (role != "") message = message + " :role :" + role;
     if (password != "") message = message + " :password " + password;
     message = message +
       " :message-type :" + messageType +

@@ -22,7 +22,8 @@
     { :id :pds :type :ground :name "Planetary Defence System" :individual-ids false  :image-name "PDS" :image-size [ 67 49 ] }
     { :id :sd :type :ground :name "Spacedock" :individual-ids false  :image-name "Spacedock" :image-size [ 76 78 ] }
    ; Special tokens (move elsewhere..?)
-    { :id :flag :type :special :image-name "Flag" :image-size [ 76 43 ] } ] )
+    { :id :flag :type :special :image-name "Flag" :individual-ids false :image-size [ 76 43 ] }
+    { :id :cc :type :special :image-name "CC" :individual-ids true :image-size [ 100 88 ] }] )
 
 (def all-unit-types (index-by-id all-unit-types-arr))
 
@@ -36,9 +37,9 @@
 
 (defn ship-image-url [ type race ]
   { :pre [ (valid-unit-type? type) ] }
-  (if (= type :flag)
-    (str html/resources-url "FlagWavy/Flag-Wavy-" (name race) ".png")
-    ; Regular unit types
+  (case type
+    :flag (str html/resources-url "FlagWavy/Flag-Wavy-" (name race) ".png")
+    :cc (str html/resources-url "CCs/CC-" (name race) ".png")
     (let [{image-name :image-name} (all-unit-types type)
           {color :unit-color} (races/all-races race)]
       (str html/resources-url "Ships/" color "/Unit-" color "-" image-name ".png"))))

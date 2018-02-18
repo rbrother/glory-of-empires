@@ -28,7 +28,7 @@
   (fn [ game role ]
     (let [ ids (cons :game-master (players/ids game)) ]
       `[ :select { :id "role" :name "role" }
-         ~@(map (fn [ player ] [ :option {} (str player) ]) ids) ] )))
+         ~@(map (fn [ player ] [ :option {} (name player) ]) ids) ] )))
 
 ;------------ composite views ----------------
 

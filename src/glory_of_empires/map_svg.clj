@@ -89,7 +89,9 @@
   (let [ screen-locs (->> map-pieces (map :logical-pos) (map systems/screen-loc)) ]
     [ (min-pos screen-locs) (map + (max-pos screen-locs) systems/tile-size) ] ))
 
-(defn piece-to-flag [ { id :id controller :controller } ] { :id id :location id :owner controller :type :flag } )
+(defn piece-special-units [ { id :id controller :controller activated :activated } ]
+  (concat (if controller [{:id id :location id :owner controller :type :flag}] [])
+          (map (fn [race] {:id race :location id :owner race :type :cc}) (keys activated))))
 
 (defn render
   ( [ game-state ] (render game-state {} ))
@@ -102,9 +104,9 @@
              planet-to-flag (fn [ { id :id controller :controller } ]
                               { :id id :location (glory-of-empires.map/find-planet-loc board id)
                                :planet id :owner controller :type :flag } )
-             system-flags (->> board vals (filter :controller) (map piece-to-flag))
+             system-specials (->> board vals (mapcat piece-special-units))
              planet-flags (->> planets vals (filter :controller) (map planet-to-flag))
-             all-pieces (concat (vals units) system-flags planet-flags)
+             all-pieces (concat (vals units) system-specials planet-flags)
              map-with-units (glory-of-empires.map/combine-map-units map-pieces all-pieces) ]
         (svg/svg svg-size (svg/g { :scale scale :translate (mul-vec min-corner -1.0) }
                                  (map piece-to-svg map-with-units) ))))))

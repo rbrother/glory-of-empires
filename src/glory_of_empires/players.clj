@@ -6,7 +6,7 @@
   (:require [glory-of-empires.html :as html]))
 
 (defn create-player [ race password ]
-  { :id race :password password :tg 0 :ac [] :pc [] :tech [] } )
+  { :id race :password password :command-pool 3 :strategy-alloc 2 :fleet-supply 3 :tg 0 :ac [] :pc [] :tech [] } )
 
 (defn password-valid? [ required-role game { role :role password :password } ]
   (or (and
@@ -33,7 +33,8 @@
 
 (defn- player-flag [ race-id ] [ :img {:src (str html/resources-url "FlagWavy/Flag-Wavy-" (name race-id) ".png")} ] )
 
-(defn- player-row-data [ { map :map planets :planets units :units } { race-id :id tg :tg ac :ac pc :pc } ]
+(defn- player-row-data [ { map :map planets :planets units :units }
+                        { race-id :id tg :tg ac :ac pc :pc cc :command-pool sa :strategy-alloc fs :fleet-supply } ]
   (let [ player-controls (fn [object] (= (:controller object) race-id))
         player-systems (->> map vals (filter player-controls))
         player-planets (->> planets vals (filter player-controls)) ]
@@ -41,9 +42,12 @@
      (fighter-image race-id)
      (player-flag race-id)
      "VP"
+     cc
+     fs
+     sa
      (count player-systems)
      (count player-planets)
-     "Res"
+     "N/M"
      "Inf"
      (or tg 0)
      "Army Res"
@@ -52,7 +56,7 @@
      (count pc)   ]))
 
 (defn players-table [ game ]
-  (let [ header [ "Race" "Color" "Symbol" "VP" "Systems" "Planets" "Res (available-units" "Inf" "TG" "Army Res" "Tech" "AC" "PC" ]
+  (let [ header [ "Race" "Color" "Symbol" "VP" "CC" "FS" "SA" "Systems" "Planets" "Res" "Inf" "TG" "Army Res" "Tech" "AC" "PC" ]
         rows (map #(player-row-data game %) (players game))
         pars `[ { :class "data" } ~header ~@rows ] ]
     (apply html/table pars) ))
