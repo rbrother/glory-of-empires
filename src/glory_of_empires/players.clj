@@ -2,6 +2,7 @@
   (:use clojure-common.utils)
   (:require [glory-of-empires.races :as races])
   (:require [glory-of-empires.ships :as ships])
+  (:require [glory-of-empires.systems :as systems])
   (:require [glory-of-empires.ac :as ac])
   (:require [glory-of-empires.html :as html]))
 
@@ -33,11 +34,15 @@
 
 (defn- player-flag [ race-id ] [ :img {:src (str html/resources-url "FlagWavy/Flag-Wavy-" (name race-id) ".png")} ] )
 
-(defn- player-row-data [ { map :map planets :planets units :units }
+(defn- player-row-data [ { board :map planets :planets units :units }
                         { race-id :id tg :tg ac :ac pc :pc cc :command-pool sa :strategy-alloc fs :fleet-supply } ]
-  (let [ player-controls (fn [object] (= (:controller object) race-id))
-        player-systems (->> map vals (filter player-controls))
-        player-planets (->> planets vals (filter player-controls)) ]
+  (let [player-controls (fn [object] (= (:controller object) race-id))
+        player-systems (->> board vals (filter player-controls))
+        player-planets (->> planets vals (filter player-controls))
+        player-planets-data (->> player-planets (map :id) (map #(systems/all-planets %)))
+        player-res (->> player-planets-data (map :res) (reduce +))
+        player-inf (->> player-planets-data (map :inf) (reduce +))
+        ]
     [ (name race-id)
      (fighter-image race-id)
      (player-flag race-id)
@@ -47,8 +52,8 @@
      sa
      (count player-systems)
      (count player-planets)
-     "N/M"
-     "Inf"
+     player-res
+     player-inf
      (or tg 0)
      "Army Res"
      "Techs"
