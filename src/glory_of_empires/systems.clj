@@ -450,9 +450,11 @@
 
 (def all-systems (index-by-id all-systems-list))
 
-(def all-planets (->> all-systems-list (filter :planets) (map :planets) (apply merge) ) )
+(def all-planets-map (->> all-systems-list (filter :planets) (map :planets) (apply merge)) )
 
-(defn planet-info [id] (all-planets id))
+(def all-planets-set (vals-with-id all-planets-map))
+
+(defn planet-info [id] (all-planets-map id))
 
 (defn get-system [ id ]
   { :pre [ (if (not (all-systems id)) (do (println id "not found") false) true) ] }
