@@ -11,18 +11,18 @@
          scale-str (if scale (str "scale(" scale ")") "" ) ]
     { :transform (str scale-str " " translate) } ))
 
-(defn g [ opts content ]
-  { :pre [ (map? opts) (sequential? content) ] }
-  `[ :g ~(merge (transform opts) (select-keys opts [:id])) ~@content ] )
+(defn g [ opts & content ]
+  { :pre [ (map? opts) ] }
+  [ :g (merge (transform opts) (select-keys opts [:id])) content ] )
 
 (defn text [ content [ x y ] { color :color font :font size :size } ]
   [ :text { :x x :y y :fill (or color "white")
             :font-family (or font "Arial") :font-size (str (or size "36") "px") } content ] )
 
 (defn double-text [ content loc opts ]
-  (g { :translate loc :id (get opts :id "shaded-text") } [
+  (g { :translate loc :id (get opts :id "shaded-text") }
     (text content [ 2 2 ] (assoc opts :color "black"))
-    (text content [ 0 0 ] (assoc opts :color "white")) ] ))
+    (text content [ 0 0 ] (assoc opts :color "white"))  ))
 
 (defn svg [ [ width height ] & content ]
-  `[ :svg { :width ~width :height ~height :xmlns:xlink "http://www.w3.org/1999/xlink" } ~@content ] )
+  [ :svg { :width width :height height :xmlns:xlink "http://www.w3.org/1999/xlink" } content ] )

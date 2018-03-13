@@ -12,13 +12,13 @@
 (deftest table-test
   (testing "table-test"
     (is (utils/compare-structure
-          (html/table {}
-                      ["Game" [:span {:id "gameName"}] [:a {:href "/login"} "Logout"]]
-                      [" " [{:id "currentCommand" :style "color: green;"} " "] [{:id "commandResult"} " "]]
-                      ["abc"
-                       [{:colspan 4}
-                        [:span {:id "currentCommand" :style "color: green;"}]
-                        [:span {:id "commandResult"}]]])
+          (html/table {} [
+                          ["Game" [:span {:id "gameName"}] [:a {:href "/login"} "Logout"]]
+                          [" " [{:id "currentCommand" :style "color: green;"} " "] [{:id "commandResult"} " "]]
+                          ["abc"
+                           [{:colspan 4}
+                            [:span {:id "currentCommand" :style "color: green;"}]
+                            [:span {:id "commandResult"}]]]])
 
           [:table
            {}

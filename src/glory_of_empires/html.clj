@@ -34,7 +34,7 @@
     (make-row-inner (first row) (rest row))
     (make-row-inner {} row)))
 
-(defn table [ attrs & rows ] [ :table attrs (map make-row rows) ] )
+(defn table [ attrs rows ] [ :table attrs (map make-row rows) ] )
 
 (defn ul [ items ] [ :ul (map (fn [item] [ :li item ]) items) ] )
 

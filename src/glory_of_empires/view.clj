@@ -27,8 +27,8 @@
 (defn role-selector [ ]
   (fn [ game role ]
     (let [ ids (cons :game-master (players/ids game)) ]
-      `[ :select { :id "role" :name "role" }
-         ~@(map (fn [ player ] [ :option {} (name player) ]) ids) ] )))
+      [ :select { :id "role" :name "role" }
+         (map (fn [ player ] [ :option {} (name player) ]) ids) ] )))
 
 ;------------ composite views ----------------
 
@@ -36,11 +36,11 @@
   ^{ :require-role :player }
   (fn [ game role ]
     (let [ view-to-html  (fn [view-func] [:div (view-func game role)]) ]
-      `[:div ~@(map view-to-html view-funcs)])))
+      [:div (map view-to-html view-funcs)])))
 
 (defn horizontal [ & views ]
   ^{ :require-role :player }
   (fn [ game role ]
     (let [ view-to-html (fn [view-fn] [:td {:style "vertical-align: top;"} (view-fn game role)]) ]
-      `[:table [:tr {} ~@(map view-to-html views)]])))
+      [:table [:tr {} (map view-to-html views)]])))
 

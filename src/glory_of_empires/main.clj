@@ -122,3 +122,7 @@
   (run-jetty handler {:port 3000} ))
 
 (defn run [] (.start (Thread. -main))) ; Call from repl
+
+(defn use-all []
+  (use 'glory-of-empires.game-state)
+  (use 'glory-of-empires.systems))

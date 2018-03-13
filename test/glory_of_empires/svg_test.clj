@@ -7,6 +7,8 @@
   (testing "svg"
     (are [ calculated expected ] (compare-structure calculated expected)
     (svg/double-text "Hello" [ 6 6 ] {})
-      [ :g { :id "shaded-text" :transform " translate(6,6)" }
-        [ :text { :fill "black" :font-family "Arial" :font-size "36px" :x 2 :y 2 } "Hello" ]
-        [ :text { :fill "white" :font-family "Arial" :font-size "36px" :x 0 :y 0 } "Hello" ] ])))
+                                 [   :g
+                                  { :id "shaded-text" :transform " translate(6,6)" }
+                                  (list    [ :text { :fill "black" :font-family "Arial" :font-size "36px" :x 2 :y 2 } "Hello" ]
+                                           [ :text { :fill "white" :font-family "Arial" :font-size "36px" :x 0 :y 0 } "Hello" ] ) ]
+                                 )))
