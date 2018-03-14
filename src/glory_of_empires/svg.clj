@@ -13,7 +13,8 @@
 
 (defn g [ opts & content ]
   { :pre [ (map? opts) ] }
-  [ :g (merge (transform opts) (select-keys opts [:id])) content ] )
+  [ :g (merge (transform opts) (select-keys opts [:id]))
+   (if (= (count content) 1) (first content) content) ] )
 
 (defn text [ content [ x y ] { color :color font :font size :size } ]
   [ :text { :x x :y y :fill (or color "white")
