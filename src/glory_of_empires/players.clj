@@ -72,29 +72,25 @@
 
 (defn- planet-to-html [ { id :id fresh :fresh res :res inf :inf } ]
   (list (str/capitalize (name id)) " - " (html/color-span "green" res)
-        " / " (html/color-span "#ff4040" inf) " - "
-        (if fresh (html/color-span "green" "Refreshed") (html/color-span "red" "Used")))  )
+        " + " (html/color-span "#ff4040" inf) " - "
+        (if fresh (html/color-span "#00ff00" "Refreshed") (html/color-span "#808080" "Exhausted")))  )
 
 (defn- player-html [ role all-planets { race-id :id acs :ac } ]
   { :pre [ (not (nil? race-id)) ] }
   (let [ show-all (or (= role :game-master) (= role race-id))
         race (races/all-races race-id)
         planets (filter-player race-id all-planets) ]
-    [ :div
+    (list
       [ :h3 (race :name) " - " (name race-id)
           (fighter-image race-id) (player-flag race-id) ]
-      (if show-all
-         [ :div { :style "margin-left: 1cm;" }
-            [ :p "Action Cards" ]
-            (html/ol (map ac-to-html acs))]
-         [ :p "(hidden)" ]   )
-     [ :div { :style "margin-left: 1cm;" }
-      [ :p "Planets" ]
-      (html/ol (map planet-to-html planets))]
-     ] ))
+      [ :div { :style "margin-left: 1cm;" }
+        (if show-all
+          (list "Action Cards: " (count acs) (html/ol (map ac-to-html acs)))
+          "(hidden)")
+        "Planets" (html/ol (map planet-to-html planets))]  )))
 
 (defn players-html [ { planets :planets :as game} role ]
   (let [ amended-planets (clojure.set/join (vals planets) systems/all-planets-set) ]
-    [:div
-     (players-table game amended-planets)
-     (map (partial player-html role amended-planets) (players game)) ]  ))
+    (list
+      (players-table game amended-planets)
+      (map (partial player-html role amended-planets) (players game)))))
