@@ -256,30 +256,90 @@
 
 ; PC cards
 
+; http://www.preeminent.org/steve/games/ti3/ti3demo/reference/political-mine/
+
+(def all-pc-array
+  [ { :id :aggressive-strategy
+      :for "Each player may (in order of play) execute the Secondary Ability of his chosen
+      Strategy without spending a Command Counter."
+      :against "No player may execute the Secondary Ability of any Strategy Card this round." }
+    { :id :ancient-artifact
+     :for "Roll 1 die with following results: 1-5: all ships in Mecatol Rex are destroyed;
+     then roll 3 dice for each fleet in adjacent systems; rolls greater than 4 cause 1 hit each,
+     greater than 5: all players gain 2 technologies of their choice."
+     :against "Discard this card" }
+    { :id :arms-reduction
+     :for "Each player destroys all but 2 Dreadnoughts and all but 4 Carriers, other types unaffected."
+     :against "Players exhaust all planets with Red Technology bonus." }
+    { :id :checks-and-balances :type :law
+     :for "When a player chooses a Strategy card, he gives it to another player who does
+     not have one."
+     :against "Each player passes current Strategy Card to the player on his left." }
+    { :id :closing-the-wormholes :type :law
+     :for "No fleets can move through wormholes."
+     :against "Any player with a fleet in a wormhole hex must discard 1 non-Ftr from that fleet." }
+    { :id :code-of-honor :type :law
+     :for "Fleets may not withdraw or retreat from Space Battles."
+     :against "Discard this card." }
+    { :id :colonial-redistribution
+     :for "Player with most Victory Points (roll die if tie) destroys all Ground Force
+     Units on 1 of his planets, then chooses a player with least Victory Points.
+     That player gets 3 Ground Force Units on that planet and controls it."
+     :against "Discard this card." }
+    { :id :colonial-licensing :type :law
+     :for "Before landing on neutral planet, players must spend resources at least equal to
+     resource value of the planet."
+     :against "All players exhaust 1 planet for every 3 they control outside home system (round down)" }
+    { :id :compensated-disarmament
+     :elect "Elect planet. All Ground Force Units on it are destroyed, but the owner
+     receives 1 Trade Good for each Ground Force Unit lost and retains control of the planet."}
+    { :id :conventions-of-war :type :law
+     :for "Dreadnoughts & War Suns may not bombard planets with space docks."
+     :against "Each player that voted against this law must return 1 of his space docks
+     outside his home system and return it to his reinforcements."}
+    { :id :core-stability :type :law
+      :for "During each Status Phase Action Cards are drawn and placed face-up on the table.
+      Players choose their cards in order of unexhausted influence from highest to lowest."
+      :against "No Action cards are drawn this round."}
+    { :id :cost-overruns
+      :for "Each player must discard 1 Trade Good for each planet he controls."
+      :against "Discard this card." }
+    { :id :council-censure :type :law
+      :elect "Elect Player. Elected player may only choose the Imperial Strategy by
+      discarding 2 Command Counter from his Strategy pool during the Strategy Phase."}
+    { :id :council-elder :type :law
+      :elect "Elect Player. Chosen player may discard this card whenever another \"Elect\"
+      agenda comes up; only his votes will count to determine the result of the election." }
+    { :id :crown-of-thalnos :type :law
+      :elect "Elect Player. Elected player's Ground Force Units receive +1 on all rolls."}
+    { :id :dispute-resolution
+      :elect "Elect 2 planets controlled by 2 different players; destroy all Ground Force
+      Units and Planetary Defense Systems on both planets. Planets revert to neutral.
+      Mecatol Rex and Home System planets may not be chosen." }
+    { :id :economic-revitalization
+      :elect "Elect Player. He receives 1 Trade Good from each opponent, if possible."}
+    { :id :fleet-regulations :type :law
+      :for "Command Counter in Fleet area limited to 5."
+      :against "Each player puts a Command Counter from reinforcements into Fleet Supply area." }
+    { :id :forced-economic-independence :type :law
+      :elect "Elect 2 Players. Place control markers of the 2 players on this card.
+      Any trade agreements between them are broken and they may not have trade agreements
+      between them as long as this law is in play." }
+    { :id :free-trade :type :law
+      :for "Each time a player received Trade Goods from his agreements,
+      he received 1 additional Trade Good."
+      :against "All players must discard 2 Trade Goods if possible." }
+    { :id :holder-of-mecatol-rex
+      :for "Player controlling Mecatol Rex may choose and discard any 1 law."
+      :against "Player controlling Mecatol Rex adds 2 free Ground Force Units to Mecatol Rex." }
+   ])
+
 
 " original:
 
-Aggressive Strategy
-Ancient Artifact
-Arms Reduction
-Checks and Balances
-Closing the Wormholes
-Code of Honor
-Colonial Redistribution
-Colonization Licensing
-Compensated Disarmament
-Conventions of War
-Core Stability
-Cost Overruns
-Council Elder
-Council’s Censure
-Crown of Thalnos
-Dispute Resolution
-Economic Revitalization
-Fleet Regulations
-Forced Economic Independence
-Free Trade
-Holder of Mecatol Rex
+
+
+
 Holy Planet of Ixth
 Humane Labor
 Imperial Academy
