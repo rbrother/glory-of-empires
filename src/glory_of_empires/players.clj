@@ -4,6 +4,7 @@
   (:require [glory-of-empires.races :as races])
   (:require [glory-of-empires.ships :as ships])
   (:require [glory-of-empires.systems :as systems])
+  (:require [glory-of-empires.strategies :as strategies])
   (:require [glory-of-empires.ac :as ac])
   (:require [glory-of-empires.html :as html]))
 
@@ -35,15 +36,20 @@
 
 (defn- player-flag [ race-id ] [ :img {:src (str html/resources-url "FlagWavy/Flag-Wavy-" (name race-id) ".png")} ] )
 
-(defn- player-controls [race-id] (fn [ { controller :controller } ] (= controller race-id)))
+(defn- player-controls [race-id]
+  (fn [ { controller :controller owner :owner } ]
+    (or (= controller race-id) (= owner race-id) )))
 
 (defn filter-player [ race-id items ] (filter (player-controls race-id) items))
 
-(defn- player-row-data [ { board :map units :units } planets
-                        { race-id :id tg :tg ac :ac pc :pc cc :command-pool sa :strategy-alloc fs :fleet-supply } ]
-  (let [player-systems (->> board vals (filter-player race-id))
+(defn- player-row-data [ board planets
+                        { race-id :id tg :tg ac :ac pc :pc cc :command-pool sa :strategy-alloc fs :fleet-supply
+                         strategies :strategies } ]
+  (let [ player-systems (filter-player race-id board)
         player-planets (filter-player race-id planets) ]
-    [(str/capitalize (name race-id))
+    [(apply min (map :order strategies))
+     (->> strategies (map :id) (map (fn [s] [ :div s ] )))
+     (str/capitalize (name race-id))
      (fighter-image race-id)
      (player-flag race-id)
      "VP"
@@ -60,9 +66,9 @@
      (count ac)
      (count pc)   ]))
 
-(defn players-table [ game amended-planets ]
-  (let [ header [ "Race" "Color" "Symbol" "VP" "CC" "FS" "SA" "Systems" "Planets" "Res" "Inf" "TG" "Army Res" "Tech" "AC" "PC" ]
-        rows (map #(player-row-data game amended-planets %) (players game)) ]
+(defn players-table [ amended-players board amended-planets ]
+  (let [ header [ "Init" "Strategy" "Race" "Color" "Symbol" "VP" "CC" "FS" "SA" "Systems" "Planets" "Res" "Inf" "TG" "Army Res" "Tech" "AC" "PC" ]
+        rows (map #(player-row-data board amended-planets %) amended-players) ]
     (html/table { :class "data" } (concat (list header) rows) )))
 
 (defn- ac-to-html [ id ]
@@ -73,7 +79,7 @@
 (defn- planet-to-html [ { id :id fresh :fresh res :res inf :inf } ]
   (list (str/capitalize (name id)) " - " (html/color-span "green" res)
         " + " (html/color-span "#ff4040" inf) " - "
-        (if fresh (html/color-span "#00ff00" "Refreshed") (html/color-span "#808080" "Exhausted")))  )
+        (if fresh (html/color-span "#00ff00" "Ready") (html/color-span "#808080" "Exhausted")))  )
 
 (defn- player-html [ role all-planets { race-id :id acs :ac } ]
   { :pre [ (not (nil? race-id)) ] }
@@ -84,13 +90,24 @@
       [ :h3 (race :name) " - " (name race-id)
           (fighter-image race-id) (player-flag race-id) ]
       [ :div { :style "margin-left: 1cm;" }
+        [ :p "Strategy cards: xxx, yyy" ]
         (if show-all
           (list "Action Cards: " (count acs) (html/ol (map ac-to-html acs)))
           "(hidden)")
-        "Planets" (html/ol (map planet-to-html planets))]  )))
+        "Planets" (html/ol (map planet-to-html planets))
+        "Tech" (html/ol ["a" "b" "c"])
+       ]  )))
 
-(defn players-html [ { planets :planets :as game} role ]
-  (let [ amended-planets (clojure.set/join (vals planets) systems/all-planets-set) ]
+(defn amend-player [ { player-id :id :as player } strategies ]
+  (assoc player :strategies (filter-player player-id strategies)))
+
+(defn players-html [ { planets :planets strat :strategies players :players board :map } role ]
+  (let [amended-planets (clojure.set/join (vals planets) systems/all-planets-set)
+        amended-strategies (clojure.set/join strat strategies/all-strategies-arr)
+        sorted-strategies (sort-by :order amended-strategies)
+        player-order (->> sorted-strategies (map :owner) (filter identity) distinct)
+        players-in-order (->> player-order (map #(players %)))
+        amended-players (->> players-in-order (map #(amend-player % amended-strategies))) ]
     (list
-      (players-table game amended-planets)
-      (map (partial player-html role amended-planets) (players game)))))
+      (players-table amended-players (vals board) amended-planets)
+      (map (partial player-html role amended-planets) amended-players))))

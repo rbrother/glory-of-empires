@@ -516,7 +516,7 @@
 (defn systems-table [ image-size-ratio title systems ]
   (let [ rows (map (partial system-info-row image-size-ratio) (partition 3 3 nil systems)) ]
     [ :div [ :h1 title ]
-      (apply html/table (concat [ { :class "data" } ] rows))   ] ))
+      (html/table { :class "data" } rows) ] ))
 
 (defn all-systems-table [ image-size-ratio ]
   (let [ table (partial systems-table image-size-ratio) ]

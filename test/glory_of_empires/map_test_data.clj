@@ -15,9 +15,9 @@
                  :planets #{ :aah}
                  :system :aah}}
     :planets {
-              :abyz { :id :abyz :controller :hacan :refreshed true}
-              :fria { :id :fria :controller :hacan :refreshed false}
-              :aah { :id :aah :controller :norr :refreshed true}}
+              :abyz { :id :abyz :controller :hacan :ready true}
+              :fria { :id :fria :controller :hacan :ready false}
+              :aah { :id :aah :controller :norr :ready true}}
 
     :units {
             :gf3 { :id :gf3 :location :a1 :planet :abyz :owner :hacan :type :gf}
@@ -50,6 +50,16 @@
     :pc-deck [ ]
     :ac-discard []
     :pc-discard [ ]
+    :strategies #{
+                  { :id :leadership4 :owner :norr :ready true :bonus 0 }
+                  { :id :diplomacy4 :owner :norr :ready false :bonus 0 }
+                  { :id :politics4  :ready true :bonus 1 }
+                  { :id :production :ready true :bonus 0 }
+                  { :id :trade4 :owner :hacan :ready false :bonus 0 }
+                  { :id :warfare4 :owner :hacan :ready true :bonus 0 }
+                  { :id :technology4 :ready true :bonus 1 }
+                  { :id :bureaucracy :ready true :bonus 2 }
+                  }
     :ship-counters { :ca 3 :de 2 :fi 8 :ws 1 :gf 3 :pds 2}})
 
 (def many-ships [

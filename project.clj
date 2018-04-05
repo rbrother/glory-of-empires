@@ -6,7 +6,7 @@
   :dependencies [  [org.clojure/clojure "1.9.0-alpha17"]
                    [ring "1.6.3"]
                  [hiccup "1.0.5"]
-                 [org.clojars.rbrother/clojure-common "0.1.3"] ]
+                 [org.clojars.rbrother/clojure-common "0.1.4"] ]
   :main ^:skip-aot glory-of-empires.main
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
