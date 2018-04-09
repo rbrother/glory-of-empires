@@ -36,22 +36,28 @@
 
 (defn- player-flag [ race-id ] [ :img {:src (str html/resources-url "FlagWavy/Flag-Wavy-" (name race-id) ".png")} ] )
 
+(defn ready-color [ready content]
+  (html/color-span (if ready "#00ff00" "#808080") content))
+
 (defn- player-controls [race-id]
   (fn [ { controller :controller owner :owner } ]
     (or (= controller race-id) (= owner race-id) )))
 
 (defn filter-player [ race-id items ] (filter (player-controls race-id) items))
 
+(defn strategy-list-item [ { id :id ready :ready } ]
+  [ :div (ready-color ready (str/capitalize (name id)))]   )
+
 (defn- player-row-data [ board planets
                         { race-id :id tg :tg ac :ac pc :pc cc :command-pool sa :strategy-alloc fs :fleet-supply
                          strategies :strategies } ]
   (let [ player-systems (filter-player race-id board)
         player-planets (filter-player race-id planets) ]
-    [(apply min (map :order strategies))
-     (->> strategies (map :id) (map (fn [s] [ :div s ] )))
-     (str/capitalize (name race-id))
+    [(str/capitalize (name race-id))
      (fighter-image race-id)
      (player-flag race-id)
+     (apply min (map :order strategies))
+     (map strategy-list-item strategies)
      "VP"
      cc
      fs
@@ -67,7 +73,7 @@
      (count pc)   ]))
 
 (defn players-table [ amended-players board amended-planets ]
-  (let [ header [ "Init" "Strategy" "Race" "Color" "Symbol" "VP" "CC" "FS" "SA" "Systems" "Planets" "Res" "Inf" "TG" "Army Res" "Tech" "AC" "PC" ]
+  (let [ header [ "Race" "Color" "Symbol" "Init" "Strategy"  "VP" "CC" "FS" "SA" "Systems" "Planets" "Res" "Inf" "TG" "Army Res" "Tech" "AC" "PC" ]
         rows (map #(player-row-data board amended-planets %) amended-players) ]
     (html/table { :class "data" } (concat (list header) rows) )))
 
@@ -79,7 +85,7 @@
 (defn- planet-to-html [ { id :id fresh :fresh res :res inf :inf } ]
   (list (str/capitalize (name id)) " - " (html/color-span "green" res)
         " + " (html/color-span "#ff4040" inf) " - "
-        (if fresh (html/color-span "#00ff00" "Ready") (html/color-span "#808080" "Exhausted")))  )
+        (ready-color fresh (if fresh "Ready" "Exhausted"))   ))
 
 (defn- player-html [ role all-planets { race-id :id acs :ac } ]
   { :pre [ (not (nil? race-id)) ] }
